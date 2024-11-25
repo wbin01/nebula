@@ -1,0 +1,31 @@
+
+<form action="{% url 'post' cookie_language post.url %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+<div class="modal fade text-light" data-bs-theme="dark" id="editContentModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editContentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <span class="ms-1 m-0 p-0 text-light text-opacity-50"><small>Choose 'html' content file</small></span>
+        <div class="input-group">
+          <input type="file" class="form-control" id="content_file" name="content_file">
+        </div>
+
+        <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+          <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+            </svg>
+          </button>
+          <input type="hidden" name="id" value="{{ post.id }}">
+          <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</form>

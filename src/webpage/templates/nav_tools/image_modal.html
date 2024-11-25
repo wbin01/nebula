@@ -1,0 +1,113 @@
+<div class="modal fade text-start" data-bs-theme="dark" id="navItem{{ nav_item.id }}ImageModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="navItem{{ nav_item.id }}ImageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-body text-light">
+
+        <button class="btn btn-outline-light btn-sm border border-0" data-bs-target="#{{ nav_item.id }}" data-bs-toggle="modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+          </svg> &nbsp;Back
+        </button>
+        <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <div class="mx-2 my-0 mt-1 p-0">
+        {% if nav_item.code == 'item' %}
+
+        <p class="text-light text-opacity-50 p-0 m-0 mb-2">
+        <small><small>
+        The <u><b>ID</b></u> <span class="bg-light bg-opacity-10 rounded-1">&nbsp;item&nbsp;</span> is reserved and not visible to the user.
+        Rename it!
+        </small></small>
+        </p>
+
+        {% else %}
+
+        <p class="p-0 m-0">
+        <svg class="bi bi-card-heading" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+          <path d="m1.5 0.97656c-0.82843 0-1.5 0.66962-1.5 1.498v6c0 0.82843 0.67157 1.5 1.5 1.5h13c0.82843 0 1.5-0.67157 1.5-1.5v-6c0-0.82843-0.67157-1.498-1.5-1.498zm0 0.99805h13c0.27614 0 0.5 0.22386 0.5 0.5v4.498l-3.7734-1.9473c-0.07212-0.036126-0.15146-0.051263-0.22852-0.050781-0.12842 8.022e-4 -0.25442 0.051558-0.34961 0.14648l-3.6484 2.8535-2.7207-0.91797c-0.19801-0.13183-0.46235-0.1054-0.63086 0.0625l-2.459 1.7227c-0.11403-0.1035-0.18945-0.24829-0.18945-0.36719v-6c0-0.27614 0.22386-0.5 0.5-0.5zm3.0527 1.002c-0.05322-0.0017-0.10774-0.00209-0.16211 0.00195-0.78316 0.058286-1.3888 0.71077-1.3887 1.4961 0 2 3 2 3 0 1.258e-4 -0.81785-0.65092-1.4726-1.4492-1.498zm-3.5527 8.0234v3l1.0156-1h0.98438v3h2v-3h0.98438l1.0156 1v-3zm7 1v3h7v-3z"/>
+        </svg>
+        Card<small class="text-light text-opacity-50"><small>&nbsp;({{ nav_item.code }})</small></small>
+        </p>
+
+        {% if nav_item.local == 'menu' %}
+        <div class="m-0 mt-4 p-0"></div>
+        <h6>Menu icon</h6>
+
+        <div class="row g-0 m-0 mt-1 p-0">
+          <div class="col me-1 text-light text-opacity-75">
+            <small><small>
+            <span class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" value="icon" name="nav-item-img-type" id="nav-item-img-type-icon-{{ nav_item.id }}" {% if nav_item.img_type == 'icon' %}checked{% endif %}>
+              <label class="form-check-label m-0 p-0" for="nav-item-img-type-icon-{{ nav_item.id }}"><small>30x30</small></label>
+            </span>
+            <img src="{{ nav_item.icon.url }}" width="20" height="20" class="m-0 p-0 d-inline-block align-text-top">
+            <input type="file" class="form-control form-control-sm" id="nav-item-icon" name="nav-item-icon">
+            </small></small>
+          </div>
+          <div class="col ms-1 text-light text-opacity-75">
+            <small><small>
+            <span class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" value="image" name="nav-item-img-type" id="nav-item-img-type-image-{{ nav_item.id }}" {% if nav_item.img_type == 'image' %}checked{% endif %}>
+              <label class="form-check-label m-0 p-0" for="nav-item-img-type-image-{{ nav_item.id }}"><small>60x30</small></label>
+            </span>
+            <img src="{{ nav_item.image.url }}" width="40" height="20" class="m-0 p-0 d-inline-block align-text-top">
+            <input type="file" class="form-control form-control-sm" id="nav-item-image" name="nav-item-image">
+            </small></small>
+          </div>
+        </div>
+
+        <span class="text-light text-opacity-75">
+        <small><small>
+        <span class="form-check form-check">
+          <input class="form-check-input" type="checkbox" value="" name="nav-item-display-image" id="nav-item-display-image-{{ nav_item.id }}" {% if nav_item.display_image %}checked{% endif %}>
+          <label class="form-check-label text-light text-opacity-75" for="nav-item-display-image-{{ nav_item.id }}">Display image</label>
+        </span>
+        </small></small>
+        </span>
+        {% endif %}
+
+        <div class="text-success m-0 mt-4 p-0"></div>
+        <h6 class="m-0 p-0">Page cover</h6>
+
+        <div class="row g-0 m-0 mt-1 p-0">
+          <div class="col me-1 text-light text-opacity-75">
+            <small><small>
+            <small>(100x200)</small>
+            <img src="{{ nav_item.cover.url }}" width="80" height="20" class="m-0 p-0 d-inline-block align-text-top">
+            <input type="file" class="form-control form-control-sm" id="nav-item-cover" name="nav-item-cover">
+            </small></small>
+          </div>
+        </div>
+
+        <span class="text-light text-opacity-75">
+        <small><small>
+        <span class="form-check form-check">
+          <input class="form-check-input" type="checkbox" value="" name="nav-item-display-cover" id="nav-item-display-cover-{{ nav_item.id }}" {% if nav_item.display_cover %}checked{% endif %}>
+          <label class="form-check-label text-light text-opacity-75" for="nav-item-display-cover-{{ nav_item.id }}">Display cover</label>
+        </span>
+        </small></small>
+        </span>
+
+        {% endif %}
+        </div>
+
+        <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+          </svg>
+        </button>
+
+        <input type="hidden" name="nav-item-id" value="{{ nav_item.id }}">
+        <input type="hidden" name="nav-item-image-modal">
+        <button type="submit" name="nav-item-translate" class="btn btn-outline-light btn-sm border border-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+          </svg>
+        </button>
+        </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

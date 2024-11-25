@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load split %}
+
+{% block content %}
+{% include '_nav.html'%}
+
+
+<div class="container-md mt-3" style="min-height: 500px;">
+  <div class="mb-3 text-center" style="font-size: 15pt;">
+    {% if search.type == 'search' %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+    </svg>
+    <span class="bg-dark bg-opacity-10 rounded pb-1">
+      &nbsp;{{ search.text }}&nbsp;
+    </span>
+    {% else %}
+    <span class="m-0 bg-dark bg-opacity-25 rounded-start-pill pb-1">
+      <svg class="bi bi-file-earmark-plus" width="22" height="22" fill="currentColor" version="1.1" viewBox="0 0 16 16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="7" r="3" fill="#dcdcdc" stroke-dasharray="7.21134, 7.21134" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2019" style="paint-order:stroke fill markers"/>
+      </svg>
+      {{ search.text }}
+    </span>
+    <span class="m-0 bg-dark bg-opacity-25 rounded-end-3 pb-1">&nbsp;</span>
+    {% endif %}
+  </div>
+
+  {% if posts %}
+    {% for post in posts %}
+    <a class="text-decoration-none" href="{% url 'post' cookie_language post.url %}">
+    <div class="card mb-3 rounded-0 card-link-style shadow-sm" style="max-width: 100%;">
+      <div class="row g-0">
+        <div class="col-md-3">
+          <img src="{{ post.cover_image_thumb }}" alt="{{ post.title }}" style="width:100%;height:100px;object-fit:cover;margin:0px;">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h3 style="font-size:17pt;">{{ post.title }}</h3>
+<!--            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
+          </div>
+        </div>
+
+        <span class="card-link-indicator-bg">
+          <span class="card-link-indicator-fg">
+            &nbsp;
+          </span>
+        </span>
+
+      </div>
+    </div>
+    </a>
+    {% endfor %}
+
+  {% else %}
+
+  <div class="col">
+    <div class="card">
+        <div class="card-body">
+          <p>No articles are available.</p>
+        </div>
+    </div>
+  </div>
+
+  {% endif %}
+
+</div>
+
+{% include '_footer.html'%}
+{% endblock %}

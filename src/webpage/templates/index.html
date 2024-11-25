@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load split %}
+{% block content %}
+{% include '_nav.html'%}
+
+<!-- carousel length -->
+{% if posts_highlight %}
+<div id="carouselExampleCaptions" class="carousel slide">
+  <div class="carousel-indicators">
+    {% if posts_highlight|length > 1 %}
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    {% endif %}
+    {% if posts_highlight|length > 2 %}
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    {% endif %}
+  </div>
+  <div class="carousel-inner post-cover-title">
+    <div class="carousel-item active">
+      <a class="text-decoration-none" href="{% url 'post' cookie_language posts_highlight.0.url %}">
+      <img src="{{ posts_highlight.0.cover_image.url }}" class="d-block w-100" alt="{{ posts_highlight.0.title }}" style="width:100%;height:250px;object-fit:cover;margin: 0px;">
+      <div class="position-absolute top-0 start-0" style="height:250px;width:100%;
+        background: rgb(0,0,0);
+        background: -moz-linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        background: linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000',endColorstr='#000000',GradientType=1);">
+      </div>
+      <div class="carousel-caption d-block"><!-- d-none d-md-block -->
+        <h5>{{ posts_highlight.0.title }}</h5>
+        <!-- <p>Some representative placeholder content for the first slide.</p>-->
+      </div>
+      </a>
+    </div>
+    {% if posts_highlight|length > 1 %}
+    <div class="carousel-item">
+      <a class="text-decoration-none" href="{% url 'post' cookie_language posts_highlight.1.url %}">
+      <img src="{{ posts_highlight.1.cover_image.url }}" class="d-block w-100 " alt="{{ posts_highlight.1.title }}" style="width:100%;height:250px;object-fit:cover;margin: 0px;">
+      <div class="position-absolute top-0 start-0" style="height:250px;width:100%;
+        background: rgb(0,0,0);
+        background: -moz-linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        background: linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000',endColorstr='#000000',GradientType=1);">
+      </div>
+      <div class="carousel-caption d-block">
+        <h5>{{ posts_highlight.1.title }}</h5>
+        <!-- <p>Some representative placeholder content for the second slide.</p>-->
+      </div>
+      </a>
+    </div>
+    {% endif %}
+    {% if posts_highlight|length > 2 %}
+    <div class="carousel-item">
+      <a class="text-decoration-none" href="{% url 'post' cookie_language posts_highlight.2.url %}">
+      <img src="{{ posts_highlight.2.cover_image.url }}" class="d-block w-100" alt="{{ posts_highlight.2.title }}" style="width:100%;height:250px;object-fit:cover;margin: 0px;">
+      <div class="position-absolute top-0 start-0" style="height:250px;width:100%;
+        background: rgb(0,0,0);
+        background: -moz-linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        background: linear-gradient(0deg, rgba(0,0,0,0.5928571257604605) 0%, rgba(0,0,0,0.4976190305223652) 13%, rgba(0,0,0,0) 49%, rgba(0,0,0,0) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000',endColorstr='#000000',GradientType=1);">
+      </div>
+      <div class="carousel-caption d-block">
+        <h5>{{ posts_highlight.2.title }}</h5>
+        <!-- <p>Some representative placeholder content for the third slide.</p>-->
+      </div>
+      </a>
+    </div>
+    {% endif %}
+  </div>
+  {% if posts_highlight|length > 1 %}
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="bg-dark rounded-circle p-0 pt-2 pe-1" style="width:50px;height:50px;">
+      <span class="carousel-control-prev-icon align-middle" aria-hidden="true"></span>
+    </span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="bg-dark rounded-circle p-0 pt-2 ps-1" style="width:50px;height:50px;">
+      <span class="carousel-control-next-icon align-middle" aria-hidden="true"></span>
+    </span>
+    <span class="visually-hidden">Next</span>
+  </button>
+  {% endif %}
+</div>
+{% endif %}
+<!-- carousel end -->
+
+<div class="container-md mt-3" style="min-height: 500px;">
+  {% if posts %}
+    {% for post in posts %}
+    <a class="text-decoration-none" href="{% url 'post' cookie_language post.url %}">
+    <div class="card mb-3 rounded-0 card-link-style shadow-sm" style="max-width: 100%;">
+      <div class="row g-0">
+        <div class="col-md-3">
+          <img src="{{ post.cover_image_thumb }}" alt="{{ post.title }}" style="width:100%;height:100px;object-fit:cover;margin: 0px;">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h3 style="font-size:17pt;">{{ post.title }}</h3>
+<!--            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
+          </div>
+        </div>
+        <span class="card-link-indicator-bg">
+          <span class="card-link-indicator-fg">
+            &nbsp;
+          </span>
+        </span>
+      </div>
+    </div>
+    </a>
+    {% endfor %}
+
+  {% else %}
+
+  <div class="col">
+    <div class="card">
+        <div class="card-body">
+          <p>No articles are available.</p>
+        </div>
+    </div>
+  </div>
+
+  {% endif %}
+
+</div>
+
+
+{% include '_footer.html'%}
+{% endblock %}

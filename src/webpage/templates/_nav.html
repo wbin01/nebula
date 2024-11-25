@@ -1,0 +1,194 @@
+{% load static %}
+{% load replace %}
+{% load split %}
+{% load dict_key %}
+
+<div class="d-print-none m-0 p-0" style="background-color:{{ style.nav_top_bg }};">
+  <nav class="navbar m-0 p-0  text-light">
+
+    <div class="m-0 p-0 ms-3 me-4 mt-1 mb-1 img-hover-highlight">
+      <a class="navbar-brand nav-bg" href="{% url 'index' cookie_language %}">
+        <img src="{% static 'nav-logo.svg' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+      </a>
+    </div>
+
+    <div>&nbsp;</div>
+
+    <!-- Search -->
+    <div>
+      <a type="button" class="text-decoration-none" style="color:{{ style.nav_top_fg }};" onMouseOver="this.style.color='{{ style.nav_top_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_top_fg }}'" data-bs-toggle="modal" data-bs-target="#searchModal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+        </svg>
+      </a>
+
+      <div class="modal fade text-light" data-bs-theme="dark" id="searchModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+              <form action="{% url 'search' cookie_language '#' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+                <div class="mb-3 mt-4">
+                  <label for="typed_search">Search</label>
+                  <input type="text" class="form-control" id="typed_search" name="typed_search">
+                </div>
+
+                <div class="d-grid gap-2 d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                  </svg>
+                </button>
+
+                <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                  </svg>
+                </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div> <!-- modal end -->
+
+      <!-- Translate -->
+      <a class="ms-3 me-3 text-decoration-none" style="color:{{ style.nav_top_fg }};" onMouseOver="this.style.color='{{ style.nav_top_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_top_fg }}'" type="button" data-bs-toggle="modal" data-bs-target="#translateModal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-translate" viewBox="0 0 16 16">
+          <path d="M4.545 6.714 4.11 8H3l1.862-5h1.284L8 8H6.833l-.435-1.286zm1.634-.736L5.5 3.956h-.049l-.679 2.022z"/>
+          <path d="M0 2a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v3h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zm7.138 9.995q.289.451.63.846c-.748.575-1.673 1.001-2.768 1.292.178.217.451.635.555.867 1.125-.359 2.08-.844 2.886-1.494.777.665 1.739 1.165 2.93 1.472.133-.254.414-.673.629-.89-1.125-.253-2.057-.694-2.82-1.284.681-.747 1.222-1.651 1.621-2.757H14V8h-3v1.047h.765c-.318.844-.74 1.546-1.272 2.13a6 6 0 0 1-.415-.492 2 2 0 0 1-.94.31"/>
+        </svg><small><small>&nbsp;{{ cookie_language }}</small></small>
+      </a>
+      <!-- Translate modal -->
+      <div class="modal fade text-light" data-bs-theme="dark" id="translateModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="translateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <form action="{% url 'settings' cookie_language 'cookie_language' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+                {% for lang in languages %}
+                <div class="mb-2 mx-2">
+                  <small>
+                  <input class="form-check-input" type="radio" name="radio-lang" id="{{ lang.code }}nav" value="{{ lang.code }}" {% if lang.code == cookie_language %}checked{% endif %}>
+                  <label class="form-check-label" for="{{ lang.code }}nav">
+                    &nbsp;{{ lang.code }}: &nbsp;<span>{{ lang.native_name }}</span> <small class="opacity-50">({{ lang.english_name }})</small>
+                  </label>
+                  </small>
+                </div>
+                {% endfor %}
+
+                <div class="d-grid gap-2 d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                  </svg>
+                </button>
+
+                <button type="submit" class="btn btn-outline-light btn-sm border border-0" data-bs-target="#deleteModal2" data-bs-toggle="modal">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
+                </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Translate modal end -->
+      <!-- Translate end -->
+
+      <!-- Settings -->
+      {% if user.is_superuser %}
+      <a class="me-4 text-decoration-none" style="color:{{ style.nav_top_fg }};" onMouseOver="this.style.color='{{ style.nav_top_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_top_fg }}'" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sliders" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1z"/>
+        </svg>
+      </a>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" data-bs-theme="dark">
+        <div class="offcanvas-header">
+          <span class="offcanvas-title text-light" id="offcanvasRightLabel">SETTINGS</span>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">&nbsp;</button>
+        </div>
+        <div class="offcanvas-body">
+          <!-- Admin settings -->
+          {% if user.is_superuser %}
+          <div class="list-group">
+            <a class="list-group-item list-group-item-action" href="{% url 'settings' cookie_language 'header' %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-plus-fill" viewBox="0 0 16 16">
+                <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0"/>
+              </svg> &nbsp;<span>Header</span>
+            </a>
+            <a class="list-group-item list-group-item-action" href="{% url 'settings' cookie_language 'posts' %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-plus-fill" viewBox="0 0 16 16">
+                <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0"/>
+              </svg> &nbsp;<span>Posts</span>
+            </a>
+            <a class="list-group-item list-group-item-action" href="{% url 'admin' %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-fill" viewBox="0 0 16 16">
+                <path d="M5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56"/>
+              </svg> &nbsp;<span>Admin</span>
+            </a>
+            </div><!-- Admin end -->
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+  </nav>
+</div>
+
+<div class="nav-container d-print-none m-0 p-0" style="background-color:{{ style.nav_bottom_bg }};">
+  <nav class="navbar m-0 p-0">
+    <div class="m-0 p-0 mt-1 mb-2">&nbsp;</div>
+
+    <!-- Nav Item -->
+    <div class="m-0 p-0 nav-text">
+      {% for nav_item in nav_items %}
+      <span class="my-0 mx-1 p-0 text-start">
+        {% if user.is_superuser %}
+        {% include 'nav_tools/warning.html'%}
+        {% endif %}
+
+        <a class="navbar-brand m-0 p-0 text-align-middle" href="{% url 'category' cookie_language nav_item.code %}">
+          {% if nav_item.display_image and nav_item.img_type == 'image' %}
+          <img src="{{ nav_item.image.url }}" alt="{{ nav_item.code }} icon" width="60" height="30" class="m-0 p-0 d-inline-block align-text-top">
+          {% elif nav_item.display_image and nav_item.img_type == 'icon' %}
+          <img src="{{ nav_item.icon.url }}" alt="{{ nav_item.code }} icon" width="30" height="30" class="m-0 p-0 d-inline-block align-text-top">
+          {% endif %}
+
+          {% if nav_item.display_text %}
+          <span style="color:{{ style.nav_items_fg }};" onMouseOver="this.style.color='{{ style.nav_items_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_items_fg }}'">
+            {{ categories_name|dict_key:nav_item.code }}
+          </span>
+          {% endif %}
+        </a>
+
+      </span>
+      {% endfor %}
+
+      {% if user.is_superuser %}
+      <div class="btn-group" role="group" aria-label="Add Nav Item">
+        <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+          <input type="hidden" name="category-name" value="nav_item.code">
+          <input type="hidden" name="add-item">
+          <button type="submit" class="btn btn-dark btn-sm border border-0" style="position:relative;top:-5px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+          </svg>
+        </button>
+        </form>
+      </div>
+      {% endif %}
+
+    </div>
+    <!-- Nav Item end -->
+
+    <div>&nbsp;</div>
+  </nav>
+<!--  <div class="nav-border-bottom"></div>-->
+
+</div>

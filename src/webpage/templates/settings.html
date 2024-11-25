@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load split %}
+{% block content %}
+{% include '_nav.html'%}
+
+<div class="container-md" style="min-height: 500px;">
+{% if path == 'cookie_language' %}
+  <meta http-equiv="REFRESH" content="0;url={% url 'index' cookie_language %}">
+
+{% elif path == 'header' %}
+  Header
+
+{% elif path == 'posts' %}
+  <h1 class="text-center">Posts</h1>
+  <h4>New</h4>
+  <a type="button" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25" href="{% url 'post' cookie_language 'create-new-post' %}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+    </svg>
+  </a>
+  <h4 class="mt-4">All</h4>
+  {% for post_group in posts %}
+  <div class="row p-0 m-0 my-2">
+    {% for post in post_group %}
+    <div class="row align-items-center" style="margin-top: 1px;">
+
+      <div class="col-1 m-0 p-0 py-2 bg-light bg-opacity-25 h-100" style="min-width: 60px; max-width: 60px;">
+        <p class="m-0 p-0 ps-2">{{ post.lang }}</p>
+      </div>
+
+      <div class="col m-0 p-0 py-2 bg-light bg-opacity-50 h-100">
+        {% if post.title == 'x' %}
+        <p class="m-0 p-0 px-2 text-danger text-opacity-75">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+          </svg>
+        </p>
+        {% else %}
+          <p class="m-0 p-0 px-2 text-dark text-opacity-50">
+            {% if post.display %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill mb-1" viewBox="0 0 16 16">
+              <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+              <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+            </svg>
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill mb-1 text-warning text-opacity-75" viewBox="0 0 16 16">
+              <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
+              <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
+            </svg>
+            {% endif %}
+            <a class="text-decoration-none ps-1" href="{% url 'post' cookie_language post.url %}">{{ post.title }}</a>
+          </p>
+        {% endif %}
+      </div>
+
+      </div>
+    {% endfor %}
+    </div>
+    {% endfor %}
+
+{% endif %}
+</div>
+
+{% include '_footer.html'%}
+{% endblock %}

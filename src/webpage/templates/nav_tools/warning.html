@@ -1,0 +1,27 @@
+{% if nav_item.warning == 'translate' %}
+<svg class="bi bi-pen-fill m-0 p-0" width="5" height="16" version="1.1" viewBox="0 0 5 16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+ <circle cx="2.5" cy="4.5" r="2.5" fill="#f34" stroke-dasharray="10.0157, 10.0157" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6693" style="paint-order:stroke fill markers"/>
+</svg>
+{% elif not nav_item.display or nav_item.warning_id_exists %}
+<svg class="bi bi-pen-fill m-0 p-0" width="5" height="16" version="1.1" viewBox="0 0 5 16" xmlns="http://www.w3.org/2000/svg">
+ <circle cx="2.5" cy="4.5" r="2.5" fill="#f93" stroke-dasharray="10.0157, 10.0157" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6693" style="paint-order:stroke fill markers"/>
+</svg>
+{% else %}
+
+  {% for sub_nav_item in all_sub_nav_items %}
+    {% if sub_nav_item.parent == nav_item.code %}
+
+      {% if sub_nav_item.warning == 'translate' %}
+        <svg class="bi bi-pen-fill m-0 p-0" width="5" height="16" version="1.1" viewBox="0 0 5 16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+         <circle cx="2.5" cy="4.5" r="2.5" fill="#f34" stroke-dasharray="10.0157, 10.0157" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6693" style="paint-order:stroke fill markers"/>
+        </svg>
+        {% elif not sub_nav_item.display or sub_nav_item.warning_id_exists %}
+        <svg class="bi bi-pen-fill m-0 p-0" width="5" height="16" version="1.1" viewBox="0 0 5 16" xmlns="http://www.w3.org/2000/svg">
+         <circle cx="2.5" cy="4.5" r="2.5" fill="#f93" stroke-dasharray="10.0157, 10.0157" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6693" style="paint-order:stroke fill markers"/>
+        </svg>
+      {% endif %}
+
+    {% endif %}
+  {% endfor %}
+
+{% endif %}

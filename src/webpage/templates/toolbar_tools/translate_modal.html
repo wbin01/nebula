@@ -1,0 +1,187 @@
+
+  <!-- Lang/Translate modal 1 -->
+  <div class="modal fade text-light" data-bs-theme="dark" id="langModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="langModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+
+          {% if post.url != 'new' %}
+          <button class="btn btn-outline-light btn-sm border border-0 mb-2" data-bs-target="#newLangModal2" data-bs-toggle="modal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+            </svg> &nbsp;Add new
+          </button>
+          {% else %}
+          <small>Current title is invalid, please rename it to translate</small>
+          {% endif %}
+
+          <form class="needs-validation" action="{% url 'post' cookie_language post.url %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="ms-2 mt-3">
+
+            {% for lang in languages %}
+            {% if lang.code in post_languages %}
+              <div class="form-check border-bottom border-secondary border-opacity-10 mb-4 me-2">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <input class="form-check-input" type="radio" name="radio-lang" id="{{ lang.code }}{{ post.id }}" value="{{ lang.code }}" {% if post.lang == lang.code %}checked{% endif %}>
+                    <label class="form-check-label" for="{{ lang.code }}{{ post.id }}">
+                      {{ lang.code }}: &nbsp;<span>{{ lang.native_name }}</span> <small class="opacity-50">({{ lang.english_name }})</small>
+                    </label><br>
+                    {% for key, value in post_languages.items %}
+                    {% if key == lang.code %}
+                    <sup class="opacity-25">{{ value.1 }}</sup>
+                    {% endif %}
+                    {% endfor %}
+                  </div>
+
+                  <div>
+                  {% for key, value in post_languages.items %}
+                    {% if key == lang.code %}
+
+                      {% if value.0 %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                      </svg>
+                      {% else %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                        <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
+                        <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
+                      </svg>
+                      {% endif %}
+
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if lang.code not in post_languages %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle text-light text-opacity-25" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                  {% endif %}
+                  </div>
+
+                </div>
+              </div>
+            {% endif %}
+            {% endfor %}
+            </div>
+
+            <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+              </svg>
+            </button>
+
+            <input type="hidden" name="id" value="{{ post.id }}">
+            <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+              </svg>
+            </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div> <!-- Lang/Translate modal 1 end -->
+
+  <!-- Lang/Translate modal 2 -->
+  <div class="modal fade text-light" data-bs-theme="dark" id="newLangModal2" data-bs-backdrop="static" tabindex="-1" aria-labelledby="newLangModal2Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-body">
+
+          <button class="btn btn-outline-light btn-sm border border-0" data-bs-target="#langModal" data-bs-toggle="modal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+              <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+            </svg> &nbsp;Back
+          </button>
+
+          <form class="needs-validation" action="{% url 'post' cookie_language post.url %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="mt-2">
+
+              {% for lang in languages %}
+              {% if lang.code not in post_languages %}
+              <div class="mb-2 mx-2">
+                <input class="form-check-input" type="radio" name="radio-lang" id="{{ lang.code }}1" value="{{ lang.code }}">
+                <label class="form-check-label" for="{{ lang.code }}1">
+                  &nbsp;{{ lang.code }}: &nbsp;<span>{{ lang.native_name }}</span> <small class="opacity-50">({{ lang.english_name }})</small>
+                </label>
+              </div>
+              {% endif %}
+              {% endfor %}
+
+              {% if post_languages|length != languages|length %}
+              <div class="my-0 ms-1 me-2 ps-1 py-1 border border-secondary border-opacity-10 rounded-top-2">
+                <input class="form-check-input collapsed" type="radio" name="radio-lang" id="new-radio-lang" value="new-radio-lang" checked>
+                <label class="form-check-label" for="new-radio-lang">&nbsp;New</label>
+              </div>
+              {% endif %}
+
+              <div class="ms-1 me-2 my-0 ps-1 pt-1 pb-3 {% if post_languages|length != languages|length %}border border-secondary border-opacity-10 rounded-bottom-2 border-top-0{% endif %}">
+
+                <div class="my-0 py-0 mx-4">
+                <label for="new-lang-native-name" class="form-label my-0 py-0">
+                  <small>
+                  Native name:<br><sup class="opacity-50 my-0 py-0">Português, Español, 日本語 . . .</sup>
+                  </small>
+                </label>
+                <input type="text" class="form-control my-0 py-0" id="new-lang-native-name" name="new-lang-native-name">
+                <div class="invalid-feedback">
+                  Please provide a native name
+                </div>
+              </div>
+
+              <div class="mb-0 mt-2 py-0 mx-4">
+                <label for="new-lang-english-name" class="form-label my-0 py-0">
+                  <small>
+                  English name:<br><sup class="opacity-50 my-0 py-0">Portuguese, Spanish, Japanese . . .</sup>
+                  </small>
+                </label>
+                <input type="text" class="form-control my-0 py-0" id="new-lang-english-name" name="new-lang-english-name">
+                <div class="invalid-feedback">
+                  Please provide the english name
+                </div>
+              </div>
+
+              <div class="mb-0 mt-2 py-0 mx-4">
+                <label for="new-lang-code" class="form-label my-0 py-0">
+                  <small>
+                  Lang code:<br><sup class="opacity-50 my-0 py-0">pt-br, &nbsp; es, &nbsp; ja&nbsp;. . .</sup>
+                  </small>
+                </label>
+                <input type="text" class="form-control my-0 py-0" id="new-lang-code" name="new-lang-code">
+                <div class="invalid-feedback">
+                  Please provide the lang code
+                </div>
+              </div>
+
+              </div>
+
+            </div>
+
+            <div class="d-grid gap-2 d-flex justify-content-end mt-2">
+              <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                </svg>
+              </button>
+
+              <input type="hidden" name="id" value="{{ post.id }}">
+              <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Lang/Translate modal 2 end -->

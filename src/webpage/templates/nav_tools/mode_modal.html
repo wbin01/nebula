@@ -1,0 +1,93 @@
+<div class="modal fade text-start" data-bs-theme="dark" id="navItem{{ nav_item.id }}ModeModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="navItem{{ nav_item.id }}ModeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-body text-light">
+
+        <button class="btn btn-outline-light btn-sm border border-0" data-bs-target="#{{ nav_item.id }}" data-bs-toggle="modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+          </svg> &nbsp;Back
+        </button>
+        <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <div class="mx-2 my-0 mt-1 p-0">
+          {% if nav_item.code == 'item' %}
+
+          <p class="text-light text-opacity-50 p-0 m-0 mb-2">
+          <small><small>
+          The <u><b>ID</b></u> <span class="bg-light bg-opacity-10 rounded-1">&nbsp;item&nbsp;</span> is reserved and not visible to the user.
+          Rename it!
+          </small></small>
+          </p>
+          {% else %}
+
+          <p class="p-0 m-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+            <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
+          </svg>
+          Mode<small class="text-light text-opacity-50"><small>&nbsp;({{ nav_item.code }})</small></small>
+          </p>
+
+          <div class="m-0 mt-4 p-0"></div>
+          <h6>Choose page mode</h6>
+
+          <div class="position-relative m-0 d-print-none">
+            <div class="form-check m-0 me-1 mt-2">
+              <small><small>
+              <input class="form-check-input" type="radio" name="nav-item-local-type" id="list" value="list" {% if nav_item.local_type == 'list' %}checked{% endif %}>
+              <label class="form-check-label" for="list">
+                Posts<br>
+                <small class="p-0 m-0 text-light text-opacity-75">
+                  Displays all posts tagged with this category
+                </small>
+              </label>
+              </small></small>
+            </div>
+            <div class="form-check m-0 me-1 mt-2">
+              <small><small>
+              <input class="form-check-input" type="radio" name="nav-item-local-type" id="grid" value="grid" {% if nav_item.local_type == 'grid' %}checked{% endif %}>
+              <label class="form-check-label" for="grid">
+                Sub categories<br>
+                <small class="p-0 m-0 text-light text-opacity-75">
+                  Page with option to create subcategories
+                </small>
+              </label>
+              </small></small>
+            </div>
+            <div class="form-check m-0 me-1 mt-2">
+              <small><small>
+              <input class="form-check-input" type="radio" name="nav-item-local-type" id="content" value="content" {% if nav_item.local_type == 'content' %}checked{% endif %}>
+              <label class="form-check-label" for="content">
+                Text content<br>
+                <small class="p-0 m-0 text-light text-opacity-75">
+                  Page with option to upload an HTML file with the content to be displayed
+                </small>
+              </label>
+              </small></small>
+            </div>
+
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+          </svg>
+        </button>
+
+        <input type="hidden" name="category-name" value="{{ nav_item.code }}">
+        <input type="hidden" name="nav-item-id" value="{{ nav_item.id }}">
+        <button type="submit" name="nav-item-translate" class="btn btn-outline-light btn-sm border border-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+          </svg>
+        </button>
+        </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

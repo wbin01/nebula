@@ -1,0 +1,36 @@
+{% load replace %}
+
+<div class="modal fade" data-bs-theme="dark" id="editTagsModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editTagsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form action="{% url 'post' cookie_language post.url %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="text-light">
+            <label for="tags" class="mb-2">Tags</label>
+            <p class="my-0 py-0"><small>Separate the tags with commas!<br><sup class="opacity-50">(tag 1, tag 2, tag 3)</sup></small></p>
+            </div>
+            <div class="mb-3 mt-1">
+              <input type="text" class="form-control" id="tags" name="tags" value="{{ post.tags|replace:',|, ' }}">
+            </div>
+
+            <div class="d-grid gap-2 d-flex justify-content-end">
+            <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+              </svg>
+            </button>
+
+            <input type="hidden" name="id" value="{{ post.id }}">
+            <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+              </svg>
+            </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

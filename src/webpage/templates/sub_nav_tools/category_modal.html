@@ -1,0 +1,78 @@
+{% load split %}
+<div class="modal fade" data-bs-theme="dark" id="subNavItem{{ sub_nav_item.id }}CategoryModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="subNavItem{{ sub_nav_item.id }}CategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body text-light">
+
+        <button class="btn btn-outline-light btn-sm border border-0" data-bs-target="#sub{{ sub_nav_item.id }}" data-bs-toggle="modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+          </svg> &nbsp;Back
+        </button>
+
+        <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <div class="mx-2 my-0 mt-1">
+        {% if sub_nav_item.code == 'item' %}
+
+        <p class="text-light text-opacity-50 p-0 m-0 mb-2">
+        <small><small>
+        The <u><b>ID</b></u> <span class="bg-light bg-opacity-10 rounded-1">&nbsp;item&nbsp;</span> is reserved and not visible to the user.
+        Rename it!
+        </small></small>
+        </p>
+
+        {% else %}
+        <p class="m-0 mb-2 p-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
+          <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+        </svg>
+        Categories<small class="text-light text-opacity-50"><small>&nbsp;({{ sub_nav_item.code }})</small></small>
+        </p>
+
+        <p class="p-0 m-0 mt-0 text-light text-opacity-75">
+          <small><small><small>
+          Posts with categories chosen below will be displayed by this menu item.
+          </small></small></small>
+        </p>
+        {% for category in categories %}
+          {% if category.code != 'home-highlight' %}
+        <small><small>
+        <span class="form-check form-check-inline text-light text-opacity-75">
+          <input class="form-check-input" type="checkbox" value="" name="{{ category.code }}" id="{{ category.code }}-{{ sub_nav_item.id }}" {% if category.code in sub_nav_item.categories|split:',' %}checked{% endif %}>
+          <label class="form-check-label" for="{{ category.code }}-{{ sub_nav_item.id }}">
+            {{ category.code }}
+          </label>
+        </span>
+        </small></small>
+          {% endif %}
+        {% endfor %}
+<!--        <br>-->
+
+<!--        <label class="m-0 mt-2 p-0 text-light text-opacity-75"><small><small>New categories: <small class="text-light text-opacity-50">Separated by commas</small></small></small></label><br>-->
+<!--        <label class="text-light text-opacity-50"><small><small><small>Only letters and - (category1, category-2)</small></small></small></label>-->
+<!--        <input type="text" class="form-control form-control-sm" id="nav-item-new-category" name="nav-item-new-category">-->
+
+        {% endif %}
+        </div>
+
+        <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+          </svg>
+        </button>
+
+        <input type="hidden" name="nav-item-id" value="{{ sub_nav_item.id }}">
+        <input type="hidden" name="nav-item-category-modal">
+        <button type="submit" name="nav-item-category" class="btn btn-outline-light btn-sm border border-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+          </svg>
+        </button>
+        </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

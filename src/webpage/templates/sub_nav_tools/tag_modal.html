@@ -1,0 +1,58 @@
+<div class="modal fade" data-bs-theme="dark" id="subNavItem{{ sub_nav_item.id }}TagModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="subNavItem{{ sub_nav_item.id }}TagModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body text-light">
+
+        <button class="btn btn-outline-light btn-sm border border-0" data-bs-target="#sub{{ sub_nav_item.id }}" data-bs-toggle="modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+          </svg> &nbsp;Back
+        </button>
+
+        <div class="mx-2 my-0 mt-1">
+        {% if sub_nav_item.url_id == 'item' %}
+
+        <p class="text-light text-opacity-50 p-0 m-0 mb-2">
+        <small><small>
+        The <u><b>ID</b></u> <span class="bg-light bg-opacity-10 rounded-1">&nbsp;item&nbsp;</span> is reserved and not visible to the user.
+        Rename it!
+        </small></small>
+        </p>
+
+        {% else %}
+
+        <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag-fill" viewBox="0 0 16 16">
+          <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+        </svg>
+        Tags<small class="text-light text-opacity-50"><small>&nbsp;({{ sub_nav_item.code }})</small></small></p>
+        <p class="text-light text-opacity-75 my-0 py-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightbulb-fill" viewBox="0 0 16 16">
+            <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/>
+          </svg>
+          <small> ...</small>
+        </p>
+
+        {% endif %}
+        </div>
+
+        <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+          </svg>
+        </button>
+
+        <input type="hidden" name="nav-item-id" value="{{ sub_nav_item.id }}">
+        <input type="hidden" name="nav-item-tag-modal">
+        <button type="submit" name="nav-item-tag" class="btn btn-outline-light btn-sm border border-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+          </svg>
+        </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

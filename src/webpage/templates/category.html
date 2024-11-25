@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load split %}
+{% load dict_key %}
+
+{% block content %}
+{% include '_nav.html'%}
+
+<!-- Cover -->
+{% if nav_item.display_cover %}
+<div class="px-0"> <!-- container -->
+
+  <div class="text-center d-none d-print-block"> <!-- Print page cover image-->
+    <img class="mx-0" style="width:100%;height:100px;object-fit:cover;margin: 0px;" src="{{ nav_item.cover.url }}">
+    <h1>{{ categories_name|dict_key:nav_item.code }}</h1>
+  </div>
+
+  <!-- Cover -->
+  <div class="position-relative mx-0 d-print-none" style="height:100px;width:100%;margin: 0px;">
+    <img class="mx-0" style="width:100%; height:100px; object-fit:cover; margin: 0px;" src="{{ nav_item.cover.url }}">
+
+    <div class="position-absolute top-0 start-0" style="height:100px;width:100%;
+    background: rgb(0,0,0);
+    background: -moz-linear-gradient(0deg, rgba(0,0,0,0.6124649688977153) 0%, rgba(0,0,0,0.42759101931788346) 42%, rgba(20,255,0,0) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.6124649688977153) 0%, rgba(0,0,0,0.42759101931788346) 42%, rgba(20,255,0,0) 100%);
+    background: linear-gradient(0deg, rgba(0,0,0,0.6124649688977153) 0%, rgba(0,0,0,0.42759101931788346) 42%, rgba(20,255,0,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000',endColorstr='#14ff00',GradientType=1);
+    ">
+    </div>
+    <!-- Title -->
+    <div class="container text-center">
+      {% if nav_item.parent %}
+        <a href="{% url 'category' cookie_language nav_item.parent %}" style="position: relative; top: -90px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #AAA;">
+        {{ categories_name|dict_key:nav_item.parent }}
+        </a>
+        <h1 style="position: relative; top: -90px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #DDD;">
+        {{ categories_name|dict_key:nav_item.code }}
+        </h1>
+      {% else %}
+        <h1 style="position: relative; top: -65px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #DDD;">
+        {{ categories_name|dict_key:nav_item.code }}
+        </h1>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% else %}
+
+<div class="container text-center">
+  {% if nav_item.parent %}
+  <small>
+  <a href="{% url 'category' cookie_language nav_item.parent %}" class="m-0 p-0 text-dark text-opacity-50">
+    {{ categories_name|dict_key:nav_item.parent }}
+  </a>
+  </small>
+  <h1 class="mt-0">{{ categories_name|dict_key:nav_item.code }}</h1>
+  {% else %}
+  <h1>{{ categories_name|dict_key:nav_item.code }}</h1>
+  {% endif %}
+</div>
+
+{% endif %}
+<!-- cover end -->
+
+<!-- Edit category page -->
+<div class="text-center" style="position:relative;top:-15px;">
+  {% if user.is_superuser %}
+  {% include 'nav_tools/edit.html'%}
+  {% include 'nav_tools/edit_modal.html'%}
+  {% endif %}
+</div>
+<!-- Edit category page end -->
+
+<div class="container-md mt-0" style="min-height: 500px;">
+  <!-- grid -->
+  {% if nav_item.local_type == 'grid' %}
+  <div class="m-0 p-0">
+  <div class="row row-cols-1 row-cols-md-2 m-0 p-0 g-4">
+
+  {% for sub_nav_item in sub_nav_items %}
+  {% if sub_nav_item.display or user.is_superuser %}
+
+    {% for nav_item_string in nav_items_strings %}
+    {% if nav_item_string.code == sub_nav_item.code and nav_item_string.lang == cookie_language and nav_item_string.subtitle %}
+    </div>
+    <h1 class="m-0 p-0 mt-3 mb-2">{{ nav_item_string.subtitle }}</h1>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+    {% endif %}
+    {% endfor %}
+
+  <div class="col">
+
+    <div class="card card-link-style shadow-sm">
+      <div style="position:absolute;bottom:20px;left:-15px;margin:0px;">
+      {% if user.is_superuser %}
+      {% include 'sub_nav_tools/edit.html'%}
+      {% include 'sub_nav_tools/edit_modal.html'%}
+      {% endif %}
+      </div>
+      <a class="text-decoration-none text-dark" href="{% url 'sub_category' cookie_language sub_nav_item.parent sub_nav_item.code %}">
+      <img src="{{ sub_nav_item.cover.url }}" class="card-img-top" alt="{{ sub_nav_item.code }}" style="width:100%;height:100px;object-fit:cover;margin: 0px;">
+      <div class="card-body">
+        <h5 class="card-title">{{ categories_name|dict_key:sub_nav_item.code }}</h5>
+        <!-- <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
+      </div>
+      <div class="card-grid-link-indicator-bg">
+        <div class="card-grid-link-indicator-middle-bg">
+          <div class="card-grid-link-indicator-fg">
+            &nbsp;
+          </div>
+        </div>
+      </div>
+      </a>
+    </div>
+
+  </div>
+  {% endif %}
+  {% endfor %}
+  </div>
+
+    <!-- Add category button-->
+    {% if user.is_superuser %}
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
+      <div class="col"></div>
+
+      <div class="col" style="min-height: 150px;">
+        <div class="position-relative card-link-style w-100 h-100 align-content-center text-center bg-light rounded border border-secondary border-opacity-25">
+          Add category
+          <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <input type="hidden" name="category-name" value="{{ nav_item.code }}">
+            <input type="hidden" name="add-sub-item">
+            <button type="submit" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+            </svg>
+          </button>
+          </form>
+        </div>
+      </div>
+      <div class="col"></div>
+    </div>
+    {% endif %}
+    <!-- Add category button end-->
+  </div>
+  <!-- grid end -->
+
+  <!-- list -->
+  {% elif nav_item.local_type == 'list' %}
+
+    {% if posts %}
+    {% for post in posts %}
+    <a class="text-decoration-none" href="{% url 'post' cookie_language post.url %}">
+    <div class="card mb-3 mt-3 rounded-0 card-link-style shadow-sm" style="max-width: 100%;">
+      <div class="row g-0">
+        <div class="col-md-3">
+          <img src="{{ post.cover_image_thumb }}" alt="{{ post.title }}" style="width:100%;height:100px;object-fit:cover;margin: 0px;">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h3 style="font-size:17pt;">{{ post.title }}</h3>
+            <!-- <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
+          </div>
+        </div>
+
+        <span class="card-link-indicator-bg">
+          <span class="card-link-indicator-fg">
+            &nbsp;
+          </span>
+        </span>
+
+      </div>
+    </div>
+    </a>
+    {% endfor %}
+
+    {% else %}
+    <div class="col mt-3">
+      <div class="card">
+          <div class="card-body">
+            <p>No articles are available.</p>
+          </div>
+      </div>
+    </div>
+  {% endif %}
+  <!-- list end -->
+
+  <!-- content -->
+  {% elif nav_item.local_type == 'content' %}
+
+  {% if nav_item.content %}
+  <div class="m-0 my-3">
+  {{ nav_item.content|safe }}
+  </div>
+  {% endif %}
+
+  {% if user.is_superuser %}
+  <div class="row">
+    <div class="col">
+      <div class="d-print-none my-1 p-0">
+        <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+          <span class="ms-1 m-0 p-0 text-dark text-opacity-50"><small>Choose 'html' content file</small></span>
+          <div class="row m-0 p-0">
+          <div class="col m-0 p-0 me-2">
+          <div class="input-group">
+            <input type="file" class="form-control" id="content-file" name="content-file">
+          </div>
+          </div>
+
+          <div class="col m-0 p-0">
+            <input type="hidden" name="nav-item-id" value="{{ nav_item.id }}">
+            <input type="hidden" name="category-name" value="{{ nav_item.code }}">
+            <input type="hidden" name="nav-item-content">
+            <button type="submit" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+              </svg>
+            </button>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col"></div>
+  </div>
+  {% endif %}
+
+  {% endif %}
+  <!-- content end -->
+
+</div>
+{% include '_footer.html'%}
+{% endblock %}

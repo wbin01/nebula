@@ -1,0 +1,66 @@
+{% load replace %}
+{% load split %}
+<div class="modal fade" data-bs-theme="dark" id="editCategoryModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form action="{% url 'post' cookie_language post.url %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="text-light">
+            <label class="mb-2">Categories</label>
+            <p>
+              <small><small>
+              <span class="bg-secondary bg-opacity-25 rounded-2">&nbsp;home&nbsp;</span> indicates that the post will be displayed on the website's home page.<br>
+              </small></small>
+            </p>
+            <p>
+              <small><small>
+              <span class="bg-secondary bg-opacity-25 rounded-2">&nbsp;home-highlight&nbsp;</span> indicates that the post will be displayed prominently on the site's home page.
+              </small></small>
+            </p>
+            </div>
+
+            <div class="text-light">
+            {% for category in categories %}
+            {% if category.code in post.categories|split:"," %}
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" value="" name="{{ category.code }}" id="{{ category.code }}0" checked>
+              <label class="form-check-label" for="{{ category.code }}0">
+                {{ category.code }}
+              </label>
+            </div>
+            {% else %}
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" value="" name="{{ category.code }}" id="{{ category.code }}1">
+              <label class="form-check-label" for="{{ category.code }}1">
+                {{ category.code }}
+              </label>
+            </div>
+            {% endif %}
+            {% endfor %}
+            </div>
+
+
+            <div class="d-grid gap-2 d-flex justify-content-end">
+
+            <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+              </svg>
+            </button>
+
+            <input type="hidden" name="id" value="{{ post.id }}">
+            <input type="hidden" name="categories">
+            <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+              </svg>
+            </button>
+
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

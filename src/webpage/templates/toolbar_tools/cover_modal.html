@@ -1,0 +1,47 @@
+
+<div class="modal fade text-light" data-bs-theme="dark" id="editCoverModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editCoverModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form action="{% url 'post' cookie_language post.url %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+          <label for="cover_image" class="mt-4">Cover image</label>
+
+          <div class="me-1 text-light text-opacity-75">
+            <small><small>
+            <small>(1000x400)</small>
+            <img src="{{ post.cover_image.url }}" width="80" height="20" class="m-0 p-0 d-inline-block align-text-top">
+            </small></small>
+          </div>
+
+          <div class="input-group">
+            <input type="file" class="form-control" id="cover_image" name="cover_image">
+          </div>
+
+          <label for="cover-image-credits" class="mt-4">Credits</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="cover-image-credits" name="cover-image-credits" aria-describedby="label-credits" value="{{ post.cover_image_credits }}">
+            <span class="input-group-text" id="label-credits-link">Link</span>
+            <input type="text" class="form-control" id="cover-image-credits-link" name="cover-image-credits-link" aria-describedby="label-credits-link" value="{{ post.cover_image_credits_link }}">
+          </div>
+
+          <div class="d-grid gap-2 d-flex justify-content-end">
+          <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+            </svg>
+          </button>
+
+          <input type="hidden" name="id" value="{{ post.id }}">
+          <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+            </svg>
+          </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

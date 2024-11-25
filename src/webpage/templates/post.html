@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load replace %}
+{% load split %}
+
+{% block content %}
+{% include '_nav.html'%}
+
+<!-- Toolbar -->
+{% if user.is_superuser %}
+<div class="sticky-top d-print-none">
+
+  <div class="row row-cols-auto justify-content-center m-0 p-0">
+    <div class="btn-toolbar m-0 p-0 position-absolute top-0 mt-4" role="toolbar" aria-label="Toolbar with button groups">
+
+      <div class="btn-group m-0 p-0 border border-1 border-light border-opacity-10 rounded-2 mx-1" role="group" aria-label="Translate post">
+        {% include 'toolbar_tools/publish.html' %}
+      </div>
+
+      <div class="btn-group m-0 p-0 border border-1 border-light border-opacity-10 rounded-2 mx-1" role="group" aria-label="Edit post">
+        {% include 'toolbar_tools/cover.html' %}
+        {% include 'toolbar_tools/title.html' %}
+        {% include 'toolbar_tools/content.html' %}
+        {% include 'toolbar_tools/tags.html' %}
+        {% include 'toolbar_tools/categories.html' %}
+        {% include 'toolbar_tools/translate.html' %}
+      </div>
+
+      <div class="btn-group m-0 p-0 border border-1 border-light border-opacity-10 rounded-2 mx-1" role="group" aria-label="Publish post">
+        {% include 'toolbar_tools/delete.html' %}
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Translate -->
+{% include 'toolbar_tools/translate_modal.html' %}
+
+<!-- Cover -->
+{% include 'toolbar_tools/cover_modal.html' %}
+<!-- Title -->
+{% include 'toolbar_tools/title_modal.html' %}
+<!-- Content -->
+{% include 'toolbar_tools/content_modal.html' %}
+<!-- Tags -->
+{% include 'toolbar_tools/tags_modal.html' %}
+<!-- Category -->
+{% include 'toolbar_tools/categories_modal.html' %}
+
+<!-- Delete -->
+{% include 'toolbar_tools/delete_modal.html' %}
+<!-- Published -->
+{% include 'toolbar_tools/publish_modal.html' %}
+
+{% endif %}
+<!-- Toolbar end -->
+
+<!-- Cover -->
+<div style="background: #222;">
+<div class="px-0"> <!-- container -->
+  <div class="d-none d-print-block"> <!-- Print page cover image-->
+    {% if not post.cover_image.url %}
+    <img class="mx-0" style="width:100%;height:350px;object-fit:cover;margin: 0px;" src="{% static 'landscape-h.png' %}">
+    {% else %}
+    <img class="mx-0" style="width:100%;height:350px;object-fit:cover;margin: 0px;" src="{{ post.cover_image.url }}">
+    {% endif %}
+    {% if post.cover_image_credits %}
+    <div class="text-dark text-opacity-50 text-end m-0 p-0"><sup>{{ post.cover_image_credits }}</sup></div>
+
+    {% endif %}
+    <h1 class="text-center">{{ post.title }}</h1>
+  </div>
+
+  <!-- Cover -->
+  <div class="position-relative mx-0 d-print-none" style="height:350px;width:100%;margin: 0px;">
+
+    {% if not post.cover_image.url %}
+    <img class="mx-0" style="width:100%;height:350px;object-fit:cover;margin: 0px;" src="{% static 'landscape-h.png' %}">
+    {% else %}
+    <img class="mx-0" style="width:100%;height:350px;object-fit:cover;margin: 0px;" src="{{ post.cover_image.url }}">
+    {% endif %}
+
+    <div class="position-absolute top-0 start-0" style="height:350px;width:100%;
+    background: rgb(0,0,0);
+    background: -moz-linear-gradient(0deg, rgba(0,0,0,0.39677869438791147) 0%, rgba(0,0,0,0.20070026301536237) 25%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.39677869438791147) 0%, rgba(0,0,0,0.20070026301536237) 25%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(0deg, rgba(0,0,0,0.39677869438791147) 0%, rgba(0,0,0,0.20070026301536237) 25%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000',endColorstr='#000000',GradientType=1);
+    "></div>
+
+    {% if post.warning %}
+      <div class="position-absolute bottom-50 start-0 w-100">
+        <div class="position-relative p-3 mt-5 mx-5 text-light bg-danger bg-opacity-50 border border-danger rounded-3 d-flex justify-content-between">
+
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+          </svg>&nbsp;
+          {{ post.warning }}
+          </div>
+          <div>
+            <a href="{% url 'post' cookie_language post.url %}" class="text-decoration-none text-light">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+            </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    {% elif post.title|lower == 'new' %}
+      <div class="position-absolute bottom-50 start-0 w-100">
+
+        <div class="position-relative mt-5 mx-5 text-light d-flex justify-content-between">
+          <div>&nbsp;</div>
+          <div class="bg-warning bg-opacity-50 border border-warning border-opacity-75 rounded-3 p-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+          </svg>&nbsp;
+          Rename the title to save the content as a valid post.
+          </div>
+          <div>&nbsp;</div>
+        </div>
+
+      </div>
+    {% endif %}
+
+    <!-- Title -->
+    <div class="container text-center post-cover-title"> <!-- position-absolute bottom-0 start-0 mb-2 -->
+        <h1>
+          {{ post.title }}
+        </h1>
+    </div>
+
+  </div>
+<!-- cover end -->
+
+</div>
+</div>
+<!-- Cover end -->
+
+<!-- Content -->
+<div class="container-md px-0">
+<div class="position-relative my-0 mx-0 px-4 pb-4 post_stl" style="background: rgb(220, 220, 220);margin:0px;">
+  {% if post.cover_image_credits and not post.cover_image_credits_link %}
+  <div class="text-dark text-end my-0 mx-0 py-0 opacity-50 d-print-none">
+    <sup>{{ post.cover_image_credits }}</sup>
+  </div>
+  {% elif post.cover_image_credits and post.cover_image_credits_link %}
+  <div class="text-end my-0 mx-0 py-0 opacity-50 d-print-none">
+    <sup>
+      <a href="{{ post.cover_image_credits_link }}" target="_blank" class="text-decoration-none text-dark">
+        {{ post.cover_image_credits }}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+          <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+          <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+        </svg>
+      </a>
+    </sup>
+  </div>
+  {% else %}
+  <div class="text-dark text-end my-0 mx-0 py-0 opacity-50 d-print-none">
+    <sup>&nbsp;</sup>
+  </div>
+  {% endif %}
+
+  <div class="d-flex justify-content-between py-0 my-0">
+  <p class="py-0 my-0 opacity-25 d-print-none">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+      <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+    </svg>&nbsp;&nbsp;<small>{{ post.update_date }}</small>
+  </p>
+
+  <!-- Lang/Translate user col -->
+  {% if post_languages|length > 1 %}
+  <div class="py-0 my-0 d-print-none">
+    <button type="button" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25" data-bs-toggle="modal" data-bs-target="#langUserModal">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-translate" viewBox="0 0 16 16">
+        <path d="M4.545 6.714 4.11 8H3l1.862-5h1.284L8 8H6.833l-.435-1.286zm1.634-.736L5.5 3.956h-.049l-.679 2.022z"/>
+        <path d="M0 2a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v3h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zm7.138 9.995q.289.451.63.846c-.748.575-1.673 1.001-2.768 1.292.178.217.451.635.555.867 1.125-.359 2.08-.844 2.886-1.494.777.665 1.739 1.165 2.93 1.472.133-.254.414-.673.629-.89-1.125-.253-2.057-.694-2.82-1.284.681-.747 1.222-1.651 1.621-2.757H14V8h-3v1.047h.765c-.318.844-.74 1.546-1.272 2.13a6 6 0 0 1-.415-.492 2 2 0 0 1-.94.31"/>
+      </svg>
+      {{ post.lang }}
+    </button>
+    <!-- Lang/Translate user modal -->
+    <div class="modal fade text-light" data-bs-theme="dark" id="langUserModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="langUserModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+
+            <form action="{% url 'post' cookie_language post.url %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+              <div class="ms-2 mt-3">
+              {% for post_lang in languages %}
+
+                {% if post_lang.code in post_languages %}
+                <div class="form-check border-bottom border-secondary border-opacity-10 mb-4 me-2">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <input class="form-check-input" type="radio" name="radio-lang" id="{{ post_lang.code }}0" value="{{ post_lang.code }}" {% if post.lang == post_lang.code %}checked{% endif %}>
+                      <label class="form-check-label" for="{{ post_lang.code }}0">
+                        {{ post_lang.code }}: &nbsp;{{ post_lang.native_name }} <small class="opacity-50">({{ post_lang.english_name }})</small>
+                      </label>
+                      <br>
+                      {% for key, value in post_languages.items %}
+                      {% if post_lang.code in key %}
+                      <sup class="opacity-25">{{ value.1 }}</sup>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+
+                    <div>
+                      &nbsp;
+                    </div>
+
+                  </div>
+                </div>
+                {% endif %}
+
+              {% endfor %}
+              </div>
+
+              <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+              <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                </svg>
+              </button>
+
+              <input type="hidden" name="id" value="{{ post.id }}">
+              <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                </svg>
+              </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div> <!-- Lang/Translate user modal end -->
+  </div> <!-- Lang/Translate user end -->
+  {% endif %}
+
+  </div>
+
+  <div style="min-height:300px;">
+    {% if not post.content %}
+      Content...
+    {% else %}
+      {{ post.content | safe }}
+    {% endif %}
+  </div>
+
+</div>
+
+<div class="container-md d-print-none px-0">
+<div class="position-relative my-0 mx-0 tag-category" style="background: rgb(220, 220, 220);margin:0px;">
+  <!-- Tags -->
+
+  <div class="row row-cols-auto ms-1 ps-2 pb-4"><span class="opacity-50">{% if post.tags %}Tags:{% else %}&nbsp;{% endif %}</span>
+  {% if post.tags %}
+  {% for tag in post.tags|split:',' %}
+    <div class="col mx-2 px-0">
+      <a href="{% url 'tag' cookie_language tag %}">
+        <svg class="bi bi-file-earmark-plus" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="8" cy="7" r="3" fill="#dcdcdc" stroke-dasharray="7.21134, 7.21134" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2019" style="paint-order:stroke fill markers"/>
+        </svg>
+        {{ tag }}&nbsp;
+      </a>
+    </div>
+  {% endfor %}
+  {% endif %}
+  </div>
+
+
+</div>
+</div>
+
+</div>
+
+
+{% include '_footer.html'%}
+{% endblock %}
