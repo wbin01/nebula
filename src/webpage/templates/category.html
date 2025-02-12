@@ -187,48 +187,21 @@
   {% endif %}
   <!-- list end -->
 
-  <!-- content -->
+  <!-- Post content -->
   {% elif nav_item.local_type == 'content' %}
 
-  {% if nav_item.content %}
-  <div class="m-0 my-3">
-  {{ nav_item.content|safe }}
-  </div>
-  {% endif %}
+    {% if posts %}
+      {% for post in posts %}
 
-  {% if user.is_superuser %}
-  <div class="row">
-    <div class="col">
-      <div class="d-print-none my-1 p-0">
-        <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-          <span class="ms-1 m-0 p-0 text-dark text-opacity-50"><small>Choose 'html' content file</small></span>
-          <div class="row m-0 p-0">
-          <div class="col m-0 p-0 me-2">
-          <div class="input-group">
-            <input type="file" class="form-control" id="content-file" name="content-file">
-          </div>
-          </div>
+        {% if nav_item.code in post.categories and post.lang == cookie_language %}
+        <p>{{ post.content|safe }}</p>
+        {% endif %}
 
-          <div class="col m-0 p-0">
-            <input type="hidden" name="nav-item-id" value="{{ nav_item.id }}">
-            <input type="hidden" name="category-name" value="{{ nav_item.code }}">
-            <input type="hidden" name="nav-item-content">
-            <button type="submit" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-              </svg>
-            </button>
-          </div>
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="col"></div>
-  </div>
-  {% endif %}
+      {% endfor %}
+    {% endif %}
 
+  <!-- Post content -->
   {% endif %}
-  <!-- content end -->
 
 </div>
 {% include '_footer.html'%}
