@@ -148,26 +148,45 @@
     <!-- Nav Item -->
     <div class="m-0 p-0 nav-text">
       {% for nav_item in nav_items %}
-      <span class="my-0 mx-1 p-0 text-start">
         {% if user.is_superuser %}
-        {% include 'nav_tools/warning.html'%}
-        {% endif %}
+          <span class="my-0 mx-1 p-0 text-start">
+            {% include 'nav_tools/warning.html'%}
+            <a class="navbar-brand m-0 p-0 text-align-middle" href="{% url 'category' cookie_language nav_item.code %}">
+              {% if nav_item.display_image and nav_item.img_type == 'image' %}
+              <img src="{{ nav_item.image.url }}" alt="{{ nav_item.code }} icon" width="60" height="30" class="m-0 p-0 d-inline-block align-text-top">
+              {% elif nav_item.display_image and nav_item.img_type == 'icon' %}
+              <img src="{{ nav_item.icon.url }}" alt="{{ nav_item.code }} icon" width="30" height="30" class="m-0 p-0 d-inline-block align-text-top">
+              {% endif %}
 
-        <a class="navbar-brand m-0 p-0 text-align-middle" href="{% url 'category' cookie_language nav_item.code %}">
-          {% if nav_item.display_image and nav_item.img_type == 'image' %}
-          <img src="{{ nav_item.image.url }}" alt="{{ nav_item.code }} icon" width="60" height="30" class="m-0 p-0 d-inline-block align-text-top">
-          {% elif nav_item.display_image and nav_item.img_type == 'icon' %}
-          <img src="{{ nav_item.icon.url }}" alt="{{ nav_item.code }} icon" width="30" height="30" class="m-0 p-0 d-inline-block align-text-top">
-          {% endif %}
+              {% if nav_item.display_text %}
+              <span style="color:{{ style.nav_items_fg }};" onMouseOver="this.style.color='{{ style.nav_items_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_items_fg }}'">
+                {{ categories_name|dict_key:nav_item.code }}
+              </span>
+              {% endif %}
+            </a>
+          </span>
 
-          {% if nav_item.display_text %}
-          <span style="color:{{ style.nav_items_fg }};" onMouseOver="this.style.color='{{ style.nav_items_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_items_fg }}'">
-            {{ categories_name|dict_key:nav_item.code }}
+        {% else %}
+
+          {% if nav_item.display %}
+          <span class="my-0 mx-1 p-0 text-start">
+            <a class="navbar-brand m-0 p-0 text-align-middle" href="{% url 'category' cookie_language nav_item.code %}">
+              {% if nav_item.display_image and nav_item.img_type == 'image' %}
+              <img src="{{ nav_item.image.url }}" alt="{{ nav_item.code }} icon" width="60" height="30" class="m-0 p-0 d-inline-block align-text-top">
+              {% elif nav_item.display_image and nav_item.img_type == 'icon' %}
+              <img src="{{ nav_item.icon.url }}" alt="{{ nav_item.code }} icon" width="30" height="30" class="m-0 p-0 d-inline-block align-text-top">
+              {% endif %}
+
+              {% if nav_item.display_text %}
+              <span style="color:{{ style.nav_items_fg }};" onMouseOver="this.style.color='{{ style.nav_items_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_items_fg }}'">
+                {{ categories_name|dict_key:nav_item.code }}
+              </span>
+              {% endif %}
+            </a>
           </span>
           {% endif %}
-        </a>
 
-      </span>
+        {% endif %}
       {% endfor %}
 
       {% if user.is_superuser %}
