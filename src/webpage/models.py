@@ -42,9 +42,6 @@ class NavItemString(models.Model):
 class NavItem(models.Model):
     categories = models.CharField(default='', max_length=500)
     code = models.CharField(default='item', max_length=100)
-    content = models.TextField(default='')
-    content_file = models.FileField(
-        default='', upload_to='category_content_doc/')
     cover = ResizedImageField(
         default='/category_image/defaults/nav-cover.png',
         size=[1000, 100], crop=['middle', 'center'],
@@ -62,7 +59,7 @@ class NavItem(models.Model):
         size=[60, 30], crop=['middle', 'center'],
         upload_to='category_image/', blank=True)
     img_type = models.CharField(default='icon', max_length=500)
-    index = models.IntegerField(default=0)
+    index = models.IntegerField(default=1)
     local = models.CharField(
         default='menu', max_length=200)  # 'category'
     local_type = models.CharField(

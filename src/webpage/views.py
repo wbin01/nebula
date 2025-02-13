@@ -266,28 +266,6 @@ def category(request, lang, category_name):
             nav_item.local_type = request.POST['nav-item-local-type']
             nav_item.save()
 
-        if 'nav-item-content' in request.POST:
-            if ('content-file' in request.FILES and
-                    request.FILES['content-file'].name.lower().endswith('.html')):
-                nav_item.content_file = request.FILES['content-file']
-                nav_item.save()
-
-                path_file = (
-                        pathlib.Path(
-                            __file__).resolve().parent.parent.as_posix() +
-                        nav_item.content_file.url)
-
-                if path_file.endswith('.html'):
-                    with open(path_file, 'r') as html_file:
-                        html = html_mdl.clear_style(html_file.read())
-                        html = html_mdl.image(html)
-                        html = html_mdl.ref_button(html)
-                        html = html_mdl.ref_content(html)
-
-                        nav_item.content = html
-                        nav_item.save()
-                        os.remove(path_file)
-
         if 'nav-item-delete-modal' not in request.POST:
             nav_item.save()
 
