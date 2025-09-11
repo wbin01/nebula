@@ -375,6 +375,25 @@ def post(request, lang, url):
                 os.remove(path_file)
                 os.remove(input_file)
                 os.remove(output_file)
+        
+        if ('content_file' in request.FILES and
+                request.FILES['content_file'].name.lower().endswith('.html')):
+            post_obj.content_file = request.FILES['content_file']
+            post_obj.save()
+
+            path_file = (
+                pathlib.Path(__file__).resolve().parent.parent.as_posix() +
+                post_obj.content_file.url)
+
+            with open(path_file, 'r') as html_file:
+                html = html_mdl.clear_style(html_file.read())
+                html = html_mdl.image(html)
+                html = html_mdl.ref_button(html)
+                html = html_mdl.ref_content(html)
+
+                post_obj.content = html
+                post_obj.save()
+                os.remove(path_file)
 
         if 'tags' in request.POST:
             tags = request.POST['tags'].replace(

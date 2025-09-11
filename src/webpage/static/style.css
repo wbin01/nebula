@@ -7,6 +7,10 @@
     src: url("static/Newsreader_14pt-Light.ttf") format("truetype");
 }
 @font-face {
+    font-family: "Newsreader 14pt ExtraLight";
+    src: url("static/Newsreader_14pt-ExtraLight.ttf") format("truetype");
+}
+@font-face {
     font-family: "Newsreader Italic";
     src: url("Newsreader-Italic-VariableFont_opsz,wght.ttf") format("truetype");
 }
@@ -168,7 +172,8 @@ body {
 }
 .post_stl p {
     font-family: "Newsreader 14pt Light";
-    font-size: 12pt;
+    font-size: 14pt;
+    color: #222;
 }
 .post_stl img {
     border: 5px solid rgba(0, 0, 0, 0);
@@ -199,18 +204,29 @@ body {
     text-decoration: none;
 }
 
-.style-link a, .style-link a:link, .style-link a:active, .style-link a:visited {
-    text-decoration: none;
+a.stylelink, a.stylelink:link, a.stylelink:active, a.stylelink:visited {
+    /*text-decoration: none;*/
+    text-decoration-color: rgba(31, 92, 171, 0.4);
     padding: 1px 2px 1px 2px;
-    color: black;
-    box-shadow: inset 0 -3px 0 -1px black;
+    color: #194C8B;
+    box-shadow: inset 0 -1px 0 -1px #194C8B;
+    /*box-shadow: inset 0 -3px 0 -1px black;*/
     transition: box-shadow .15s ease-in-out;
 }
-.style-link a:hover {
+a.stylelink:hover {
+    text-decoration: none;
     color: white;
-    box-shadow: inset 0 -40px 0 -1px black;
+    box-shadow: inset 0 -40px 0 -1px #194C8B;
 }
-
+a.ref_plus_button, a.ref_plus_button:link, a.ref_plus_button:active, a.ref_plus_button:visited {
+    text-decoration: none;
+    text-decoration-color: rgba(31, 92, 171, 0.4);
+    color: #2A5073;
+}
+a.ref_plus_button:hover {
+    text-decoration: none;
+    color: #416b87;
+}
 .inverted-style-link a, .inverted-style-link a:link, .inverted-style-link a:active, .inverted-style-link a:visited {
     text-decoration: none;
     padding: 1px 2px 1px 2px;

@@ -65,6 +65,7 @@ class NavItem(models.Model):
     local_type = models.CharField(  # list, grid or content
         default='list', max_length=200)
     parent = models.CharField(default='', max_length=200)
+    posts_by_index = models.BooleanField(default=False)
     warning = models.CharField(default='', max_length=200)
     warning_id_exists = models.IntegerField(default=0)
 
