@@ -83,4 +83,8 @@ def upd_subtitle(
             nav_i_s = NavItemString.objects.get(
                 code=nav_item.code, lang=lang.code)
             nav_i_s.subtitle = request.POST[lang.code].strip()
+
+            if '-' in nav_i_s.subtitle:
+                nav_i_s.summary = nav_i_s.subtitle.split('-')[1].strip()
+
             nav_i_s.save()

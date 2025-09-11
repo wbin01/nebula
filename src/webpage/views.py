@@ -6,6 +6,9 @@ import re
 import string
 from sys import modules
 
+import pypandoc  # sudo apt install pandoc && python -m pip install pypandoc
+from docx import Document
+
 # from email.policy import default
 # from http.client import HTTPResponse
 from django.core.files.base import File, ContentFile
@@ -337,7 +340,7 @@ def post(request, lang, url):
             post_obj.cover_image_credits_link = request.POST[
                 'cover-image-credits-link']
         if ('content_file' in request.FILES and
-                request.FILES['content_file'].name.lower().endswith('.html')):
+                request.FILES['content_file'].name.lower().endswith('.docx')):
             post_obj.content_file = request.FILES['content_file']
             post_obj.save()
 
@@ -345,16 +348,33 @@ def post(request, lang, url):
                 pathlib.Path(__file__).resolve().parent.parent.as_posix() +
                 post_obj.content_file.url)
 
-            if path_file.endswith('.html'):
-                with open(path_file, 'r') as html_file:
-                    html = html_mdl.clear_style(html_file.read())
-                    html = html_mdl.image(html)
-                    html = html_mdl.ref_button(html)
-                    html = html_mdl.ref_content(html)
+            input_file = path_file
+            output_file = input_file.replace('.docx', '_valid.docx')
 
-                    post_obj.content = html
-                    post_obj.save()
-                    os.remove(path_file)
+            doc = Document(input_file)
+            doc.save(output_file)
+
+            input_file = output_file
+            output_file = input_file.replace('_valid.docx', '.html')
+
+            pypandoc.convert_file(
+                input_file,
+                format="docx",
+                to="html",
+                outputfile=output_file,
+                extra_args=['--standalone', '--embed-resources'],)
+
+            with open(output_file, 'r') as html_file:
+                html = html_mdl.clear_style(html_file.read())
+                html = html_mdl.image(html)
+                html = html_mdl.ref_button(html)
+                html = html_mdl.ref_content(html)
+
+                post_obj.content = html
+                post_obj.save()
+                os.remove(path_file)
+                os.remove(input_file)
+                os.remove(output_file)
 
         if 'tags' in request.POST:
             tags = request.POST['tags'].replace(
@@ -399,7 +419,7 @@ def post(request, lang, url):
                 new_lang_post.cover_image = post_obj.cover_image
                 new_lang_post.cover_image_credits = post_obj.cover_image_credits
                 new_lang_post.cover_image_credits_link = post_obj.cover_image_credits_link
-                new_lang_post.cover_image = post_obj.cover_image
+                new_lang_post.cover_image_thumb = post_obj.cover_image_thumb
                 new_lang_post.content = post_obj.content
                 new_lang_post.categories = post_obj.categories
                 new_lang_post.tags = post_obj.tags
@@ -429,7 +449,7 @@ def post(request, lang, url):
                 new_lang_post.cover_image = post_obj.cover_image
                 new_lang_post.cover_image_credits = post_obj.cover_image_credits
                 new_lang_post.cover_image_credits_link = post_obj.cover_image_credits_link
-                new_lang_post.cover_image = post_obj.cover_image
+                new_lang_post.cover_image_thumb = post_obj.cover_image_thumb
                 new_lang_post.content = post_obj.content
                 new_lang_post.categories = post_obj.categories
                 new_lang_post.tags = post_obj.tags

@@ -76,12 +76,12 @@ body {
     border-radius: 50%;
     width:26px;
     height:26px;
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(240, 240, 240);
 }
 .card-link-style:hover .card-grid-link-indicator-fg {
-    background-color: black;
+    background-color: rgb(240, 240, 240);
 }
-
+/*
 .card-link-style .card-link-indicator-fg {
     position: absolute;
     width: 10px;
@@ -96,7 +96,34 @@ body {
     background-color: #000;
     border: 1px solid rgb(220, 220, 220);
 }
-
+*/
+/*
+.card-link-style .card-link-indicator-fg {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 50%;
+    margin-top: -15px;
+    left: -15px;
+    background-color: rgba(0, 0, 0, 0);
+    border: 3px solid rgba(0, 0, 0, 0);
+    border-radius: 15px 15px 15px 15px;
+}
+.card-link-style:hover .card-link-indicator-fg {
+    background-color: #000;
+    border: 3px solid rgb(220, 220, 220);
+}
+*/
+.card-link-style .card-link-indicator-fg {
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    top: 0px;
+    background-color: rgba(0, 0, 0, 0);
+}
+.card-link-style:hover .card-link-indicator-fg {
+    backdrop-filter: invert(70%);
+}
 .post-cover-title h1{
     font-family: "OpenSans-SemiBold";
     position: relative;

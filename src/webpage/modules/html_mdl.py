@@ -23,6 +23,12 @@ def image(html: str) -> str:
 
 
 def ref_button(html: str) -> str:
+    # {+1 ? }     ->  ?
+    # {+1 + }     ->  +
+    # {+1 }       ->  +
+    # {+1 text }  ->  text
+
+    # {-1 ... }
     references = re.findall(r'\{\+\d+[^}]*}', html)
     question_svg = (
         '<svg width="13" height="13" fill="currentColor" version="1.1" '
@@ -112,7 +118,7 @@ def clear_style(html:str) -> str:
 
     html = re.sub(r'font-family:[^;]+;','', html)
     html = re.sub(r'font-size:[^;]+;','', html)
-    return clear_tag_a(html)
+    return clear_tag_mark(clear_tag_a(html))
 
 
 def clear_tag_a(html: str) -> str:
@@ -151,3 +157,8 @@ def clear_tag_h(html: str) -> str:
         html = html.replace(h, new_h.replace('<span>', '').replace('</span>', ''))
 
     return html
+
+def clear_tag_mark(html: str) -> str:
+    return html.replace(
+        '<p><mark>', '').replace('</mark></p>', ''
+        ).replace('<mark>', '').replace('</mark>', '')

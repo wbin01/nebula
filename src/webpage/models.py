@@ -60,10 +60,10 @@ class NavItem(models.Model):
         upload_to='category_image/', blank=True)
     img_type = models.CharField(default='icon', max_length=500)
     index = models.IntegerField(default=1)
-    local = models.CharField(
-        default='menu', max_length=200)  # 'category'
-    local_type = models.CharField(
-        default='list', max_length=200) # 'grid' 'content'
+    local = models.CharField(  # menu or category
+        default='menu', max_length=200)
+    local_type = models.CharField(  # list, grid or content
+        default='list', max_length=200)
     parent = models.CharField(default='', max_length=200)
     warning = models.CharField(default='', max_length=200)
     warning_id_exists = models.IntegerField(default=0)
@@ -119,6 +119,7 @@ class PageStyle(models.Model):
 class Post(models.Model):
     categories = models.CharField(
         default='home,home-highlight', max_length=200)
+    code = models.CharField(default='TR0', max_length=20)
     content = models.TextField(default='')
     content_file = models.FileField(default='', upload_to='content_doc/')
     cover_image = ResizedImageField(
@@ -133,11 +134,11 @@ class Post(models.Model):
         default='https://www.nasa.gov/nasa-brand-center/images-and-media/',
         max_length=200)
     display = models.BooleanField(default=False)
+    index = models.IntegerField(default=1)
     lang = models.CharField(default='en', max_length=50)
     publication_date = models.DateTimeField(default=timezone.now)
     tags = models.CharField(default='', max_length=200)
     title = models.CharField(default='New', max_length=90)
-    code = models.CharField(default='TR0', max_length=20)
     update_date = models.DateTimeField(default=timezone.now)
     url = models.CharField(default='new', max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

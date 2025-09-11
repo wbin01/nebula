@@ -5,6 +5,7 @@
 {% load dict_key %}
 
 {% block content %}
+
 {% include '_nav.html'%}
 
 <!-- Cover -->
@@ -86,7 +87,8 @@
     {% for nav_item_string in nav_items_strings %}
     {% if nav_item_string.code == sub_nav_item.code and nav_item_string.lang == cookie_language and nav_item_string.subtitle %}
     </div>
-    <h1 class="m-0 p-0 mt-3 mb-2">{{ nav_item_string.subtitle }}</h1>
+    <h1 class="m-0 p-0 mt-3 mb-2">{{ nav_item_string.subtitle|split:"-|0" }}</h1>
+    <h5 class="m-0 p-0 mt-3 mb-2 ms-2">{{ nav_item_string.summary }}</h5>
     <div class="row row-cols-1 row-cols-md-2 g-4">
     {% endif %}
     {% endfor %}
