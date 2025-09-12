@@ -15,16 +15,16 @@
         method="post" enctype="multipart/form-data">{% csrf_token %}
 
         <label for="favicon_image" class="mt-4"><h4>Favicon image</h4></label>
-        <div class="me-1 text-opacity-75">
-          <img src="{{ settings.favicon.url }}" width="16" height="16" class="m-0 ms-1 mb-1 p-0 d-inline-block align-text-center"> (16x16)
+        <div class="text-opacity-75">
+          <img src="{{ settings.favicon.url }}" width="16" height="16" class="m-0 mb-1 p-0 d-inline-block align-text-center"> (16x16) <span class="opacity-50">&nbsp;png &nbsp;jpg &nbsp;jpeg</span>
         </div>
         <div class="input-group">
           <input type="file" class="form-control" id="favicon_image" name="favicon_image">
         </div>
 
         <label for="logo_image" class="mt-4"><h4>Logo image</h4></label>
-        <div class="me-1 text-opacity-75">
-          <img src="{{ settings.logo.url }}" width="30" height="30" class="m-0 ms-1 mb-1 p-0 d-inline-block align-text-center"> (30x30)
+        <div class="text-opacity-75">
+          <img src="{{ settings.logo.url }}" width="30" height="30" class="m-0 mb-1 p-0 d-inline-block align-text-center"> (30x30) <span class="opacity-50">&nbsp;png &nbsp;jpg &nbsp;jpeg</span>
         </div>
         <div class="input-group">
           <input type="file" class="form-control" id="logo_image" name="logo_image">
@@ -36,8 +36,8 @@
         </span>
 
         <label for="brand_image" class="mt-4"><h4>Brand image</h4></label>
-        <div class="me-1 text-opacity-75">
-          <img src="{{ settings.brand.url }}" width="100" height="30" class="m-0 ms-1 mb-1 p-0 d-inline-block align-text-center"> (100x30)
+        <div class="text-opacity-75">
+          <img src="{{ settings.brand.url }}" width="100" height="30" class="m-0 mb-1 p-0 d-inline-block align-text-center"> (100x30) <span class="opacity-50">&nbsp;png &nbsp;jpg &nbsp;jpeg</span>
         </div>
         <div class="input-group">
           <input type="file" class="form-control" id="brand_image" name="brand_image">
@@ -58,6 +58,14 @@
             {% if settings.display_name %}checked{% endif %}>
           <label class="form-check-label text-opacity-75" for="display_page_name">Display page name</label>
         </span>
+
+        <div class="my-5 mx-2 d-flex align-items-end flex-column">
+          <button type="submit" name="settings_brand" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+            </svg> Save
+          </button>
+        </div>
       
     </form>
   </div>

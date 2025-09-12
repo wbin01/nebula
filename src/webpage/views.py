@@ -375,7 +375,7 @@ def post(request, lang, url):
                 os.remove(path_file)
                 os.remove(input_file)
                 os.remove(output_file)
-        
+
         if ('content_file' in request.FILES and
                 request.FILES['content_file'].name.lower().endswith('.html')):
             post_obj.content_file = request.FILES['content_file']
@@ -629,6 +629,52 @@ def settings(request, lang, text='resume'):
 
                 return response
             return redirect('index', context['cookie_language'])
+
+
+        if 'settings_brand' in request.POST:
+            settings = PageSetting.objects.all()[0]
+            rm_favicon, rm_logo, rm_brand = None, None, None
+            path = pathlib.Path(__file__).resolve().parent.parent
+
+            if 'favicon_image' in request.FILES:
+                if '/defaults/' not in settings.favicon.url:
+                    rm_favicon = settings.favicon.url
+                settings.favicon = request.FILES['favicon_image']
+
+            if 'logo_image' in request.FILES:
+                if '/defaults/' not in settings.logo.url:
+                    rm_logo = settings.logo.url
+                settings.logo = request.FILES['logo_image']
+
+            settings.display_logo = False
+            if 'display_logo' in request.POST:
+                settings.display_logo = True
+
+            if 'brand_image' in request.FILES:
+                if '/defaults/' not in settings.brand.url:
+                    rm_brand = settings.brand.url
+                settings.brand = request.FILES['brand_image']
+
+            settings.display_brand = False
+            if 'display_brand' in request.POST:
+                settings.display_brand = True
+
+            if 'page_name' in request.POST:
+                settings.name = request.POST['page_name']
+
+            settings.display_name = False
+            if 'display_page_name' in request.POST:
+                settings.display_name = True
+            
+            settings.save()
+            if rm_favicon:
+                os.remove(path.as_posix() + rm_favicon)
+            if rm_logo:
+                os.remove(path.as_posix() + rm_logo)
+            if rm_brand:
+                os.remove(path.as_posix() + rm_brand)
+
+            return redirect('settings', context['cookie_language'], 'brand')
 
     return render(request, 'settings.html', context)
 
