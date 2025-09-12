@@ -90,7 +90,22 @@ class Language(models.Model):
 
 
 class PageSetting(models.Model):
+    brand = ResizedImageField(
+        default='/category_image/defaults/brand.svg',
+        size=[100, 30], crop=['middle', 'center'],
+        upload_to='category_image/', blank=True)
+    display_brand = models.BooleanField(default=False)
+    display_logo = models.BooleanField(default=True)
+    display_name = models.BooleanField(default=False)
+    favicon = ResizedImageField(
+        default='/category_image/defaults/favicon.svg',
+        size=[16, 16], crop=['middle', 'center'],
+        upload_to='category_image/', blank=True)
     lang = models.ForeignKey(Language, on_delete=models.CASCADE)
+    logo = ResizedImageField(
+        default='/category_image/defaults/logo.svg',
+        size=[30, 30], crop=['middle', 'center'],
+        upload_to='category_image/', blank=True)
     name = models.CharField(default="Nebula", max_length=200)
     style = models.IntegerField(default=1)
 

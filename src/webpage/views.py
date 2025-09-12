@@ -582,7 +582,7 @@ def settings(request, lang, text='resume'):
     context['path'] = text
 
     if request.method == 'GET':
-        if text == 'header':
+        if text == 'brand':
             pass
 
         elif text == 'posts':

@@ -4,12 +4,24 @@
 {% load dict_key %}
 
 <div class="d-print-none m-0 p-0" style="background-color:{{ style.nav_top_bg }};">
-  <nav class="navbar m-0 p-0  text-light">
+  <nav class="navbar m-0 p-0 text-light">
 
-    <div class="m-0 p-0 ms-3 me-4 mt-1 mb-1 img-hover-highlight">
-      <a class="navbar-brand nav-bg" href="{% url 'index' cookie_language %}">
-        <img src="{% static 'nav-logo.svg' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+    <div class="m-0 p-0 mt-1 ms-3 me-4 align-middle">
+      {% if settings.display_logo %}
+      <a class="text-decoration-none img-hover-highlight m-0 p-0" href="{% url 'index' cookie_language %}">
+        <img src="{{ settings.logo.url }}" alt="Logo" width="30" height="30" class="d-inline-block">
       </a>
+      {% endif %}
+      {% if settings.display_brand %}
+      <a class="text-decoration-none img-hover-highlight m-0 p-0" href="{% url 'index' cookie_language %}">
+        <img src="{{ settings.brand.url }}" alt="Brand" width="100" height="30" class="d-inline-block">
+      </a>
+      {% endif %}
+      {% if settings.display_name %}
+      <a class="text-decoration-none text-light m-0 p-0" href="{% url 'index' cookie_language %}">
+      {{ settings.name }}
+      </a>
+      {% endif %}
     </div>
 
     <div>&nbsp;</div>
@@ -116,15 +128,15 @@
           <!-- Admin settings -->
           {% if user.is_superuser %}
           <div class="list-group">
-            <a class="list-group-item list-group-item-action" href="{% url 'settings' cookie_language 'header' %}">
+            <a class="list-group-item list-group-item-action" href="{% url 'settings' cookie_language 'brand' %}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-plus-fill" viewBox="0 0 16 16">
                 <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0"/>
-              </svg> &nbsp;<span>Header settings</span>
+              </svg> &nbsp;<span>Brand</span>
             </a>
             <a class="list-group-item list-group-item-action" href="{% url 'settings' cookie_language 'posts' %}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-plus-fill" viewBox="0 0 16 16">
                 <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0"/>
-              </svg> &nbsp;<span>All Posts</span>
+              </svg> &nbsp;<span>Posts</span>
             </a>
             <a class="list-group-item list-group-item-action" href="{% url 'admin' %}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-fill" viewBox="0 0 16 16">
