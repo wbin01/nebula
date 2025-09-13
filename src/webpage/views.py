@@ -131,10 +131,11 @@ def category(request, lang, category_name, page=1):
             context = category_mdl.upd_context(context, category_name)
             # Pagination
             context['page_num'] = page  # page_num, posts_4_page, pagination_nums
-            pag = post_mdl.create_pagination_context(context)
-            if pag:
+            pagination = post_mdl.create_pagination_context(context)
+            if pagination:
                 return redirect(
-                    'category', context['cookie_language'], category_name, pag)
+                    'category', context['cookie_language'],
+                    category_name, pagination)
 
             if context['nav_item'].parent:
                 return redirect(
@@ -288,9 +289,17 @@ def category(request, lang, category_name, page=1):
     return redirect('category', context['cookie_language'], category_name)
 
 
-def sub_category(request, lang, category_name, sub_category_name):
+def sub_category(request, lang, category_name, sub_category_name, page=1):
     context = category_mdl.upd_context(
         default_context(request), sub_category_name)
+
+    context['page_num'] = page  # page_num, posts_4_page, pagination_nums
+    pagination = post_mdl.create_pagination_context(context)
+    if pagination:
+        return redirect(
+            'sub_category', context['cookie_language'],
+            category_name, sub_category_name, pagination)
+
     return render(request, 'category.html', context)
 
 

@@ -182,40 +182,81 @@
 
 <!-- Pagination -->
     {% if page_posts_schema|length > 1 %}
-    <div class="text-center">
-      <div>
-        {{ page_num }}<span class="opacity-50"><small>/{{ page_posts_schema|length }}&nbsp;</small></span>
+      {{ nav_item.parent }} {{ nav_item.code }}
+      {% if nav_item.parent %}
+      <div class="text-center">
+        <div>
+          {{ page_num }}<span class="opacity-50"><small>/{{ page_posts_schema|length }}&nbsp;</small></span>
+        </div>
+        
+        {% if page_posts_schema|length > 3 %}
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <a type="button" class="btn btn-light" href="{% url 'sub_category' cookie_language nav_item.parent nav_item.code 1 %}">&lt;&lt;</a>
+        </div>
+        {% endif %}
+
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <a type="button" class="btn btn-light" href="{% url 'sub_category' cookie_language nav_item.parent nav_item.code page_num|sub:1 %}">&lt;</a>
+        </div>
+
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          {% for num in pagination_nums %}
+          <a type="button" class="btn btn-light {% if num == page_num %}active{% endif %}" href="{% url 'sub_category' cookie_language nav_item.parent nav_item.code num %}">
+          {{ num }}
+          </a>
+          {% endfor %}
+        </div>
+
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <a type="button" class="btn btn-light" href="{% url 'sub_category' cookie_language nav_item.parent nav_item.code page_num|add:1 %}">&gt;</a>
+        </div>
+
+        {% if page_posts_schema|length > 3 %}
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <a type="button" class="btn btn-light" href="{% url 'sub_category' cookie_language nav_item.parent nav_item.code page_posts_schema|length %}">&gt;&gt;</a>
+        </div>
+        {% endif %}
+
       </div>
-      
-      {% if page_posts_schema|length > 3 %}
-      <div class="btn-group me-2" role="group" aria-label="First group">
-        <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path 1 %}">&lt;&lt;</a>
+
+      {% else %}
+
+      <div class="text-center">
+        <div>
+          {{ page_num }}<span class="opacity-50"><small>/{{ page_posts_schema|length }}&nbsp;</small></span>
+        </div>
+        
+        {% if page_posts_schema|length > 3 %}
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path 1 %}">&lt;&lt;</a>
+        </div>
+        {% endif %}
+
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_num|sub:1 %}">&lt;</a>
+        </div>
+
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          {% for num in pagination_nums %}
+          <a type="button" class="btn btn-light {% if num == page_num %}active{% endif %}" href="{% url 'category' cookie_language path num %}">
+          {{ num }}
+          </a>
+          {% endfor %}
+        </div>
+
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_num|add:1 %}">&gt;</a>
+        </div>
+
+        {% if page_posts_schema|length > 3 %}
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_posts_schema|length %}">&gt;&gt;</a>
+        </div>
+        {% endif %}
+        
       </div>
       {% endif %}
-
-      <div class="btn-group me-2" role="group" aria-label="First group">
-        <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_num|sub:1 %}">&lt;</a>
-      </div>
-
-      <div class="btn-group me-2" role="group" aria-label="First group">
-        {% for num in pagination_nums %}
-        <a type="button" class="btn btn-light {% if num == page_num %}active{% endif %}" href="{% url 'category' cookie_language path num %}">
-        {{ num }}
-        </a>
-        {% endfor %}
-      </div>
-
-      <div class="btn-group me-2" role="group" aria-label="First group">
-        <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_num|add:1 %}">&gt;</a>
-      </div>
-
-      {% if page_posts_schema|length > 3 %}
-      <div class="btn-group me-2" role="group" aria-label="First group">
-        <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_posts_schema|length %}">&gt;&gt;</a>
-      </div>
-      {% endif %}
-
-    </div>
+    
     {% endif %}
 <!-- Pagination end -->
 

@@ -9,7 +9,7 @@ urlpatterns = [
     path('<str:lang>/',
          views.index, name='index'),
 
-    path('<str:lang>/page=<int:page>',
+    path('<str:lang>/page=<int:page>/',
          views.index, name='index'),
 
     path('<str:lang>/post/<str:url>/',
@@ -27,10 +27,13 @@ urlpatterns = [
     path('<str:lang>/<str:category_name>/',
          views.category, name='category'),
 
-    path('<str:lang>/<str:category_name>/page=<int:page>',
+    path('<str:lang>/<str:category_name>/page=<int:page>/',
          views.category, name='category'),
 
     path('<str:lang>/<str:category_name>/<str:sub_category_name>/',
+         views.sub_category, name='sub_category'),
+
+    path('<str:lang>/<str:category_name>/<str:sub_category_name>/page=<int:page>/',
          views.sub_category, name='sub_category'),
 
     path('admin/',
