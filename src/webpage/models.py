@@ -101,7 +101,8 @@ class PageSetting(models.Model):
         default='/brand_image/defaults/favicon.svg',
         size=[16, 16], crop=['middle', 'center'],
         upload_to='brand_image/', blank=True)
-    lang = models.ForeignKey(Language, on_delete=models.CASCADE)
+    # lang = models.ForeignKey(Language, on_delete=models.CASCADE)
+    default_lang = models.CharField(default='en', max_length=20)
     logo = ResizedImageField(
         default='/brand_image/defaults/logo.svg',
         size=[30, 30], crop=['middle', 'center'],

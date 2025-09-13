@@ -9,6 +9,9 @@ urlpatterns = [
     path('<str:lang>/',
          views.index, name='index'),
 
+    path('<str:lang>/page=<int:page>',
+         views.index, name='index'),
+
     path('<str:lang>/post/<str:url>/',
          views.post, name='post'),
 

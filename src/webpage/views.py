@@ -76,7 +76,7 @@ def default_context(request):
     }
 
 
-def index(request, lang=''):
+def index(request, lang='', page=1):
     context = default_context(request)
 
     if request.path == '/':
@@ -93,6 +93,13 @@ def index(request, lang=''):
             display=True).order_by('-publication_date')
         if 'home' in x.categories.split(',')]
 
+    # Pagination
+    context['page_num'] = page  # page_num, posts_4_page, pagination_nums
+    pagination = post_mdl.create_pagination_context(context, page)
+    if pagination:
+        return redirect('index', context['cookie_language'], pagination)
+
+    # Posts Highlight
     context['posts_highlight'] = [
         x for x in Post.objects.filter(
             lang=context['cookie_language'],
@@ -414,11 +421,23 @@ def post(request, lang, url):
                 post_obj.display = True
 
         if 'delete' in request.POST:
+            post_lang = post_obj.lang
+            post_code = post_obj.code
             if 'delete-langs-too' in request.POST:
                 for item in Post.objects.filter(code=post_obj.code):
                     item.delete()
             else:
                 post_obj.delete()
+            
+            if post_lang != 'en':
+                delete_lang_too = True
+                for item in Post.objects.all():
+                    if item.lang == post_lang:
+                        delete_lang_too = False
+                        break
+                if delete_lang_too:
+                    Language.objects.filter(code=post_lang).delete()
+
             return redirect('index', context['cookie_language'])
 
         if ('radio-lang' in request.POST and

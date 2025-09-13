@@ -52,3 +52,62 @@ def file_ext_is_valid(request, request_name: str) -> bool:
                 name.endswith('.jpeg')):
             return True
     return False
+
+def create_pagination_context(context: dict, page: int) -> int:
+    # Pagination posts
+    context['posts_4_page'] = {}
+    posts_4_page = 5
+    page_num = 1
+
+    num = 1
+    for post in context['posts']:
+        if num == 1:
+            context['posts_4_page'][page_num] = []
+
+        context['posts_4_page'][page_num].append(post)
+        
+        if num == posts_4_page:
+            page_num += 1
+            num = 0
+        num += 1
+
+    # Validate page
+    len_posts = len(context['posts_4_page'])
+    if page > len_posts:
+        return len_posts
+    if page < 1:
+        return 1
+
+    # Page posts
+    context['page_posts'] = context['posts_4_page'][page]
+
+    # Pagination nums
+    context['pagination_nums'] = []
+
+    prev = 1
+    next_ = 3
+    if page == 1:
+        prev = 1
+        page = 2
+    else:
+        prev = page - 1
+        next_ = page + 1
+
+    if next_ > len(context['posts_4_page']):
+        next_ = None
+    if page > len(context['posts_4_page']):
+        page = None
+
+    if prev:
+        context['pagination_nums'].append(prev)
+    if page:
+        context['pagination_nums'].append(page)
+    if next_:
+        context['pagination_nums'].append(next_)
+
+    if len(context['pagination_nums']) < 3:
+        if context['pagination_nums'][0] >= 2:
+            context['pagination_nums'].insert(
+                0, context['pagination_nums'][0] - 1)
+
+    return 0
