@@ -616,10 +616,10 @@ def settings(request, lang, text='resume'):
     context['path'] = text
 
     if request.method == 'GET':
-        if text == 'brand':
-            pass
+        if text not in ['general', 'brand', 'posts', 'colors']:
+            return redirect('index', context['cookie_language'])
 
-        elif text == 'posts':
+        if text == 'posts':
             context['posts'] = []
 
             post_codes = []
@@ -636,9 +636,6 @@ def settings(request, lang, text='resume'):
                     else:
                         post_list.append({'lang': lang, 'title': 'x'})
                 context['posts'].append(post_list)
-
-        else:
-            return redirect('index', context['cookie_language'])
 
     elif request.method == 'POST':
         if text == 'cookie_language':
@@ -664,8 +661,15 @@ def settings(request, lang, text='resume'):
                 return response
             return redirect('index', context['cookie_language'])
 
+        if 'settings_general' in request.POST:
+            if 'posts_for_page' in request.POST:
+                context[
+                    'settings'].posts_for_page = request.POST['posts_for_page']
+                context['settings'].save()
 
-        if 'settings_brand' in request.POST:
+            return redirect('settings', context['cookie_language'], 'general')
+
+        elif 'settings_brand' in request.POST:
             settings = PageSetting.objects.all()[0]
             rm_favicon, rm_logo, rm_brand = None, None, None
             path = pathlib.Path(__file__).resolve().parent.parent
@@ -709,6 +713,9 @@ def settings(request, lang, text='resume'):
                 os.remove(path.as_posix() + rm_brand)
 
             return redirect('settings', context['cookie_language'], 'brand')
+
+        elif 'settings_colors' in request.POST:
+            return redirect('settings', context['cookie_language'], 'colors')
 
     return render(request, 'settings.html', context)
 

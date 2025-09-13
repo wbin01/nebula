@@ -5,9 +5,50 @@
 {% include '_nav.html'%}
 
 <div class="container-md" style="min-height: 500px;">
+
+<!-- cookie_language -->
 {% if path == 'cookie_language' %}
   <meta http-equiv="REFRESH" content="0;url={% url 'index' cookie_language %}">
+<!-- cookie_language end -->
 
+<!-- General -->
+{% elif path == 'general' %}
+  <h1 class="text-center">General</h1>
+  <div class="w-75 mx-auto">
+    <form action="{% url 'settings' cookie_language 'general' %}"
+        method="post" enctype="multipart/form-data">{% csrf_token %}
+
+      <label for="posts_for_page" class="mt-4"><h4>Posts for page</h4></label>
+
+      <div class="row align-items-center" style="width: 250px;">
+        <div class="col">
+          <input type="number" class="form-control" id="posts_for_page" name="posts_for_page" value="{{ settings.posts_for_page }}">
+        </div>
+        
+        <div class="col">
+          <button type="submit" name="settings_general" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+            </svg> Save
+          </button>
+        </div>
+      
+      </div>
+
+<!--       <div class="my-5 mx-2 d-flex align-items-end flex-column form-check form-check-inline">
+        <button type="submit" name="settings_general" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+          </svg> Save
+        </button>
+      </div> -->
+
+    </form>
+    
+  </div>
+<!-- General end -->
+
+<!-- Brand -->
 {% elif path == 'brand' %}
   <h1 class="text-center">Brand settings</h1>
   <div class="w-75 mx-auto">
@@ -69,7 +110,9 @@
       
     </form>
   </div>
+<!-- Brand end -->
 
+<!-- Posts -->
 {% elif path == 'posts' %}
   <h1 class="text-center">Posts</h1>
   <h4>New</h4>
@@ -117,6 +160,28 @@
     {% endfor %}
     </div>
     {% endfor %}
+<!-- Posts end -->
+
+<!-- Colors -->
+{% elif path == 'colors' %}
+  <h1 class="text-center">Colors</h1>
+  <div class="w-75 mx-auto">
+    <form action="{% url 'settings' cookie_language 'colors' %}"
+        method="post" enctype="multipart/form-data">{% csrf_token %}
+
+
+      <div class="my-5 mx-2 d-flex align-items-end flex-column">
+        <button type="submit" name="settings_colors" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+          </svg> Save
+        </button>
+      </div>
+      
+    </form>
+    
+  </div>
+<!-- Colors end -->
 
 {% endif %}
 </div>
