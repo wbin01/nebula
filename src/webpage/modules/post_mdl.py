@@ -53,36 +53,36 @@ def file_ext_is_valid(request, request_name: str) -> bool:
             return True
     return False
 
-def create_pagination_context(context: dict, page: int) -> int:
+def create_pagination_context(context: dict) -> int:
     # Pagination posts
-    context['posts_4_page'] = {}
-    posts_4_page = 5
+    context['page_posts_schema'] = {}  # {1: [Post1, Post2], 2: [Post3, Post4]}
     page_num = 1
 
     num = 1
     for post in context['posts']:
         if num == 1:
-            context['posts_4_page'][page_num] = []
+            context['page_posts_schema'][page_num] = []
 
-        context['posts_4_page'][page_num].append(post)
+        context['page_posts_schema'][page_num].append(post)
         
-        if num == posts_4_page:
+        if num == context['settings'].posts_for_page:
             page_num += 1
             num = 0
         num += 1
 
     # Validate page
-    len_posts = len(context['posts_4_page'])
+    page = context['page_num']
+    len_posts = len(context['page_posts_schema'])
     if page > len_posts:
         return len_posts
     if page < 1:
         return 1
 
     # Page posts
-    context['page_posts'] = context['posts_4_page'][page]
+    context['page_posts'] = context['page_posts_schema'][page]  # [Post1,Post2]
 
     # Pagination nums
-    context['pagination_nums'] = []
+    context['pagination_nums'] = []  # [1, 2, 3]
 
     prev = 1
     next_ = 3
@@ -93,9 +93,9 @@ def create_pagination_context(context: dict, page: int) -> int:
         prev = page - 1
         next_ = page + 1
 
-    if next_ > len(context['posts_4_page']):
+    if next_ > len(context['page_posts_schema']):
         next_ = None
-    if page > len(context['posts_4_page']):
+    if page > len(context['page_posts_schema']):
         page = None
 
     if prev:

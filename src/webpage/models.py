@@ -108,6 +108,7 @@ class PageSetting(models.Model):
         size=[30, 30], crop=['middle', 'center'],
         upload_to='brand_image/', blank=True)
     name = models.CharField(default="Nebula", max_length=200)
+    posts_for_page = models.IntegerField(default=5)
     style = models.IntegerField(default=1)
 
     def __str__(self):

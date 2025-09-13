@@ -116,13 +116,13 @@
     {% endfor %}
 
 <!-- Pagination -->
-    {% if posts_4_page|length > 1 %}
+    {% if page_posts_schema|length > 1 %}
     <div class="text-center">
       <div>
-        {{ page_num }}<span class="opacity-50"><small>/{{ posts_4_page|length }}&nbsp;</small></span>
+        {{ page_num }}<span class="opacity-50"><small>/{{ page_posts_schema|length }}&nbsp;</small></span>
       </div>
       
-      {% if posts_4_page|length > 3 %}
+      {% if page_posts_schema|length > 3 %}
       <div class="btn-group me-2" role="group" aria-label="First group">
         <a type="button" class="btn btn-light" href="{% url 'index' cookie_language 1 %}">&lt;&lt;</a>
       </div>
@@ -144,9 +144,9 @@
         <a type="button" class="btn btn-light" href="{% url 'index' cookie_language page_num|add:1 %}">&gt;</a>
       </div>
 
-      {% if posts_4_page|length > 3 %}
+      {% if page_posts_schema|length > 3 %}
       <div class="btn-group me-2" role="group" aria-label="First group">
-        <a type="button" class="btn btn-light" href="{% url 'index' cookie_language posts_4_page|length %}">&gt;&gt;</a>
+        <a type="button" class="btn btn-light" href="{% url 'index' cookie_language page_posts_schema|length %}">&gt;&gt;</a>
       </div>
       {% endif %}
 

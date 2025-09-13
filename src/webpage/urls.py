@@ -27,6 +27,9 @@ urlpatterns = [
     path('<str:lang>/<str:category_name>/',
          views.category, name='category'),
 
+    path('<str:lang>/<str:category_name>/page=<int:page>',
+         views.category, name='category'),
+
     path('<str:lang>/<str:category_name>/<str:sub_category_name>/',
          views.sub_category, name='sub_category'),
 

@@ -2,6 +2,8 @@
 
 {% load static %}
 {% load split %}
+{% load sub %}
+{% load add %}
 {% load dict_key %}
 
 {% block content %}
@@ -153,7 +155,7 @@
   {% elif nav_item.local_type == 'list' %}
 
     {% if posts %}
-    {% for post in posts %}
+    {% for post in page_posts %}
     <a class="text-decoration-none" href="{% url 'post' cookie_language post.url %}">
     <div class="card mb-3 mt-3 rounded-0 card-link-style shadow-sm" style="max-width: 100%;">
       <div class="row g-0">
@@ -177,6 +179,45 @@
     </div>
     </a>
     {% endfor %}
+
+<!-- Pagination -->
+    {% if page_posts_schema|length > 1 %}
+    <div class="text-center">
+      <div>
+        {{ page_num }}<span class="opacity-50"><small>/{{ page_posts_schema|length }}&nbsp;</small></span>
+      </div>
+      
+      {% if page_posts_schema|length > 3 %}
+      <div class="btn-group me-2" role="group" aria-label="First group">
+        <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path 1 %}">&lt;&lt;</a>
+      </div>
+      {% endif %}
+
+      <div class="btn-group me-2" role="group" aria-label="First group">
+        <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_num|sub:1 %}">&lt;</a>
+      </div>
+
+      <div class="btn-group me-2" role="group" aria-label="First group">
+        {% for num in pagination_nums %}
+        <a type="button" class="btn btn-light {% if num == page_num %}active{% endif %}" href="{% url 'category' cookie_language path num %}">
+        {{ num }}
+        </a>
+        {% endfor %}
+      </div>
+
+      <div class="btn-group me-2" role="group" aria-label="First group">
+        <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_num|add:1 %}">&gt;</a>
+      </div>
+
+      {% if page_posts_schema|length > 3 %}
+      <div class="btn-group me-2" role="group" aria-label="First group">
+        <a type="button" class="btn btn-light" href="{% url 'category' cookie_language path page_posts_schema|length %}">&gt;&gt;</a>
+      </div>
+      {% endif %}
+
+    </div>
+    {% endif %}
+<!-- Pagination end -->
 
     {% else %}
     <div class="col mt-3">

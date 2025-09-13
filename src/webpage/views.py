@@ -95,7 +95,7 @@ def index(request, lang='', page=1):
 
     # Pagination
     context['page_num'] = page  # page_num, posts_4_page, pagination_nums
-    pagination = post_mdl.create_pagination_context(context, page)
+    pagination = post_mdl.create_pagination_context(context)
     if pagination:
         return redirect('index', context['cookie_language'], pagination)
 
@@ -111,7 +111,7 @@ def index(request, lang='', page=1):
     return render(request, 'index.html', context)
 
 
-def category(request, lang, category_name):
+def category(request, lang, category_name, page=1):
     logging.info(lang)
     context = default_context(request)
     category_mdl.add_warning()
@@ -129,6 +129,12 @@ def category(request, lang, category_name):
 
         elif category_name.replace('-', '').isalpha():
             context = category_mdl.upd_context(context, category_name)
+            # Pagination
+            context['page_num'] = page  # page_num, posts_4_page, pagination_nums
+            pag = post_mdl.create_pagination_context(context)
+            if pag:
+                return redirect(
+                    'category', context['cookie_language'], category_name, pag)
 
             if context['nav_item'].parent:
                 return redirect(
