@@ -86,5 +86,7 @@ def upd_subtitle(
 
             if '-' in nav_i_s.subtitle:
                 nav_i_s.summary = nav_i_s.subtitle.split('-')[1].strip()
+            else:
+                nav_i_s.summary = ''
 
             nav_i_s.save()
