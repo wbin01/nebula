@@ -715,6 +715,28 @@ def settings(request, lang, text='resume'):
             return redirect('settings', context['cookie_language'], 'brand')
 
         elif 'settings_colors' in request.POST:
+            
+            if 'nav_top_bg' in request.POST:
+                context['style'
+                    ].nav_top_bg = request.POST['nav_top_bg']
+            if 'nav_top_fg' in request.POST:
+                context['style'
+                    ].nav_top_fg = request.POST['nav_top_fg']
+            if 'nav_top_fg_hover' in request.POST:
+                context['style'
+                    ].nav_top_fg_hover = request.POST['nav_top_fg_hover']
+            if 'nav_bottom_bg' in request.POST:
+                context['style'
+                    ].nav_bottom_bg = request.POST['nav_bottom_bg']
+            if 'nav_items_fg' in request.POST:
+                context['style'
+                    ].nav_items_fg = request.POST['nav_items_fg']
+            if 'nav_items_fg_hover' in request.POST:
+                context['style'
+                    ].nav_items_fg_hover = request.POST['nav_items_fg_hover']
+
+            context['style'].save()
+
             return redirect('settings', context['cookie_language'], 'colors')
 
     return render(request, 'settings.html', context)

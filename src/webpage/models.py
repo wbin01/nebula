@@ -117,18 +117,18 @@ class PageSetting(models.Model):
 
 class PageStyle(models.Model):
     code = models.IntegerField(default=1)
-    nav_top_bg = models.CharField(default="#000000FF", max_length=10)
-    nav_top_fg = models.CharField(default="#CCCCCCFF", max_length=10)
-    nav_top_fg_hover = models.CharField(default="#FFFFFFFF", max_length=10)
+    nav_top_bg = models.CharField(default="#000000", max_length=10)
+    nav_top_fg = models.CharField(default="#CCCCCC", max_length=10)
+    nav_top_fg_hover = models.CharField(default="#FFFFFF", max_length=10)
+    
+    nav_bottom_fg = models.CharField(default="#CCCCCC", max_length=10)  # rm
+    nav_items_bg = models.CharField(default="#000000", max_length=10)  # rm
 
-    nav_bottom_bg = models.CharField(default="#000000FF", max_length=10)
-    nav_bottom_fg = models.CharField(default="#CCCCCCFF", max_length=10)
+    nav_bottom_bg = models.CharField(default="#000000", max_length=10)
+    nav_items_fg = models.CharField(default="#CCCCCC", max_length=10)
+    nav_items_fg_hover = models.CharField(default="#FFFFFF", max_length=10)
 
-    nav_items_bg = models.CharField(default="#000000FF", max_length=10)
-    nav_items_fg = models.CharField(default="#CCCCCCFF", max_length=10)
-    nav_items_fg_hover = models.CharField(default="#FFFFFFFF", max_length=10)
-
-    body_fg = models.CharField(default="#555555FF", max_length=10)
+    body_fg = models.CharField(default="#555555", max_length=10)
 
     def __str__(self):
         return f'Page style {self.code}'

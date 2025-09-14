@@ -169,8 +169,79 @@
     <form action="{% url 'settings' cookie_language 'colors' %}"
         method="post" enctype="multipart/form-data">{% csrf_token %}
 
+        <div class="container text-center">
+          <div class="row">
 
-      <div class="my-5 mx-2 d-flex align-items-end flex-column">
+            <h2 class="text-start mt-4">Header</h2>
+
+            <div class="col">
+              <label for="nav_top_bg">background</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="nav_top_bg" name="nav_top_bg" value="{{ style.nav_top_bg }}">
+              </div>
+              <small class="text-dark text-opacity-50">{{ style.nav_top_bg|upper }}</small>
+            </div>
+
+            <div class="col">
+              <label for="nav_top_fg">text</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="nav_top_fg" name="nav_top_fg" value="{{ style.nav_top_fg }}">
+              </div>
+              <small class="text-dark text-opacity-50">{{ style.nav_top_fg|upper }}</small>
+            </div>
+
+            <div class="col">
+              <label for="nav_top_fg_hover">text hover</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="nav_top_fg_hover" name="nav_top_fg_hover" value="{{ style.nav_top_fg_hover }}">
+              </div>
+              <small class="text-dark text-opacity-50">{{ style.nav_top_fg_hover|upper }}</small>
+            </div>
+
+            <div class="text-dark text-opacity-50 mt-4"><hr></div>
+            <h2 class="text-start">Menu</h2>
+
+            <div class="col">
+              <label for="nav_bottom_bg">background</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="nav_bottom_bg" name="nav_bottom_bg" value="{{ style.nav_bottom_bg }}">
+              </div>
+              <small class="text-dark text-opacity-50">{{ style.nav_bottom_bg|upper }}</small>
+            </div>
+
+            <div class="col">
+              <label for="nav_items_fg">text</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="nav_items_fg" name="nav_items_fg" value="{{ style.nav_items_fg }}">
+              </div>
+              <small class="text-dark text-opacity-50">{{ style.nav_items_fg|upper }}</small>
+            </div>
+
+            <div class="col">
+              <label for="nav_items_fg_hover">text hover</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="nav_items_fg_hover" name="nav_items_fg_hover" value="{{ style.nav_items_fg_hover }}">
+              </div>
+              <small class="text-dark text-opacity-50">{{ style.nav_items_fg_hover|upper }}</small>
+            </div>
+
+            <!-- <div class="text-dark text-opacity-50 mt-4"><hr></div>
+            <h2 class="text-start">Page</h2>
+
+            <div class="col">
+              <label for="body_fg">text</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="body_fg" name="body_fg" value="{{ style.body_fg }}">
+              </div>
+            </div>
+
+            <div class="col"></div> <div class="col"></div> -->
+            <div class="text-dark text-opacity-50 m-0 mt-4"><hr></div>
+
+          </div>
+        </div>
+
+      <div class="mb-5 mx-2 d-flex align-items-end flex-column">
         <button type="submit" name="settings_colors" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
