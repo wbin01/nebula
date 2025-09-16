@@ -36,13 +36,13 @@ def default_context(request):
         page_style = PageStyle.objects.create()
         page_style.save()
 
-        page_settings = PageSetting.objects.create(lang=lang)
+        page_settings = PageSetting.objects.create()
         page_settings.save()
     else:
         page_settings = page_settings[0]
 
     cookie_lang = request.COOKIES.get('cookie_language')
-    cookie_language = cookie_lang if cookie_lang else page_settings.lang.code
+    cookie_language = cookie_lang if cookie_lang else page_settings.default_lang
 
     categories_name = {}
     for nav_i_str in NavItemString.objects.order_by('code'):
@@ -61,6 +61,10 @@ def default_context(request):
         if nav_item.code not in categories_name:
             categories_name[nav_item.code] = nav_item.code
 
+    languages = Language.objects.all()
+    if cookie_language not in [x.code for x in languages]:
+        cookie_language = page_settings.default_lang
+
     return {
         'settings': page_settings,
         'style': PageStyle.objects.get(code=page_settings.style),
@@ -69,7 +73,7 @@ def default_context(request):
         'all_sub_nav_items': NavItem.objects.filter(local='category').order_by('index'),
         'categories_name': categories_name,
         'nav_items_strings': NavItemString.objects.order_by('lang'),
-        'languages': Language.objects.all(),
+        'languages': languages,
         'categories': Category.objects.order_by('code'),
         'path': '#',
         'cookie_language': cookie_language
@@ -444,7 +448,7 @@ def post(request, lang, url):
             else:
                 post_obj.delete()
             
-            if post_lang != 'en':
+            if post_lang != context['settings'].default_lang:
                 delete_lang_too = True
                 for item in Post.objects.all():
                     if item.lang == post_lang:
@@ -482,15 +486,24 @@ def post(request, lang, url):
 
         elif 'new-lang-native-name' in request.POST:
             if all([
-                request.POST['new-lang-native-name'],
-                request.POST['new-lang-english-name'],
-                request.POST['new-lang-code']
+                    request.POST['new-lang-native-name'],
+                    request.POST['new-lang-english-name'],
+                    request.POST['new-lang-code']
                     ]):
-                new_lang = Language.objects.create(
-                    native_name=request.POST['new-lang-native-name'],
-                    english_name=request.POST['new-lang-english-name'],
+
+                new_lang = Language.objects.filter(
                     code=request.POST['new-lang-code'])
+
+                if not new_lang:
+                    new_lang = Language.objects.create(
+                        native_name=request.POST['new-lang-native-name'],
+                        english_name=request.POST['new-lang-english-name'],
+                        code=request.POST['new-lang-code'])
+                    new_lang.save()
+
+                new_lang.display = True
                 new_lang.save()
+
                 context['languages'] = Language.objects.all()
 
                 new_lang_post = Post.objects.create(user=request.user)
@@ -616,7 +629,7 @@ def settings(request, lang, text='resume'):
     context['path'] = text
 
     if request.method == 'GET':
-        if text not in ['general', 'brand', 'posts', 'colors']:
+        if text not in ['general', 'brand', 'posts', 'style']:
             return redirect('index', context['cookie_language'])
 
         if text == 'posts':
@@ -641,25 +654,27 @@ def settings(request, lang, text='resume'):
         if text == 'cookie_language':
             if 'radio-lang' in request.POST:
                 context['cookie_language'] = request.POST['radio-lang']
-                response = render(request, 'settings.html', context)
+            else:
+                context['cookie_language'] = context[
+                    'settings'].default_lang
+            
+            response = render(request, 'settings.html', context)
+            max_age = 382 * 24 * 60 * 60
+            expires = datetime.datetime.strftime(
+                datetime.datetime.now(datetime.UTC) + datetime.timedelta(
+                    seconds=max_age),
+                "%a, %d-%b-%Y %H:%M:%S GMT")
 
-                max_age = 382 * 24 * 60 * 60
-                expires = datetime.datetime.strftime(
-                    datetime.datetime.now(datetime.UTC) + datetime.timedelta(
-                        seconds=max_age),
-                    "%a, %d-%b-%Y %H:%M:%S GMT")
+            response.set_cookie(
+                'cookie_language',
+                context['cookie_language'],
+                max_age=max_age,
+                expires=expires,
+                # domain=settings.SESSION_COOKIE_DOMAIN,
+                # secure=settings.SESSION_COOKIE_SECURE or None
+                )
 
-                response.set_cookie(
-                    'cookie_language',
-                    request.POST['radio-lang'],
-                    max_age=max_age,
-                    expires=expires,
-                    # domain=settings.SESSION_COOKIE_DOMAIN,
-                    # secure=settings.SESSION_COOKIE_SECURE or None
-                    )
-
-                return response
-            return redirect('index', context['cookie_language'])
+            return response
 
         if 'settings_general' in request.POST:
             if 'posts_for_page' in request.POST:
@@ -714,8 +729,8 @@ def settings(request, lang, text='resume'):
 
             return redirect('settings', context['cookie_language'], 'brand')
 
-        elif 'settings_colors' in request.POST:
-            
+        elif 'settings_style' in request.POST:
+
             if 'nav_top_bg' in request.POST:
                 context['style'
                     ].nav_top_bg = request.POST['nav_top_bg']
@@ -737,7 +752,7 @@ def settings(request, lang, text='resume'):
 
             context['style'].save()
 
-            return redirect('settings', context['cookie_language'], 'colors')
+            return redirect('settings', context['cookie_language'], 'style')
 
     return render(request, 'settings.html', context)
 

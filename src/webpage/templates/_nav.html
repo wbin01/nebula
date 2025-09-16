@@ -66,6 +66,7 @@
       </div> <!-- modal end -->
 
       <!-- Translate -->
+      {% if languages|length > 1 %}
       <a class="ms-3 me-3 text-decoration-none" style="color:{{ style.nav_top_fg }};" onMouseOver="this.style.color='{{ style.nav_top_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_top_fg }}'" type="button" data-bs-toggle="modal" data-bs-target="#translateModal">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-translate" viewBox="0 0 16 16">
           <path d="M4.545 6.714 4.11 8H3l1.862-5h1.284L8 8H6.833l-.435-1.286zm1.634-.736L5.5 3.956h-.049l-.679 2.022z"/>
@@ -110,6 +111,9 @@
         </div>
       </div>
       <!-- Translate modal end -->
+      {% else %}
+      <span class="me-3"></span>
+      {% endif %}
       <!-- Translate end -->
 
       <!-- Settings -->
@@ -146,11 +150,11 @@
                 <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0"/>
               </svg> &nbsp;<span>Posts</span>
             </a>
-            <!-- Colors -->
-            <a class="list-group-item list-group-item-action" href="{% url 'settings' cookie_language 'colors' %}">
+            <!-- Style -->
+            <a class="list-group-item list-group-item-action" href="{% url 'settings' cookie_language 'style' %}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-plus-fill" viewBox="0 0 16 16">
                 <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0"/>
-              </svg> &nbsp;<span>Colors</span>
+              </svg> &nbsp;<span>Style</span>
             </a>
             <!-- Admin -->
             <a class="list-group-item list-group-item-action" href="{% url 'admin' %}">

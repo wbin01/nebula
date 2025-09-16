@@ -84,6 +84,7 @@ class Language(models.Model):
     code = models.CharField(default='en', max_length=20)
     english_name = models.CharField(default='English', max_length=200)
     native_name = models.CharField(default='English', max_length=200)
+    display = models.BooleanField(default=True)
 
     def __str__(self):
         return self.code
@@ -94,6 +95,7 @@ class PageSetting(models.Model):
         default='/brand_image/defaults/brand.svg',
         size=[100, 30], crop=['middle', 'center'],
         upload_to='brand_image/', blank=True)
+    default_lang = models.CharField(default='en', max_length=20)
     display_brand = models.BooleanField(default=False)
     display_logo = models.BooleanField(default=True)
     display_name = models.BooleanField(default=False)
@@ -101,8 +103,7 @@ class PageSetting(models.Model):
         default='/brand_image/defaults/favicon.svg',
         size=[16, 16], crop=['middle', 'center'],
         upload_to='brand_image/', blank=True)
-    # lang = models.ForeignKey(Language, on_delete=models.CASCADE)
-    default_lang = models.CharField(default='en', max_length=20)
+    lang = models.CharField(default='en', max_length=20)
     logo = ResizedImageField(
         default='/brand_image/defaults/logo.svg',
         size=[30, 30], crop=['middle', 'center'],
