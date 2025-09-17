@@ -631,7 +631,7 @@ def settings(request, lang, text='resume'):
     context['path'] = text
 
     if request.method == 'GET':
-        if text not in ['general', 'brand', 'posts', 'style']:
+        if text not in ['language', 'brand', 'posts', 'style']:
             return redirect('index', context['cookie_language'])
 
         if text == 'posts':
@@ -678,7 +678,7 @@ def settings(request, lang, text='resume'):
 
             return response
 
-        if 'settings_general' in request.POST:
+        if 'settings_language' in request.POST:
             
             for lang in Language.objects.all():
                 if lang.code != context['settings'].default_lang:
@@ -701,12 +701,7 @@ def settings(request, lang, text='resume'):
                 default_lang.display = True
                 default_lang.save()
 
-            if 'posts_for_page' in request.POST:
-                context[
-                    'settings'].posts_for_page = request.POST['posts_for_page']
-                context['settings'].save()
-
-            return redirect('settings', context['cookie_language'], 'general')
+            return redirect('settings', context['cookie_language'], 'language')
 
         elif 'settings_brand' in request.POST:
             settings = PageSetting.objects.all()[0]
@@ -752,6 +747,14 @@ def settings(request, lang, text='resume'):
                 os.remove(path.as_posix() + rm_brand)
 
             return redirect('settings', context['cookie_language'], 'brand')
+
+        elif 'settings_posts' in request.POST:
+            if 'posts_for_page' in request.POST:
+                context[
+                    'settings'].posts_for_page = request.POST['posts_for_page']
+                context['settings'].save()
+
+            return redirect('settings', context['cookie_language'], 'posts')
 
         elif 'settings_style' in request.POST:
 

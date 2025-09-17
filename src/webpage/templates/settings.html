@@ -11,52 +11,39 @@
   <meta http-equiv="REFRESH" content="0;url={% url 'index' cookie_language %}">
 <!-- cookie_language end -->
 
-<!-- General -->
-{% elif path == 'general' %}
-  <h1 class="text-center">General</h1>
+<!-- Language -->
+{% elif path == 'language' %}
+  <h1 class="text-center">Languages</h1>
   <div class="w-75 mx-auto">
-    <form action="{% url 'settings' cookie_language 'general' %}"
+    <form action="{% url 'settings' cookie_language 'language' %}"
         method="post" enctype="multipart/form-data">{% csrf_token %}
 
-      <label for="posts_for_page" class="mt-4"><h4>Posts for page</h4></label>
-      <div style="width: 100px;">
-        <input type="number" class="form-control ms-2" id="posts_for_page" name="posts_for_page" value="{{ settings.posts_for_page }}">
+      <div class="mt-4">&nbsp;</div>
+
+      {% for lang in languages %}
+
+      <div class="ms-2 mt-2">
+        <span>{{ lang.native_name }}: {{ lang.code }} <small class="opacity-50">({{ lang.english_name }})</small></span>
+        <div class="form-check ms-2">
+          <input class="form-check-input" type="radio" name="default_lang_radio" id="{{ lang.code }}" value="{{ lang.code }}" {% if lang.code == settings.default_lang %}checked{% endif %}>
+          <label class="form-check-label" for="{{ lang.code }}">Default</label>
+        </div>
       </div>
 
-      <label for="default_lang_radio" class="mt-5 mb-2"><h4>Default language</h4></label>
-      {% for lang in languages %}
-      <small>
-        <div class="row border-bottom border-secondary border-opacity-25">
+      {% if lang.code != settings.default_lang %}
+      <input class="form-check-input ms-3" type="checkbox" name="display_lang" id="display_lang_1" value="{{ lang.code }}" {% if lang.display %}checked{% endif %}>
+      <label class="form-check-label" for="display_lang_1">Enabled</label>
+      {% else %}
+      <input class="form-check-input ms-3" type="checkbox" name="display_lang" id="display_lang_2" value="{{ lang.code }}" {% if lang.display %}checked disabled{% endif %}>
+      <label class="form-check-label" for="display_lang_2">Enabled</label>
+      {% endif %}
 
-          <div class="col">
-            <div class="mb-3 ms-2">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="default_lang_radio" id="{{ lang.code }}" value="{{ lang.code }}" {% if lang.code == settings.default_lang %}checked{% endif %}>
-                <label class="form-check-label" for="{{ lang.code }}">
-                  {{ lang.code }}:&nbsp;
-                  {{ lang.native_name }}&nbsp;<br>
-                  <small class="opacity-50">({{ lang.english_name }})</small>
-                </label>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col">
-            {% if lang.code != settings.default_lang %}
-            <input class="form-check-input" type="checkbox" name="display_lang" id="display_lang" value="{{ lang.code }}" {% if lang.display %}checked{% endif %}>
-            {% else %}
-            <input class="form-check-input" type="checkbox" name="display_lang" id="display_lang" value="{{ lang.code }}" {% if lang.display %}checked disabled{% endif %}>
-            {% endif %}
-            <label class="form-check-label mb-1" for="display_lang">Display</label>
-          </div>
+      <hr class="text-secondary text-opacity-50">
 
-        </div>
-      </small>
       {% endfor %}
       
-      
       <div class="my-5 mx-2 d-flex align-items-end flex-column">
-        <button type="submit" name="settings_general" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
+        <button type="submit" name="settings_language" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
           </svg> Save
@@ -74,7 +61,7 @@
     </form>
     
   </div>
-<!-- General end -->
+<!-- Language end -->
 
 <!-- Brand -->
 {% elif path == 'brand' %}
@@ -143,13 +130,34 @@
 <!-- Posts -->
 {% elif path == 'posts' %}
   <h1 class="text-center">Posts</h1>
-  <h4>New</h4>
-  <a type="button" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25" href="{% url 'post' cookie_language 'create-new-post' %}">
+  <h4>New post</h4>
+  <a type="button" class="btn btn-sm btn-outline-dark border border-1 border-dark border-opacity-25" href="{% url 'post' cookie_language 'create-new-post' %}">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
     </svg>
   </a>
-  <h4 class="mt-4">All</h4>
+
+  <h4 class="mt-4">Posts for page</h4>
+  <form action="{% url 'settings' cookie_language 'posts' %}"
+        method="post" enctype="multipart/form-data">{% csrf_token %}
+
+    <div class="input-group" style="width: 150px;">
+
+        <input type="number" class="form-control form-control-sm" id="posts_for_page" name="posts_for_page" value="{{ settings.posts_for_page }}">
+
+
+
+      <button type="submit" name="settings_posts" class="btn btn-sm btn-outline-dark border border-1 border-dark border-opacity-25">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+        </svg> Save
+      </button>
+
+
+    </div>
+  </form>
+
+  <h4 class="mt-4">All posts</h4>
   {% for post_group in posts %}
   <div class="row p-0 m-0 my-2">
     {% for post in post_group %}
