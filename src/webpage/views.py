@@ -74,6 +74,7 @@ def default_context(request):
         'categories_name': categories_name,
         'nav_items_strings': NavItemString.objects.order_by('lang'),
         'languages': languages,
+        'languages_displayed': Language.objects.filter(display=True),
         'categories': Category.objects.order_by('code'),
         'path': '#',
         'cookie_language': cookie_language
@@ -422,9 +423,10 @@ def post(request, lang, url):
                 os.remove(path_file)
 
         if 'tags' in request.POST:
-            tags = request.POST['tags'].replace(
-                ', ', ',').strip().strip(',').strip()
+            tags = request.POST['tags'].replace('  ', ' ').replace(', ', ','
+                ).strip(',').strip()
             post_obj.tags = tags.lower()
+
         if 'categories' in request.POST:
             all_categories = ''
             categories = Category.objects.all()
@@ -677,6 +679,28 @@ def settings(request, lang, text='resume'):
             return response
 
         if 'settings_general' in request.POST:
+            
+            for lang in Language.objects.all():
+                if lang.code != context['settings'].default_lang:
+                    lang.display = False
+                    lang.save()
+
+            if 'display_lang' in request.POST:
+                for lang in request.POST.getlist('display_lang'):
+                    lang = Language.objects.get(code=lang)
+                    lang.display = True
+                    lang.save()
+
+            if 'default_lang_radio' in request.POST:
+                context['settings'].default_lang = request.POST[
+                    'default_lang_radio']
+                context['settings'].save()
+
+                default_lang = Language.objects.get(
+                    code=request.POST['default_lang_radio'])
+                default_lang.display = True
+                default_lang.save()
+
             if 'posts_for_page' in request.POST:
                 context[
                     'settings'].posts_for_page = request.POST['posts_for_page']

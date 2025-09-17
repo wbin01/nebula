@@ -18,15 +18,42 @@
     <form action="{% url 'settings' cookie_language 'general' %}"
         method="post" enctype="multipart/form-data">{% csrf_token %}
 
-      <label for="default_lang" class="mt-4"><h4>Default lang</h4></label>
-      <div style="width: 100px;">
-        <input type="number" class="form-control" id="default_lang" name="default_lang" value="{{ settings.posts_for_page }}">
-      </div>
-
       <label for="posts_for_page" class="mt-4"><h4>Posts for page</h4></label>
       <div style="width: 100px;">
-        <input type="number" class="form-control" id="posts_for_page" name="posts_for_page" value="{{ settings.posts_for_page }}">
+        <input type="number" class="form-control ms-2" id="posts_for_page" name="posts_for_page" value="{{ settings.posts_for_page }}">
       </div>
+
+      <label for="default_lang_radio" class="mt-5 mb-2"><h4>Default language</h4></label>
+      {% for lang in languages %}
+      <small>
+        <div class="row border-bottom border-secondary border-opacity-25">
+
+          <div class="col">
+            <div class="mb-3 ms-2">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="default_lang_radio" id="{{ lang.code }}" value="{{ lang.code }}" {% if lang.code == settings.default_lang %}checked{% endif %}>
+                <label class="form-check-label" for="{{ lang.code }}">
+                  {{ lang.code }}:&nbsp;
+                  {{ lang.native_name }}&nbsp;<br>
+                  <small class="opacity-50">({{ lang.english_name }})</small>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col">
+            {% if lang.code != settings.default_lang %}
+            <input class="form-check-input" type="checkbox" name="display_lang" id="display_lang" value="{{ lang.code }}" {% if lang.display %}checked{% endif %}>
+            {% else %}
+            <input class="form-check-input" type="checkbox" name="display_lang" id="display_lang" value="{{ lang.code }}" {% if lang.display %}checked disabled{% endif %}>
+            {% endif %}
+            <label class="form-check-label mb-1" for="display_lang">Display</label>
+          </div>
+
+        </div>
+      </small>
+      {% endfor %}
+      
       
       <div class="my-5 mx-2 d-flex align-items-end flex-column">
         <button type="submit" name="settings_general" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">

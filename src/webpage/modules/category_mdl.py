@@ -43,15 +43,13 @@ def clear_old_covers() -> None:
 
 def upd_context(context, category_name):
     nav_item = get_object_or_404(NavItem, code=category_name)
-    nav_item_s = NavItemString.objects.get(
+    nav_item_string = NavItemString.objects.get(
         code=nav_item.code, lang=context['cookie_language'])
 
     context['nav_item'] = nav_item
     context['path'] = nav_item.code
-    context['tab_title'] = nav_item_s.text.title()
-    context['posts'] = [
-        x for x in
-        Post.objects.filter(
+    context['tab_title'] = nav_item_string.text.title()
+    context['posts'] = [x for x in Post.objects.filter(
             lang=context['cookie_language'],
             display=True).order_by('-publication_date')
         if nav_item.code in x.categories.split(',')]
@@ -94,7 +92,8 @@ def delete_nav_item(context, nav_item):
     for nav_str in NavItemString.objects.filter(code=nav_item.code):
         nav_str.delete()
 
-    for p in Post.objects.filter(lang=context['cookie_language']):
+    # for p in Post.objects.filter(lang=context['cookie_language']):
+    for p in Post.objects.all():
         if nav_item.code in p.categories.split(','):
             p.categories = p.categories.replace(
                 nav_item.code, '').replace(',,', ',').strip(',')

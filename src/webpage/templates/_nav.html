@@ -66,7 +66,7 @@
       </div> <!-- modal end -->
 
       <!-- Translate -->
-      {% if languages|length > 1 %}
+      {% if languages_displayed|length > 1 %}
       <a class="ms-3 me-3 text-decoration-none" style="color:{{ style.nav_top_fg }};" onMouseOver="this.style.color='{{ style.nav_top_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_top_fg }}'" type="button" data-bs-toggle="modal" data-bs-target="#translateModal">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-translate" viewBox="0 0 16 16">
           <path d="M4.545 6.714 4.11 8H3l1.862-5h1.284L8 8H6.833l-.435-1.286zm1.634-.736L5.5 3.956h-.049l-.679 2.022z"/>
@@ -80,7 +80,7 @@
             <div class="modal-body">
               <form action="{% url 'settings' cookie_language 'cookie_language' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
 
-                {% for lang in languages %}
+                {% for lang in languages_displayed %}
                 <div class="mb-2 mx-2">
                   <small>
                   <input class="form-check-input" type="radio" name="radio-lang" id="{{ lang.code }}nav" value="{{ lang.code }}" {% if lang.code == cookie_language %}checked{% endif %}>
