@@ -165,6 +165,8 @@ def category(request, lang, category_name, page=1):
 
         category_mdl.add_strings_for_langs(context, nav_item)
         context['path'] = nav_item.code
+        # category_name = nav_item.code
+        return redirect('category', context['settings'].lang, nav_item.code)
 
     elif request.method == 'POST' and 'add-sub-item' in request.POST:
         if 'item' in [x.code for x in NavItem.objects.all()]:

@@ -76,7 +76,8 @@ def add_warning():
 def add_strings_for_langs(context, nav_item):
     string_langs = [
         x.lang for x in
-        NavItemString.objects.filter(code=context['cookie_language'])]
+        NavItemString.objects.filter(code=context['settings'].lang)]
+        # NavItemString.objects.filter(code=context['cookie_language'])]
 
     for lang in context['languages']:
         if lang.code not in string_langs:
