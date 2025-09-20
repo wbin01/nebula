@@ -698,7 +698,7 @@ def settings(request, lang, text='resume'):
 
             return redirect('settings', context['cookie_language'], 'language')
 
-        if 'settings_language_new' in request.POST:
+        elif 'settings_language_new' in request.POST:
             if all([
                     request.POST['native_name'],
                     request.POST['english_name'],
@@ -725,6 +725,17 @@ def settings(request, lang, text='resume'):
                         lang=new_lang.code,
                         text='')
                     nav_item_string.save()
+
+            return redirect('settings', context['cookie_language'], 'language')
+
+        elif 'settings_language_delete' in request.POST:
+            lang = request.POST['settings_language_delete']
+
+            if lang != context['settings'].default_lang:
+                Language.objects.filter(code=lang).delete()
+
+                for nav_str in NavItemString.objects.filter(lang=lang):
+                    nav_str.delete()
 
             return redirect('settings', context['cookie_language'], 'language')
 
