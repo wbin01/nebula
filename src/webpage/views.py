@@ -635,22 +635,7 @@ def settings(request, lang, text='resume'):
             return redirect('index', context['cookie_language'])
 
         if text == 'posts':
-            context['posts'] = []
-
-            post_codes = []
-            for post_ in Post.objects.all().order_by('-publication_date'):
-                if post_.code not in post_codes:
-                    post_codes.append(post_.code)
-
-            for code in post_codes:
-                post_list = []
-                for lang in Language.objects.all():
-                    post_found = Post.objects.filter(lang=lang, code=code)
-                    if post_found:
-                        post_list.append(post_found[0])
-                    else:
-                        post_list.append({'lang': lang, 'title': 'x'})
-                context['posts'].append(post_list)
+            context['posts'] = settings_posts()
 
     elif request.method == 'POST':
         if text == 'cookie_language':
@@ -754,6 +739,24 @@ def settings(request, lang, text='resume'):
                     'settings'].posts_for_page = request.POST['posts_for_page']
                 context['settings'].save()
 
+            if 'search_filter_posts' in request.POST:
+                txt = request.POST['search_filter_posts']
+                tags = re.findall(r'<[^>]+>', txt)
+                categs = re.findall(r'\[[^\]]+\]', txt)
+
+                if tags:
+                    txt = txt.replace(tags[0], '')
+                    tags = tags[0].replace('<', '').replace('>', '').split(',')
+
+                if categs:
+                    txt = txt.replace(categs[0], '')
+                    categs = categs[0].replace(
+                        '[', '').replace(']', '').split(',')
+
+                context['posts'] = settings_posts(txt, tags, categs)
+                return render(request, 'settings.html', context)
+
+
             return redirect('settings', context['cookie_language'], 'posts')
 
         elif 'settings_style' in request.POST:
@@ -782,6 +785,62 @@ def settings(request, lang, text='resume'):
             return redirect('settings', context['cookie_language'], 'style')
 
     return render(request, 'settings.html', context)
+
+
+def settings_posts(
+        text: str = '', tags: list = [], categories: list = []) -> list:
+    post_codes = []
+    for post_ in Post.objects.all().order_by('-publication_date'):
+        if post_.code not in post_codes:
+            post_codes.append(post_.code)
+
+    context_posts = []
+    all_posts_as_an_alternative = []
+    for code in post_codes:
+        
+        post_list_by_lang = []
+        alt_post_list_by_lang = []
+        valid = False
+        for lang in Language.objects.all():
+            post_found = Post.objects.filter(lang=lang, code=code)
+            
+            has_tag = False
+            has_categ = False
+            has_text = False
+
+            if post_found:
+                for tag in tags:
+                    if tag in post_found[0].tags.split(','):
+                        has_tag = True
+                        break
+
+                for category in categories:
+                    if category in post_found[0].categories.split(','):
+                        has_categ = True
+                        break
+
+                if text.strip():
+                    if text.lower() in post_found[0].title.lower():
+                        has_text = True
+
+                if has_tag or has_categ or has_text:
+                    post_list_by_lang.append(post_found[0])
+                    valid = True
+                else:
+                    alt_post_list_by_lang.append(post_found[0])
+
+            else:
+                if valid:
+                    post_list_by_lang.append({'lang': lang, 'title': 'x'})
+                else:
+                    alt_post_list_by_lang.append({'lang': lang, 'title': 'x'})
+
+        if post_list_by_lang:
+            context_posts.append(post_list_by_lang)
+
+        all_posts_as_an_alternative.append(alt_post_list_by_lang)
+
+    return context_posts if context_posts else all_posts_as_an_alternative
 
 
 def admin():

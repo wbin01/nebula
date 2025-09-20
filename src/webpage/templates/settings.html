@@ -130,34 +130,48 @@
 <!-- Posts -->
 {% elif path == 'posts' %}
   <h1 class="text-center">Posts</h1>
-  <h4>New post</h4>
-  <a type="button" class="btn btn-sm btn-outline-dark border border-1 border-dark border-opacity-25" href="{% url 'post' cookie_language 'create-new-post' %}">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-      <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-    </svg>
-  </a>
-
-  <h4 class="mt-4">Posts for page</h4>
-  <form action="{% url 'settings' cookie_language 'posts' %}"
+  
+  <div class="row">
+    <div class="col">
+      <h4>New post</h4>
+      <a type="button" class="btn btn-sm btn-outline-dark border border-1 border-dark border-opacity-25" href="{% url 'post' cookie_language 'create-new-post' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+        </svg> Add
+      </a>
+    </div>
+    
+    <div class="col">
+      <h4>Posts for page</h4>
+      <form action="{% url 'settings' cookie_language 'posts' %}"
         method="post" enctype="multipart/form-data">{% csrf_token %}
 
-    <div class="input-group" style="width: 150px;">
+        <div class="input-group" style="width: 150px;">
+          <input type="number" class="form-control form-control-sm" id="posts_for_page" name="posts_for_page" value="{{ settings.posts_for_page }}">
+          <button type="submit" name="settings_posts" class="btn btn-sm btn-outline-dark border border-1 border-dark border-opacity-25">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+            </svg> Save
+          </button>
 
-        <input type="number" class="form-control form-control-sm" id="posts_for_page" name="posts_for_page" value="{{ settings.posts_for_page }}">
+        </div>
+      </form>
+    </div>
+  </div>
 
-
-
+  <form action="{% url 'settings' cookie_language 'posts' %}" class="mt-4" 
+        method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="input-group pe-4">
+      <input type="text" class="form-control form-control-sm" id="search_filter_posts" name="search_filter_posts" placeholder="Text &lt;tag, tag2&gt; [category, category2]">
       <button type="submit" name="settings_posts" class="btn btn-sm btn-outline-dark border border-1 border-dark border-opacity-25">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-        </svg> Save
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+        </svg>
       </button>
-
 
     </div>
   </form>
 
-  <h4 class="mt-4">All posts</h4>
   {% for post_group in posts %}
   <div class="row p-0 m-0 my-2">
     {% for post in post_group %}
