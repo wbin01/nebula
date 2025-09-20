@@ -15,14 +15,89 @@
 {% elif path == 'language' %}
   <h1 class="text-center">Languages</h1>
   <div class="w-75 mx-auto">
+
+
+    <button type="button" class="btn btn-sm btn-outline-dark border border-1 border-dark border-opacity-25 ms-2" data-bs-target="#newLangModal3" data-bs-toggle="modal">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+      </svg> Add
+    </button>
+    <!-- Lang/Translate modal 2 -->
+    <div class="modal fade text-light" data-bs-theme="dark" id="newLangModal3" data-bs-backdrop="static" tabindex="-1" aria-labelledby="newLangModal3Label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-body">
+
+            <form class="needs-validation" action="{% url 'settings' cookie_language 'language' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+              <div class="mt-2">
+
+                <div class="my-0 py-0 mx-4">
+                  <label for="native_name" class="form-label my-0 py-0">
+                    <small>
+                    Native name:<br><sup class="opacity-50 my-0 py-0">Português, Español, 日本語 . . .</sup>
+                    </small>
+                  </label>
+                  <input type="text" class="form-control my-0 py-0" id="native_name" name="native_name">
+                  <div class="invalid-feedback">
+                    Please provide a native name
+                  </div>
+                </div>
+
+                <div class="mb-0 mt-2 py-0 mx-4">
+                  <label for="english_name" class="form-label my-0 py-0">
+                    <small>
+                    English name:<br><sup class="opacity-50 my-0 py-0">Portuguese, Spanish, Japanese . . .</sup>
+                    </small>
+                  </label>
+                  <input type="text" class="form-control my-0 py-0" id="english_name" name="english_name">
+                  <div class="invalid-feedback">
+                    Please provide the english name
+                  </div>
+                </div>
+
+                <div class="mb-0 mt-2 py-0 mx-4">
+                  <label for="new_lang_code" class="form-label my-0 py-0">
+                    <small>
+                    Lang code:<br><sup class="opacity-50 my-0 py-0">pt-br, &nbsp; es, &nbsp; ja&nbsp;. . .</sup>
+                    </small>
+                  </label>
+                  <input type="text" class="form-control my-0 py-0" id="new_lang_code" name="new_lang_code">
+                  <div class="invalid-feedback">
+                    Please provide the lang code
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="d-grid gap-2 d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                  </svg>
+                </button>
+
+                <input type="hidden" name="settings_language_new" id="settings_language_new">
+                <button type="submit" class="btn btn-outline-light btn-sm border border-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Lang/Translate modal 2 end -->
+
+
     <form action="{% url 'settings' cookie_language 'language' %}"
         method="post" enctype="multipart/form-data">{% csrf_token %}
 
-      <div class="mt-4">&nbsp;</div>
-
       {% for lang in languages %}
 
-      <div class="ms-2 mt-2">
+      <div class="ms-2 mt-3">
         <span>{{ lang.native_name }}: {{ lang.code }} <small class="opacity-50">({{ lang.english_name }})</small></span>
         <div class="form-check ms-2">
           <input class="form-check-input" type="radio" name="default_lang_radio" id="{{ lang.code }}" value="{{ lang.code }}" {% if lang.code == settings.default_lang %}checked{% endif %}>
@@ -30,13 +105,33 @@
         </div>
       </div>
 
-      {% if lang.code != settings.default_lang %}
-      <input class="form-check-input ms-3" type="checkbox" name="display_lang" id="display_lang_1" value="{{ lang.code }}" {% if lang.display %}checked{% endif %}>
-      <label class="form-check-label" for="display_lang_1">Enabled</label>
-      {% else %}
-      <input class="form-check-input ms-3" type="checkbox" name="display_lang" id="display_lang_2" value="{{ lang.code }}" {% if lang.display %}checked disabled{% endif %}>
-      <label class="form-check-label" for="display_lang_2">Enabled</label>
-      {% endif %}
+      <div class="row">
+        {% if lang.code != settings.default_lang %}
+        <div class="col">
+          <input class="form-check-input ms-3" type="checkbox" name="display_lang" id="display_lang_1" value="{{ lang.code }}" {% if lang.display %}checked{% endif %}>
+          <label class="form-check-label" for="display_lang_1">Enabled</label>
+        </div>
+        <div class="col text-end text-danger">
+          <input class="form-check-input" type="checkbox" name="delete_lang" id="delete_lang_1" value="{{ lang.code }}">
+          <svg id="svg2" class="bi bi-trash" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <path id="path1" d="m5.5 2.9960938c0.2761424 0 0.5 0.2238576 0.5 0.5v7.0020082c0 0.666667-1 0.666667-1 0v-7.0020082c0-0.2761424 0.2238576-0.5 0.5-0.5m2.5 0c0.2761424 0 0.5 0.2238576 0.5 0.5v7.0020082c0 0.666667-1 0.666667-1 0v-7.0020082c0-0.2761424 0.2238576-0.5 0.5-0.5m3 0.5c0-0.6666664-1-0.6666664-1 0v7.0020082c0 0.666667 1 0.666667 1 0z"/>
+            <path id="path2" d="m7 0c-0.5522847 0-1 0.44771525-1 1h-3-0.5c-0.277 0-0.5 0.223-0.5 0.5s0.223 0.5 0.5 0.5h0.5v9c0 1.104569 0.8954305 2 2 2h6c1.104569 0 2-0.895431 2-2v-9h0.5c0.277 0 0.5-0.223 0.5-0.5s-0.223-0.5-0.5-0.5h-0.5-3c0-0.55228475-0.4477153-1-1-1h-2zm-3 2h8v9c0 0.552285-0.447715 1-1 1h-6c-0.5522847 0-1-0.447715-1-1v-9z"/>
+          </svg>
+        </div>
+        {% else %}
+        <div class="col">
+          <input class="form-check-input ms-3" type="checkbox" name="display_lang" id="display_lang_2" value="{{ lang.code }}" {% if lang.display %}checked disabled{% endif %}>
+          <label class="form-check-label" for="display_lang_2">Enabled</label>
+        </div>
+        <div class="col text-end text-danger text-opacity-25">
+          <input class="form-check-input" type="checkbox" name="delete_lang" id="delete_lang_2" value="{{ lang.code }}" disabled>
+          <svg id="svg2" class="bi bi-trash" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <path id="path1" d="m5.5 2.9960938c0.2761424 0 0.5 0.2238576 0.5 0.5v7.0020082c0 0.666667-1 0.666667-1 0v-7.0020082c0-0.2761424 0.2238576-0.5 0.5-0.5m2.5 0c0.2761424 0 0.5 0.2238576 0.5 0.5v7.0020082c0 0.666667-1 0.666667-1 0v-7.0020082c0-0.2761424 0.2238576-0.5 0.5-0.5m3 0.5c0-0.6666664-1-0.6666664-1 0v7.0020082c0 0.666667 1 0.666667 1 0z"/>
+            <path id="path2" d="m7 0c-0.5522847 0-1 0.44771525-1 1h-3-0.5c-0.277 0-0.5 0.223-0.5 0.5s0.223 0.5 0.5 0.5h0.5v9c0 1.104569 0.8954305 2 2 2h6c1.104569 0 2-0.895431 2-2v-9h0.5c0.277 0 0.5-0.223 0.5-0.5s-0.223-0.5-0.5-0.5h-0.5-3c0-0.55228475-0.4477153-1-1-1h-2zm-3 2h8v9c0 0.552285-0.447715 1-1 1h-6c-0.5522847 0-1-0.447715-1-1v-9z"/>
+          </svg>
+        </div>
+        {% endif %}
+      </div>
 
       <hr class="text-secondary text-opacity-50">
 

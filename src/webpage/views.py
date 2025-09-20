@@ -459,6 +459,9 @@ def post(request, lang, url):
                 if delete_lang_too:
                     Language.objects.filter(code=post_lang).delete()
 
+                    for nav_st in NavItemString.objects.filter(lang=post_lang):
+                        nav_st.delete()
+
             return redirect('index', context['cookie_language'])
 
         if ('radio-lang' in request.POST and
@@ -664,7 +667,6 @@ def settings(request, lang, text='resume'):
             return response
 
         if 'settings_language' in request.POST:
-            
             for lang in Language.objects.all():
                 if lang.code != context['settings'].default_lang:
                     lang.display = False
@@ -685,6 +687,44 @@ def settings(request, lang, text='resume'):
                     code=request.POST['default_lang_radio'])
                 default_lang.display = True
                 default_lang.save()
+            
+            if 'delete_lang' in request.POST:
+                for lang in request.POST.getlist('delete_lang'):
+                    if lang != context['settings'].default_lang:
+                        Language.objects.filter(code=lang).delete()
+
+                        for nav_str in NavItemString.objects.filter(lang=lang):
+                            nav_str.delete()
+
+            return redirect('settings', context['cookie_language'], 'language')
+
+        if 'settings_language_new' in request.POST:
+            if all([
+                    request.POST['native_name'],
+                    request.POST['english_name'],
+                    request.POST['new_lang_code']]):
+
+                new_lang = Language.objects.filter(
+                    code=request.POST['new_lang_code'])
+
+                if not new_lang:
+                    new_lang = Language.objects.create(
+                        native_name=request.POST['native_name'],
+                        english_name=request.POST['english_name'],
+                        code=request.POST['new_lang_code'])
+                    new_lang.save()
+
+                new_lang.display = True
+                new_lang.save()
+                
+                context['languages'] = Language.objects.all()
+
+                for nav_item in NavItem.objects.all():
+                    nav_item_string = NavItemString.objects.create(
+                        code=nav_item.code,
+                        lang=new_lang.code,
+                        text='')
+                    nav_item_string.save()
 
             return redirect('settings', context['cookie_language'], 'language')
 

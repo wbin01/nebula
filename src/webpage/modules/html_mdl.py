@@ -27,6 +27,7 @@ def ref_button(html: str) -> str:
     # {+1 + }     ->  +
     # {+1 }       ->  +
     # {+1 text }  ->  text
+    # {+1 b }     ->  book-icon
 
     # {-1 ... }
     references = re.findall(r'\{\+\d+[^}]*}', html)
