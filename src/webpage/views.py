@@ -797,7 +797,7 @@ def settings_posts(
     context_posts = []
     all_posts_as_an_alternative = []
     for code in post_codes:
-        
+
         post_list_by_lang = []
         alt_post_list_by_lang = []
         valid = False
@@ -810,14 +810,12 @@ def settings_posts(
 
             if post_found:
                 for tag in tags:
-                    if tag in post_found[0].tags.split(','):
+                    if tag.strip() in post_found[0].tags.split(','):
                         has_tag = True
-                        break
 
                 for category in categories:
-                    if category in post_found[0].categories.split(','):
+                    if category.strip() in post_found[0].categories.split(','):
                         has_categ = True
-                        break
 
                 if text.strip():
                     if text.lower() in post_found[0].title.lower():
