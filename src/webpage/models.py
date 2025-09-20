@@ -96,8 +96,8 @@ class PageSetting(models.Model):
         size=[100, 30], crop=['middle', 'center'],
         upload_to='brand_image/', blank=True)
     default_lang = models.CharField(default='en', max_length=20)
-    display_brand = models.BooleanField(default=False)
-    display_logo = models.BooleanField(default=True)
+    display_brand = models.BooleanField(default=True)
+    display_logo = models.BooleanField(default=False)
     display_name = models.BooleanField(default=False)
     favicon = ResizedImageField(
         default='/brand_image/defaults/favicon.svg',
@@ -118,14 +118,11 @@ class PageSetting(models.Model):
 
 class PageStyle(models.Model):
     code = models.IntegerField(default=1)
-    nav_top_bg = models.CharField(default="#000000", max_length=10)
+    nav_top_bg = models.CharField(default="#222222", max_length=10)
     nav_top_fg = models.CharField(default="#CCCCCC", max_length=10)
     nav_top_fg_hover = models.CharField(default="#FFFFFF", max_length=10)
-    
-    nav_bottom_fg = models.CharField(default="#CCCCCC", max_length=10)  # rm
-    nav_items_bg = models.CharField(default="#000000", max_length=10)  # rm
 
-    nav_bottom_bg = models.CharField(default="#000000", max_length=10)
+    nav_bottom_bg = models.CharField(default="#222222", max_length=10)
     nav_items_fg = models.CharField(default="#CCCCCC", max_length=10)
     nav_items_fg_hover = models.CharField(default="#FFFFFF", max_length=10)
 

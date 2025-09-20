@@ -225,12 +225,12 @@
       {% endfor %}
 
       {% if user.is_superuser %}
-      <div class="btn-group" role="group" aria-label="Add Nav Item">
+      <div class="btn-group" role="group" aria-label="Add Nav Item" style="top: -2px;">
         <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
           <input type="hidden" name="category-name" value="nav_item.code">
           <input type="hidden" name="add-item">
-          <button type="submit" class="btn btn-dark btn-sm border border-0" style="position:relative;top:-5px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+          <button type="submit" class="btn btn-outline-light opacity-50 btn-sm border border-0 rounded-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="p-0 m-0 my-1" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
             </svg>
           </button>
