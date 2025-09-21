@@ -32,6 +32,85 @@
     src: url("OpenSans-SemiBold.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: "Literata_18pt-Bold";
+    src: url("static/Literata_18pt-Bold.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Literata_18pt-Light";
+    src: url("static/Literata_18pt-Light.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Literata_18pt-Regular";
+    src: url("static/Literata_18pt-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "JosefinSlab-Bold";
+    src: url("static/JosefinSlab-Bold.ttf") format("truetype");
+}
+@font-face {
+    font-family: "JosefinSlab-BoldItalic";
+    src: url("static/JosefinSlab-BoldItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "JosefinSlab-Italic";
+    src: url("static/JosefinSlab-Italic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "JosefinSlab-Light";
+    src: url("static/JosefinSlab-Light.ttf") format("truetype");
+}
+@font-face {
+    font-family: "JosefinSlab-LightItalic";
+    src: url("static/JosefinSlab-LightItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "JosefinSlab-Medium";
+    src: url("static/JosefinSlab-Medium.ttf") format("truetype");
+}
+@font-face {
+    font-family: "JosefinSlab-MediumItalic";
+    src: url("static/JosefinSlab-MediumItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "JosefinSlab-Regular";
+    src: url("static/JosefinSlab-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Rokkitt-Bold";
+    src: url("static/Rokkitt-Bold.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Rokkitt-BoldItalic";
+    src: url("static/Rokkitt-BoldItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Rokkitt-Italic";
+    src: url("static/Rokkitt-Italic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Rokkitt-Light";
+    src: url("static/Rokkitt-Light.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Rokkitt-LightItalic";
+    src: url("static/Rokkitt-LightItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Rokkitt-Regular";
+    src: url("static/Rokkitt-Regular.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Rokkitt-Thin";
+    src: url("static/Rokkitt-Thin.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Rokkitt-ThinItalic";
+    src: url("static/Rokkitt-ThinItalic.ttf") format("truetype");
+}
+
 body {
     background: rgb(220, 220, 220);
     /* font-family: "Zen Maru Gothic Regular"; */
@@ -141,38 +220,50 @@ body {
 }
 
 .post_stl h1 {
-    font-family: "Newsreader 14pt Light";
+    font-family: "Rokkitt-Bold";
     font-size: 22pt;
     color: #434343;
+    margin-top: 40px;
+    margin-bottom: 15px;
 }
 .post_stl h2 {
-    font-family: "Newsreader 14pt Light";
+    font-family: "Rokkitt-Bold";
     font-size: 20pt;
     color: #434343;
+    margin-top: 40px;
+    margin-bottom: 15px;
 }
 .post_stl h3 {
-    font-family: "Newsreader 14pt Light";
+    font-family: "Rokkitt-Bold";
     font-size: 20pt;
     color: #434343;
+    margin-top: 40px;
+    margin-bottom: 15px;
 }
 .post_stl h4 {
-    font-family: "Newsreader 14pt Light";
+    font-family: "Rokkitt-Bold";
     font-size: 18pt;
     color: #434343;
+    margin-top: 40px;
+    margin-bottom: 15px;
 }
 .post_stl h5 {
-    font-family: "Newsreader 14pt Light";
+    font-family: "Rokkitt-Bold";
     font-size: 16pt;
     color: #434343;
+    margin-top: 40px;
+    margin-bottom: 15px;
 }
-.post_stl h6 {
-    font-family: "Newsreader 14pt Light";
+.post_stl h6, .post_stl h7, .post_stl h8, .post_stl h9 {
+    font-family: "Rokkitt-Bold";
     font-size: 14pt;
     color: #434343;
+    margin-top: 40px;
+    margin-bottom: 15px;
 }
 .post_stl p {
-    font-family: "Newsreader 14pt Light";
-    font-size: 14pt;
+    font-family: "Rokkitt-Light";
+    font-size: 16pt;
     color: #222;
 }
 .post_stl img {
@@ -220,12 +311,12 @@ a.stylelink:hover {
 }
 a.ref_plus_button, a.ref_plus_button:link, a.ref_plus_button:active, a.ref_plus_button:visited {
     text-decoration: none;
-    text-decoration-color: rgba(31, 92, 171, 0.4);
-    color: #2A5073;
+    text-decoration-color: rgba(44, 109, 188, 1.0);
+    color: #2c6dbc;
 }
 a.ref_plus_button:hover {
     text-decoration: none;
-    color: #416b87;
+    color: #3482dc;
 }
 .inverted-style-link a, .inverted-style-link a:link, .inverted-style-link a:active, .inverted-style-link a:visited {
     text-decoration: none;
@@ -238,3 +329,54 @@ a.ref_plus_button:hover {
     color: black;
     box-shadow: inset 0 -40px 0 -1px white;
 }
+
+details summary {
+  list-style: none; /* remove marcador em alguns navegadores */
+  cursor: pointer;
+}
+
+details summary::-webkit-details-marker {
+  display: none; /* remove seta no Chrome/Safari */
+}
+
+details summary::before {
+  content: "➤";  /* ▶ seta fechada */
+  display: inline-block;
+  margin-right: 8px;
+  transition: transform 0.2s;
+  color: #888;
+}
+
+details[open] summary::before {
+  transform: rotate(90deg); /* seta gira quando abre */
+}
+details {
+  border: 1px solid #EEE;
+  border-radius: 8px;
+  padding: .5rem 1rem;
+  margin-bottom: .5rem;
+  background: #EEE;
+  color: #434343;
+}
+
+details[open] {
+  background: #EEE;
+  /* box-shadow: 0 2px 6px rgba(0,0,0,0.1); */
+}
+
+/* Cria um "tema read" usando variáveis */
+[data-bs-theme="read"] {
+  --bs-body-bg: #DEDEDE;          /* fundo do body dcdcdc */
+  --bs-body-color: #434343;       /* cor do texto */
+  
+  /* Fundo e cores do modal */
+  --bs-modal-bg: #DEDEDE;         
+  --bs-modal-color: #434343;
+  --bs-modal-border-color: #dcdcdc;
+
+  /* Botões e etc (se precisar ajustar) */
+  --bs-btn-bg: #e0e0d0;
+  --bs-btn-color: #000;
+  --bs-btn-hover-bg: #d0d0c0;
+}
+

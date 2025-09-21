@@ -9,12 +9,12 @@
     <div class="m-0 p-0 mt-1 ms-3 me-4 align-middle">
       {% if settings.display_logo %}
       <a class="text-decoration-none img-hover-highlight m-0 p-0" href="{% url 'index' cookie_language %}">
-        <img src="{{ settings.logo.url }}" alt="Logo" width="30" height="30" class="d-inline-block">
+        <img src="{{ settings.logo.url }}" width="30" height="30" class="d-inline-block">
       </a>
       {% endif %}
       {% if settings.display_brand %}
       <a class="text-decoration-none img-hover-highlight m-0 p-0" href="{% url 'index' cookie_language %}">
-        <img src="{{ settings.brand.url }}" alt="Brand" width="100" height="30" class="d-inline-block">
+        <img src="{{ settings.brand.url }}" width="100" height="30" class="d-inline-block">
       </a>
       {% endif %}
       {% if settings.display_name %}

@@ -58,8 +58,8 @@ def ref_button(html: str) -> str:
 
         html = html.replace(
             ref, (
-                '<a type="button" class="ref_plus_button"'
-                f'data-bs-toggle="modal" data-bs-target="#ref{num}">{content}'
+                '<a type="button" class="ref_plus_button d-print-none"'
+                f'data-bs-toggle="modal" data-bs-target="#ref{num}"> {content}'
                 '</a>'))
     return html
 
@@ -73,14 +73,19 @@ def ref_content(html: str) -> str:
             ref, (  # data-bs-theme="light"
                 '<div class="modal fade" '
                 f'id="ref{num}" data-bs-backdrop="static" tabindex="-1"'
-                f'aria-labelledby="ref{num}Label" aria-hidden="true">'
+                f'aria-labelledby="ref{num}Label" aria-hidden="true" '
+                'data-bs-theme="read">'
                 
                 '<div class="modal-dialog modal-lg modal-dialog-scrollable">'
                 '<div class="modal-content">'
-                '<div class="modal-body">'
+                '<div class="modal-body p-0 m-0">'
                 
+                '<div class="px-2">'
                 f'{content}'
+                '</div>'
                 
+                '<div class="modal-footer p-0 m-0">'
+
                 '<div class="d-grid gap-2 d-flex justify-content-end">'
                 '<button type="button" class="btn btn-outline-danger btn-sm '
                 'border border-0" data-bs-dismiss="modal" aria-label="Close">'
@@ -94,9 +99,38 @@ def ref_content(html: str) -> str:
                 '</svg>'
                 
                 '</button></div>'
-                
+                '</div>'
+
+
                 '</div></div></div></div>'))
     return html
+
+
+def ref_text_versions(html: str) -> str:
+    references = re.findall(r'\[\[([^\]]+)\]\]', html)
+    html = html.replace('[[', '').replace(']]', '')
+    for n, ref in enumerate(references):  # '[[...//...]]' -> '...//...'
+        list_contents = ref.split('///')
+        
+        details_html = ''
+        for num, content in enumerate(list_contents):
+            title, content = content.split('//') if '//' in content else [
+                'Item', content]
+            title = re.sub(
+                r'<[^>]+>', '', title.replace('<p>', '').replace('</p>', ''))
+            open_ = ' open' if num == 0 else ''
+            details_html += (    
+                f'<details{open_}>'
+                f'  <summary>{title}</summary>'
+                f'  {content}'
+                '</details>')
+
+        html = html.replace(ref, details_html)
+
+    for p_style in re.findall(r'<p style[^>]+>', html):
+        html.replace(p_style, '<p>')
+
+    return html.replace('<p></p>', '').replace('<p>&nbsp;</p>', '')
 
 
 def clear_style(html:str) -> str:
@@ -106,7 +140,10 @@ def clear_style(html:str) -> str:
 
     html = re.sub(r'font-family:[^;]+;','', html)
     html = re.sub(r'font-size:[^;]+;','', html)
-    return clear_tag_p(clear_tag_mark(clear_tag_a(html)))
+    html = clear_tag_h(clear_tag_p(clear_tag_mark(clear_tag_a(html))))
+
+    top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>...</p>'
+    return top_space + html.split(div_body)[1] if div_body in html else html
 
 
 def clear_tag_a(html: str) -> str:
@@ -127,23 +164,27 @@ def clear_tag_a(html: str) -> str:
 
 
 def clear_tag_h(html: str) -> str:
-    for h in re.findall(
-        r'<h. [^>]*><span[^>]*><.[^>]*>[^<]*</.></span></h.>', html):
-        new_h = h
-        styles = re.findall(r' style="[^"]*"', h)
-        if styles:
-            for style in styles:
-                new_h = new_h.replace(style, '')
-        html = html.replace(h, new_h.replace('<span>', '').replace('</span>', ''))
+    h_spans = [
+        r'<h\d[^>]*>[^<]*<[^>]*>[^<]*<[^>]*>[^<]*<[^>]*>[^<]*<[^>]*>[^<]*</h\d>',
+        r'<h\d[^>]*>[^<]*<[^>]*>[^<]*<[^>]*>[^<]*</h\d>',
+        r'<h\d[^>]*>[^<]*</h\d>']
 
-    for h in re.findall(
-            r'<h. [^>]*><span [^>]*><.[^>]*><.[^>]*>[^<]*</.></.></span></h.>', html):
-        new_h = h
-        styles = re.findall(r' style="[^"]*"', h)
-        if styles:
-            for style in styles:
-                new_h = new_h.replace(style, '')
-        html = html.replace(h, new_h.replace('<span>', '').replace('</span>', ''))
+    clean_h = {}
+    for re_h in h_spans:
+        hs = re.findall(re_h, html)
+
+        if hs:
+            for h in hs:
+                new_h = h.replace('</span>', '')
+                new_h = re.sub(r'<span[^>]*>', '', new_h)
+                # new_h = re.sub(r'<h\d( [^>]*)>', '', new_h)
+                clean_h[h] = new_h
+
+    for key, value in clean_h.items():
+        html = html.replace(key, value)
+
+    for x in re.findall(r'<h\d([^>]*)>', html):
+        html = html.replace(x, '')
 
     return html
 
@@ -159,7 +200,10 @@ def clear_tag_p(html: str) -> str:
         text = span.replace('<span>', '').replace('</span>', '')
         html = html.replace(span, text)
 
-    return html
+    for p_style in re.findall(r'<p style[^>]+>', html):
+        html.replace(p_style, '<p>')
+
+    return html.replace('<p></p>', '').replace('<p>&nbsp;</p>', '')
 
 
 def clear_tag_mark(html: str) -> str:

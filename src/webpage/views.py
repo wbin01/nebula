@@ -398,6 +398,7 @@ def post(request, lang, url):
                 html = html_mdl.image(html)
                 html = html_mdl.ref_button(html)
                 html = html_mdl.ref_content(html)
+                html = html_mdl.ref_text_versions(html)
 
                 post_obj.content = html
                 post_obj.save()
@@ -419,6 +420,7 @@ def post(request, lang, url):
                 html = html_mdl.image(html)
                 html = html_mdl.ref_button(html)
                 html = html_mdl.ref_content(html)
+                html = html_mdl.ref_text_versions(html)
 
                 post_obj.content = html
                 post_obj.save()
