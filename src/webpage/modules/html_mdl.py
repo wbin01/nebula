@@ -1,5 +1,8 @@
 import re
 
+from bs4 import BeautifulSoup
+
+
 def image(html: str) -> str:
     # html = re.sub(
     #     r'(^.+<body[^>]*>|</body.+$)', '',
@@ -68,6 +71,7 @@ def ref_content(html: str) -> str:
     references = re.findall(r'\{-\d+[^}]+}', html)
     for ref in references:  # '{-1 ... }'
         content = re.findall(r'\{-\d+([^}]+)}', ref)[0]
+        content = ref_versions(content)
         num = re.findall(r'\{-(\d+)[^}]+}', ref)[0]
         html = html.replace(
             ref, (  # data-bs-theme="light"
@@ -80,11 +84,11 @@ def ref_content(html: str) -> str:
                 '<div class="modal-content">'
                 '<div class="modal-body p-0 m-0">'
                 
-                '<div class="px-2">'
+                '<div class="px-2 mt-2">'
                 f'{content}'
                 '</div>'
                 
-                '<div class="modal-footer p-0 m-0">'
+                '<div class="modal-footer p-0 m-1">'
 
                 '<div class="d-grid gap-2 d-flex justify-content-end">'
                 '<button type="button" class="btn btn-outline-danger btn-sm '
@@ -106,31 +110,27 @@ def ref_content(html: str) -> str:
     return html
 
 
-def ref_text_versions(html: str) -> str:
-    references = re.findall(r'\[\[([^\]]+)\]\]', html)
-    html = html.replace('[[', '').replace(']]', '')
-    for n, ref in enumerate(references):  # '[[...//...]]' -> '...//...'
-        list_contents = ref.split('///')
-        
-        details_html = ''
-        for num, content in enumerate(list_contents):
-            title, content = content.split('//') if '//' in content else [
-                'Item', content]
-            title = re.sub(
-                r'<[^>]+>', '', title.replace('<p>', '').replace('</p>', ''))
+def ref_versions(content: str) -> str:
+    details_html = ''
+    if '<p>+++</p>' in content:
+        for num, body in enumerate(content.split('<p>+++</p>')):
+            body = body.replace('<p></p>', '').replace('<p>&nbsp;</p>', '')
+
+            title = re.findall(r'<p[^>]*>[^<]+</p>', body)
+            title = title[0] if title else 'Item'
+
+            body = body.replace(title, '')
+
             open_ = ' open' if num == 0 else ''
             details_html += (    
                 f'<details{open_}>'
-                f'  <summary>{title}</summary>'
-                f'  {content}'
+                '  <summary>'
+                f'    {title.replace('<p>', '').replace('</p>', '')}'
+                '  </summary>'
+                f'  {body}'
                 '</details>')
 
-        html = html.replace(ref, details_html)
-
-    for p_style in re.findall(r'<p style[^>]+>', html):
-        html.replace(p_style, '<p>')
-
-    return html.replace('<p></p>', '').replace('<p>&nbsp;</p>', '')
+    return details_html if details_html else content
 
 
 def clear_style(html:str) -> str:
@@ -138,15 +138,18 @@ def clear_style(html:str) -> str:
         r'(^.+<body[^>]*>|</body.+$)', '',
         html.replace('\n', ''))
 
+    soup = BeautifulSoup(html, "html5lib")
+
+    html = clear_h(soup)
     html = re.sub(r'font-family:[^;]+;','', html)
     html = re.sub(r'font-size:[^;]+;','', html)
-    html = clear_tag_h(clear_tag_p(clear_tag_mark(clear_tag_a(html))))
+    html = clear_p(clear_mark(clear_a(html)))
 
     top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>...</p>'
     return top_space + html.split(div_body)[1] if div_body in html else html
 
 
-def clear_tag_a(html: str) -> str:
+def clear_a(html: str) -> str:
     for a in re.findall(
         r'<a[^>]*><span[^>]*><u[^>]*>[^<]*</u></span></a>', html):
 
@@ -163,33 +166,24 @@ def clear_tag_a(html: str) -> str:
     return html
 
 
-def clear_tag_h(html: str) -> str:
-    h_spans = [
-        r'<h\d[^>]*>[^<]*<[^>]*>[^<]*<[^>]*>[^<]*<[^>]*>[^<]*<[^>]*>[^<]*</h\d>',
-        r'<h\d[^>]*>[^<]*<[^>]*>[^<]*<[^>]*>[^<]*</h\d>',
-        r'<h\d[^>]*>[^<]*</h\d>']
+def clear_h(soup) -> str:
+    for tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'p']:
+        h = soup.find(tag)
+        if h:
+            h.attrs.clear()
+            for span in h.find_all('span'):
+                span.unwrap()
 
-    clean_h = {}
-    for re_h in h_spans:
-        hs = re.findall(re_h, html)
-
-        if hs:
-            for h in hs:
-                new_h = h.replace('</span>', '')
-                new_h = re.sub(r'<span[^>]*>', '', new_h)
-                # new_h = re.sub(r'<h\d( [^>]*)>', '', new_h)
-                clean_h[h] = new_h
-
-    for key, value in clean_h.items():
-        html = html.replace(key, value)
-
-    for x in re.findall(r'<h\d([^>]*)>', html):
-        html = html.replace(x, '')
-
-    return html
+    return str(soup)
 
 
-def clear_tag_p(html: str) -> str:
+def clear_mark(html: str) -> str:
+    return html.replace(
+        '<p><mark>', '').replace('</mark></p>', ''
+        ).replace('<mark>', '').replace('</mark>', '')
+
+
+def clear_p(html: str) -> str:
     # <span style="color:#000000;mso-style-textfill-fill-color:#000000">
     # </span>
     html = html.replace(
@@ -201,12 +195,9 @@ def clear_tag_p(html: str) -> str:
         html = html.replace(span, text)
 
     for p_style in re.findall(r'<p style[^>]+>', html):
-        html.replace(p_style, '<p>')
+        html = html.replace(p_style, '<p>')
+
+    for p in re.findall(r'<p[^>]+></p>', html):
+        html = html.replace(p, '')
 
     return html.replace('<p></p>', '').replace('<p>&nbsp;</p>', '')
-
-
-def clear_tag_mark(html: str) -> str:
-    return html.replace(
-        '<p><mark>', '').replace('</mark></p>', ''
-        ).replace('<mark>', '').replace('</mark>', '')
