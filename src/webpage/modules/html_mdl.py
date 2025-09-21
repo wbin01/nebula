@@ -26,14 +26,14 @@ def image(html: str) -> str:
 
 
 def ref_button(html: str) -> str:
-    # {+1 ? }     ->  ?
-    # {+1 + }     ->  +
-    # {+1 }       ->  +
-    # {+1 text }  ->  text
-    # {+1 b }     ->  book-icon
+    # {b1 ? }     ->  ?
+    # {b1 + }     ->  +
+    # {b1 }       ->  +
+    # {b1 text }  ->  text
+    # {b1 b }     ->  book-icon
 
-    # {-1 ... }
-    references = re.findall(r'\{\+\d+[^}]*}', html)
+    # {w1 ... }
+    references = re.findall(r'\{b\d+[^}]*}', html)
     question_svg = (
         '<svg id="svg1" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'
             '<path id="rect3" d="m8 0c-3.8660364 0-7 3.1339636-7 7 0 3.866036 3.1339636 7 7 7 3.866036 0 7-3.133964 7-7 0-3.8660364-3.133964-7-7-7zm0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6zm0.4863281 1c-1.020279 0-1.8446984 0.2810671-2.4746093 0.84375-0.6254791 0.5626829-0.9629258 1.2469722-1.0117188 2.0527344l1.7167969 0.2167968c0.119772-0.5626826 0.3388111-0.9812704 0.6582031-1.2558593 0.319392-0.274589 0.7167542-0.4121094 1.1914062-0.4121094 0.4923951 0 0.8835351 0.1328516 1.171875 0.3984375 0.2927758 0.2610847 0.4394528 0.5761924 0.4394528 0.9453125 0 0.2655866-0.083919 0.5079444-0.2480465 0.7285156-0.106464 0.1395458-0.4309355 0.4346192-0.9765625 0.8847657-0.545627 0.4501462-0.9099229 0.8547267-1.0917969 1.2148437-0.181877 0.360117-0.2734375 0.8207244-0.2734375 1.3789063 0 0.0540169 0.0034125 0.2035908 0.0078125 0.4511718h1.6953125c-0.0089-0.5221698 0.0337901-0.8833716 0.1269532-1.0859375 0.09759-0.2025658 0.3434782-0.4715789 0.7382812-0.8046875 0.762991-0.643709 1.259563-1.1517693 1.490234-1.5253906 0.235118-0.3736213 0.353516-0.7708165 0.353516-1.1894531 0-0.7562456-0.316825-1.417191-0.951172-1.984375-0.634347-0.5716859-1.4889889-0.8574219-2.5624999-0.8574219zm-0.890625 8.103516v1.896484h1.8691407v-1.896484h-1.8691407z"/>'
@@ -48,8 +48,8 @@ def ref_button(html: str) -> str:
         '</svg>')
 
     for ref in references:
-        text = re.findall(r'\{\+\d+([^}]*)}', ref)[0].strip()
-        num = re.findall(r'\{\+(\d+)[^}]*}', ref)[0]
+        text = re.findall(r'\{b\d+([^}]*)}', ref)[0].strip()
+        num = re.findall(r'\{b(\d+)[^}]*}', ref)[0]
         if text == '?':
             content = question_svg
         elif text == 'b':
@@ -68,11 +68,11 @@ def ref_button(html: str) -> str:
 
 
 def ref_content(html: str) -> str:
-    references = re.findall(r'\{-\d+[^}]+}', html)
-    for ref in references:  # '{-1 ... }'
-        content = re.findall(r'\{-\d+([^}]+)}', ref)[0]
+    references = re.findall(r'\{w\d+[^}]+}', html)
+    for ref in references:  # '{w1 ... }'
+        content = re.findall(r'\{w\d+([^}]+)}', ref)[0]
         content = ref_versions(content)
-        num = re.findall(r'\{-(\d+)[^}]+}', ref)[0]
+        num = re.findall(r'\{w(\d+)[^}]+}', ref)[0]
         html = html.replace(
             ref, (  # data-bs-theme="light"
                 '<div class="modal fade" '
@@ -105,8 +105,8 @@ def ref_content(html: str) -> str:
                 '</button></div>'
                 '</div>'
 
-
                 '</div></div></div></div>'))
+
     return html
 
 
@@ -114,8 +114,6 @@ def ref_versions(content: str) -> str:
     details_html = ''
     if '<p>+++</p>' in content:
         for num, body in enumerate(content.split('<p>+++</p>')):
-            body = body.replace('<p></p>', '').replace('<p>&nbsp;</p>', '')
-
             title = re.findall(r'<p[^>]*>[^<]+</p>', body)
             title = title[0] if title else 'Item'
 
@@ -133,19 +131,22 @@ def ref_versions(content: str) -> str:
     return details_html if details_html else content
 
 
-def clear_style(html:str) -> str:
+def clear_style(html:str, docx=False) -> str:
     html = re.sub(
         r'(^.+<body[^>]*>|</body.+$)', '',
         html.replace('\n', ''))
 
-    soup = BeautifulSoup(html, "html5lib")
-
-    html = clear_h(soup)
     html = re.sub(r'font-family:[^;]+;','', html)
     html = re.sub(r'font-size:[^;]+;','', html)
-    html = clear_p(clear_mark(clear_a(html)))
+    html = clear_p(html)
+    html = clear_a(html)
+    html = clear_mark(html)
+    html = clear_h(html)
+    html = clear_spaces(html)
 
-    top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>...</p>'
+    # '<h2 style="mso-pagination:widow-orphan lines-together;page-break-after:avoid;margin-top:8pt;margin-bottom:4pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="color:#2e75b5;mso-style-textfill-fill-color:#2e75b5">USO CORRETO DO NOME DE DEUS</span></h2>'
+
+    top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>.....</p>'
     return top_space + html.split(div_body)[1] if div_body in html else html
 
 
@@ -166,13 +167,14 @@ def clear_a(html: str) -> str:
     return html
 
 
-def clear_h(soup) -> str:
+def clear_h(html: str) -> str:
+    soup = BeautifulSoup(html, 'html5lib')
     for tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'p']:
-        h = soup.find(tag)
-        if h:
-            h.attrs.clear()
-            for span in h.find_all('span'):
-                span.unwrap()
+        for t in soup.find_all(tag):
+            if t:
+                t.attrs.clear()  # remove style, class etc.
+                for span in t.find_all('span'):
+                    span.unwrap()
 
     return str(soup)
 
@@ -201,3 +203,20 @@ def clear_p(html: str) -> str:
         html = html.replace(p, '')
 
     return html.replace('<p></p>', '').replace('<p>&nbsp;</p>', '')
+
+
+def clear_spaces(html: str) -> str:
+    soup = BeautifulSoup(html, 'html5lib')
+
+    for p in soup.find_all('p'):
+        # pega texto normalizando espaços e NBSP
+        texto = p.get_text().replace('\xa0', '').strip()
+        if not texto:
+            p.decompose()
+
+    for span in soup.find_all('span'):
+        texto = span.get_text().replace('\xa0', '').strip()
+        if not texto:
+            span.decompose()
+
+    return str(soup)

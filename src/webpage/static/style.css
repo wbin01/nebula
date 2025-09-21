@@ -333,6 +333,13 @@ a.ref_plus_button:hover {
 details summary {
   list-style: none; /* remove marcador em alguns navegadores */
   cursor: pointer;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  padding: 0px;
+}
+details summary p {
+  padding: 0px;
+  margin: 0px;
 }
 
 details summary::-webkit-details-marker {
@@ -354,6 +361,7 @@ details {
   border: 1px solid #EEE;
   border-radius: 8px;
   padding: .5rem 1rem;
+  padding-bottom: .1rem;
   margin-bottom: .5rem;
   background: #EEE;
   color: #434343;
@@ -380,3 +388,24 @@ details[open] {
   --bs-btn-hover-bg: #d0d0c0;
 }
 
+.btn-danger {
+  background-color: #711830;
+  border-color: #711830;
+}
+
+.btn-danger:hover {
+  background-color: #861d39;
+  border-color: #861d39;
+}
+
+.btn-outline-danger {
+  background-color: rgba(0, 0, 0, 0.0);
+  border-color: rgba(0, 0, 0, 0.0);
+  color: rgba(147, 31, 64, 1.0);
+}
+
+.btn-outline-danger:hover {
+  background-color: rgba(113, 24, 48, 0.8);
+  border-color: rgba(0, 0, 0, 0.0);
+  color: rgba(255, 255, 255, 0.8);
+}

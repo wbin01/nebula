@@ -394,14 +394,22 @@ def post(request, lang, url):
                 extra_args=['--standalone', '--embed-resources'],)
 
             with open(output_file, 'r') as html_file:
+                # html = html_mdl.clear_style(html_file.read())
+                # html = html_mdl.image(html)
+                # html = html_mdl.ref_button(html)
+                # html = html_mdl.ref_content(html)
+                # html = html_mdl.ref_text_versions(html)
+
+
                 html = html_mdl.clear_style(html_file.read())
                 html = html_mdl.image(html)
                 html = html_mdl.ref_button(html)
                 html = html_mdl.ref_content(html)
-                html = html_mdl.ref_text_versions(html)
-
-                post_obj.content = html
+                post_obj.content = html_mdl.clear_spaces(html)
                 post_obj.save()
+
+                # post_obj.content = html
+                # post_obj.save()
                 os.remove(path_file)
                 os.remove(input_file)
                 os.remove(output_file)
