@@ -1,10 +1,14 @@
 from django.contrib import admin
-from .models import (
-    Category, Language, NavItem, NavItemString, Post, PageSetting, PageStyle)
+from .models import *
 
 
 @admin.register(PageStyle)
-class PPageStyleAdmin(admin.ModelAdmin):
+class PageStyleAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Icon)
+class IconAdmin(admin.ModelAdmin):
     pass
 
 

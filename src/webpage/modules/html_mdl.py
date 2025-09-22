@@ -1,6 +1,8 @@
 import re
+import pathlib
 
 from bs4 import BeautifulSoup
+from scour import scour
 
 
 def image(html: str) -> str:
@@ -247,3 +249,22 @@ def clear_spaces(html: str) -> str:
     #     html = html.replace(img, new_img)
 
     return html
+
+
+def svg_to_html(svg_path: str) -> str:
+    path = pathlib.Path(__file__).resolve().parent.parent.parent
+
+    svg_path = path.as_posix() + svg_path
+
+    options = scour.sanitizeOptions()
+    options.remove_metadata = True
+    options.strip_xml_prolog = True
+    ## options.enable_viewboxing = True
+
+    with open(svg_path, 'r', encoding='utf-8') as f:
+        svg_text = f.read()
+
+    optimized = scour.scourString(svg_text, options)
+    # with open("output.svg", "w", encoding="utf-8") as f:
+    #     f.write(optimized)
+    return optimized

@@ -18,9 +18,7 @@
 
 
     <button type="button" class="btn btn-sm btn-outline-dark border border-1 border-dark border-opacity-25 ms-2" data-bs-target="#newLangModal3" data-bs-toggle="modal">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-      </svg> Add
+      {{ icons.plus_icon|safe }} Add
     </button>
     <!-- Lang/Translate modal 2 -->
     <div class="modal fade text-light" data-bs-theme="dark" id="newLangModal3" data-bs-backdrop="static" tabindex="-1" aria-labelledby="newLangModal3Label" aria-hidden="true">
@@ -71,16 +69,12 @@
 
               <div class="d-grid gap-2 d-flex justify-content-end mt-2">
                 <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                  </svg>
+                  {{ icons.close_icon|safe }}
                 </button>
 
                 <input type="hidden" name="settings_language_new" id="settings_language_new">
                 <button type="submit" class="btn btn-outline-light btn-sm border border-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-                  </svg>
+                  {{ icons.check_icon|safe }}
                 </button>
               </div>
             </form>
@@ -114,9 +108,7 @@
 
         <div class="col text-end text-danger">
           <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-toggle="modal" data-bs-target="#deleteModal">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-            </svg>
+            {{ icons.trash_icon|safe }}
           </button>
           <!-- Delete lang modal -->
           <div class="modal fade text-start" data-bs-theme="dark" id="deleteModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -126,9 +118,7 @@
                   <p class="text-light my-0 py-0">Delete lang</p>
 
                   <p class="mt-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightbulb-fill" viewBox="0 0 16 16">
-                      <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/>
-                    </svg>
+                    {{ icons.light_icon|safe }}
                     <small>
                     Consider simply disabling public viewing of the language so you can simply enable it in the future.
                     </small>
@@ -140,16 +130,12 @@
 
                   <div class="d-grid gap-2 d-flex justify-content-end mt-3">
                   <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                    </svg>
+                    {{ icons.close_icon|safe }}
                   </button>
 
                   <input type="hidden" name="settings_language_delete" value="{{ lang.code }}">
                   <button type="submit" class="btn btn-outline-light btn-sm border border-0" data-bs-target="#deleteModal2" data-bs-toggle="modal">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-                      <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-                    </svg>
+                    {{ icons.check_icon|safe }}
                   </button>
                   </div>
 
@@ -167,9 +153,7 @@
 
         <div class="col text-end text-danger text-opacity-25">
           <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-toggle="modal" data-bs-target="#deleteModal" disabled>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-            </svg>
+            {{ icons.trash_icon|safe }}
           </button>
         </div>
         {% endif %}
@@ -181,19 +165,9 @@
       
       <div class="my-5 mx-2 d-flex align-items-end flex-column">
         <button type="submit" name="settings_language" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-          </svg> Save
+          {{ icons.check_icon|safe }} Save
         </button>
       </div>
-
-<!--       <div class="my-5 mx-2 d-flex align-items-end flex-column form-check form-check-inline">
-        <button type="submit" name="settings_general" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-          </svg> Save
-        </button>
-      </div> -->
 
     </form>
     

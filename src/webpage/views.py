@@ -17,8 +17,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.utils import timezone
 
-from .models import (
-    Post, Language, Category, PageSetting, NavItem, NavItemString, PageStyle)
+from .models import *
 from .modules import category_mdl, nav_item_mdl, html_mdl, post_mdl
 
 
@@ -40,6 +39,21 @@ def default_context(request):
         page_settings.save()
     else:
         page_settings = page_settings[0]
+
+    icons = Icon.objects.all()
+    if not icons:
+        icons = Icon.objects.create()
+        icons.save()
+
+        icons.book_icon = html_mdl.svg_to_html(icons.book_file.url)
+        icons.close_icon = html_mdl.svg_to_html(icons.close_file.url)
+        icons.light_icon = html_mdl.svg_to_html(icons.light_file.url)
+        icons.check_icon = html_mdl.svg_to_html(icons.check_file.url)
+        icons.plus_icon = html_mdl.svg_to_html(icons.plus_file.url)
+        icons.trash_icon = html_mdl.svg_to_html(icons.trash_file.url)
+        icons.save()
+    else:
+        icons = icons[0]
 
     cookie_lang = request.COOKIES.get('cookie_language')
     cookie_language = cookie_lang if cookie_lang else page_settings.default_lang
@@ -67,6 +81,7 @@ def default_context(request):
 
     return {
         'settings': page_settings,
+        'icons': icons,
         'style': PageStyle.objects.get(code=page_settings.style),
         'tab_title': page_settings.name.title(),
         'nav_items': NavItem.objects.filter(local='menu').order_by('index'),

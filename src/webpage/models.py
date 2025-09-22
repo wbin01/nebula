@@ -132,6 +132,35 @@ class PageStyle(models.Model):
         return f'Page style {self.code}'
 
 
+class Icon(models.Model):
+    book_file = models.FileField(
+        default='icons/default/biblius.svg', upload_to='icons/')
+    book_icon = models.TextField(default='')
+
+    check_file = models.FileField(
+        default='icons/default/check.svg', upload_to='icons/')
+    check_icon = models.TextField(default='')
+
+    close_file = models.FileField(
+        default='icons/default/close.svg', upload_to='icons/')
+    close_icon = models.TextField(default='')
+
+    light_file = models.FileField(
+        default='icons/default/light.svg', upload_to='icons/')
+    light_icon = models.TextField(default='')
+
+    plus_file = models.FileField(
+        default='icons/default/plus.svg', upload_to='icons/')
+    plus_icon = models.TextField(default='')
+
+    trash_file = models.FileField(
+        default='icons/default/trash.svg', upload_to='icons/')
+    trash_icon = models.TextField(default='')
+
+    def __str__(self):
+        return 'Icons'
+
+
 class Post(models.Model):
     categories = models.CharField(
         default='home,home-highlight', max_length=200)
