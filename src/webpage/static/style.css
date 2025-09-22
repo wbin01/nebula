@@ -1,114 +1,97 @@
 @font-face {
-    font-family: "Newsreader";
-    src: url("Newsreader-VariableFont_opsz,wght.ttf") format("truetype");
-}
-@font-face {
-    font-family: "Newsreader 14pt Light";
-    src: url("static/Newsreader_14pt-Light.ttf") format("truetype");
-}
-@font-face {
-    font-family: "Newsreader 14pt ExtraLight";
-    src: url("static/Newsreader_14pt-ExtraLight.ttf") format("truetype");
-}
-@font-face {
-    font-family: "Newsreader Italic";
-    src: url("Newsreader-Italic-VariableFont_opsz,wght.ttf") format("truetype");
-}
-
-@font-face {
     font-family: "OpenSans-Regular";
-    src: url("OpenSans-Regular.ttf") format("truetype");
+    src: url("fonts/OpenSans-Regular.ttf") format("truetype");
 }
 @font-face {
     font-family: "OpenSans-Medium";
-    src: url("OpenSans-Medium.ttf") format("truetype");
+    src: url("fonts/OpenSans-Medium.ttf") format("truetype");
 }
 @font-face {
     font-family: "OpenSans-Light";
-    src: url("OpenSans-Light.ttf") format("truetype");
+    src: url("fonts/OpenSans-Light.ttf") format("truetype");
 }
 @font-face {
     font-family: "OpenSans-SemiBold";
-    src: url("OpenSans-SemiBold.ttf") format("truetype");
+    src: url("fonts/OpenSans-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Literata_18pt-Bold";
-    src: url("static/Literata_18pt-Bold.ttf") format("truetype");
+    src: url("fonts/Literata_18pt-Bold.ttf") format("truetype");
 }
 @font-face {
     font-family: "Literata_18pt-Light";
-    src: url("static/Literata_18pt-Light.ttf") format("truetype");
+    src: url("fonts/Literata_18pt-Light.ttf") format("truetype");
 }
 @font-face {
     font-family: "Literata_18pt-Regular";
-    src: url("static/Literata_18pt-Regular.ttf") format("truetype");
+    src: url("fonts/Literata_18pt-Regular.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "JosefinSlab-Bold";
-    src: url("static/JosefinSlab-Bold.ttf") format("truetype");
+    src: url("fonts/JosefinSlab-Bold.ttf") format("truetype");
 }
 @font-face {
     font-family: "JosefinSlab-BoldItalic";
-    src: url("static/JosefinSlab-BoldItalic.ttf") format("truetype");
+    src: url("fonts/JosefinSlab-BoldItalic.ttf") format("truetype");
 }
 @font-face {
     font-family: "JosefinSlab-Italic";
-    src: url("static/JosefinSlab-Italic.ttf") format("truetype");
+    src: url("fonts/JosefinSlab-Italic.ttf") format("truetype");
 }
 @font-face {
     font-family: "JosefinSlab-Light";
-    src: url("static/JosefinSlab-Light.ttf") format("truetype");
+    src: url("fonts/JosefinSlab-Light.ttf") format("truetype");
 }
 @font-face {
     font-family: "JosefinSlab-LightItalic";
-    src: url("static/JosefinSlab-LightItalic.ttf") format("truetype");
+    src: url("fonts/JosefinSlab-LightItalic.ttf") format("truetype");
 }
 @font-face {
     font-family: "JosefinSlab-Medium";
-    src: url("static/JosefinSlab-Medium.ttf") format("truetype");
+    src: url("fonts/JosefinSlab-Medium.ttf") format("truetype");
 }
 @font-face {
     font-family: "JosefinSlab-MediumItalic";
-    src: url("static/JosefinSlab-MediumItalic.ttf") format("truetype");
+    src: url("fonts/JosefinSlab-MediumItalic.ttf") format("truetype");
 }
 @font-face {
     font-family: "JosefinSlab-Regular";
-    src: url("static/JosefinSlab-Regular.ttf") format("truetype");
+    src: url("fonts/JosefinSlab-Regular.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Rokkitt-Bold";
-    src: url("static/Rokkitt-Bold.ttf") format("truetype");
+    src: url("fonts/Rokkitt-Bold.ttf") format("truetype");
 }
 @font-face {
     font-family: "Rokkitt-BoldItalic";
-    src: url("static/Rokkitt-BoldItalic.ttf") format("truetype");
+    src: url("fonts/Rokkitt-BoldItalic.ttf") format("truetype");
 }
 @font-face {
     font-family: "Rokkitt-Italic";
-    src: url("static/Rokkitt-Italic.ttf") format("truetype");
+    src: url("fonts/Rokkitt-Italic.ttf") format("truetype");
 }
 @font-face {
     font-family: "Rokkitt-Light";
-    src: url("static/Rokkitt-Light.ttf") format("truetype");
+    src: url("fonts/Rokkitt-Light.ttf") format("truetype");
 }
 @font-face {
     font-family: "Rokkitt-LightItalic";
-    src: url("static/Rokkitt-LightItalic.ttf") format("truetype");
+    src: url("fonts/Rokkitt-LightItalic.ttf") format("truetype");
 }
 @font-face {
     font-family: "Rokkitt-Regular";
-    src: url("static/Rokkitt-Regular.ttf") format("truetype");
+    src: url("fonts/Rokkitt-Regular.ttf") format("truetype");
 }
 @font-face {
     font-family: "Rokkitt-Thin";
-    src: url("static/Rokkitt-Thin.ttf") format("truetype");
+    src: url("fonts/Rokkitt-Thin.ttf") format("truetype");
 }
 @font-face {
     font-family: "Rokkitt-ThinItalic";
-    src: url("static/Rokkitt-ThinItalic.ttf") format("truetype");
+    src: url("fonts/Rokkitt-ThinItalic.ttf") format("truetype");
 }
 
 body {
