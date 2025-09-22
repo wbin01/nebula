@@ -16,7 +16,8 @@ def image(html: str) -> str:
         for img_ in img_content:
             img_new = re.sub(
                 img_style_pattern,
-                'style="max-width:100%;"', img_)
+                'style="max-width:100%;max-height:350px;" class="img-fluid"',
+                img_)
             img_new = re.sub(
                 img_width_pattern, '', img_new)
             img_new = re.sub(
@@ -36,15 +37,15 @@ def ref_button(html: str) -> str:
     references = re.findall(r'\{b\d+[^}]*}', html)
     question_svg = (
         '<svg id="svg1" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'
-            '<path id="rect3" d="m8 0c-3.8660364 0-7 3.1339636-7 7 0 3.866036 3.1339636 7 7 7 3.866036 0 7-3.133964 7-7 0-3.8660364-3.133964-7-7-7zm0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6zm0.4863281 1c-1.020279 0-1.8446984 0.2810671-2.4746093 0.84375-0.6254791 0.5626829-0.9629258 1.2469722-1.0117188 2.0527344l1.7167969 0.2167968c0.119772-0.5626826 0.3388111-0.9812704 0.6582031-1.2558593 0.319392-0.274589 0.7167542-0.4121094 1.1914062-0.4121094 0.4923951 0 0.8835351 0.1328516 1.171875 0.3984375 0.2927758 0.2610847 0.4394528 0.5761924 0.4394528 0.9453125 0 0.2655866-0.083919 0.5079444-0.2480465 0.7285156-0.106464 0.1395458-0.4309355 0.4346192-0.9765625 0.8847657-0.545627 0.4501462-0.9099229 0.8547267-1.0917969 1.2148437-0.181877 0.360117-0.2734375 0.8207244-0.2734375 1.3789063 0 0.0540169 0.0034125 0.2035908 0.0078125 0.4511718h1.6953125c-0.0089-0.5221698 0.0337901-0.8833716 0.1269532-1.0859375 0.09759-0.2025658 0.3434782-0.4715789 0.7382812-0.8046875 0.762991-0.643709 1.259563-1.1517693 1.490234-1.5253906 0.235118-0.3736213 0.353516-0.7708165 0.353516-1.1894531 0-0.7562456-0.316825-1.417191-0.951172-1.984375-0.634347-0.5716859-1.4889889-0.8574219-2.5624999-0.8574219zm-0.890625 8.103516v1.896484h1.8691407v-1.896484h-1.8691407z"/>'
+        '   <path id="rect3" d="m8 0c-3.8660364 0-7 3.1339636-7 7 0 3.866036 3.1339636 7 7 7 3.866036 0 7-3.133964 7-7 0-3.8660364-3.133964-7-7-7zm0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6zm0.4863281 1c-1.020279 0-1.8446984 0.2810671-2.4746093 0.84375-0.6254791 0.5626829-0.9629258 1.2469722-1.0117188 2.0527344l1.7167969 0.2167968c0.119772-0.5626826 0.3388111-0.9812704 0.6582031-1.2558593 0.319392-0.274589 0.7167542-0.4121094 1.1914062-0.4121094 0.4923951 0 0.8835351 0.1328516 1.171875 0.3984375 0.2927758 0.2610847 0.4394528 0.5761924 0.4394528 0.9453125 0 0.2655866-0.083919 0.5079444-0.2480465 0.7285156-0.106464 0.1395458-0.4309355 0.4346192-0.9765625 0.8847657-0.545627 0.4501462-0.9099229 0.8547267-1.0917969 1.2148437-0.181877 0.360117-0.2734375 0.8207244-0.2734375 1.3789063 0 0.0540169 0.0034125 0.2035908 0.0078125 0.4511718h1.6953125c-0.0089-0.5221698 0.0337901-0.8833716 0.1269532-1.0859375 0.09759-0.2025658 0.3434782-0.4715789 0.7382812-0.8046875 0.762991-0.643709 1.259563-1.1517693 1.490234-1.5253906 0.235118-0.3736213 0.353516-0.7708165 0.353516-1.1894531 0-0.7562456-0.316825-1.417191-0.951172-1.984375-0.634347-0.5716859-1.4889889-0.8574219-2.5624999-0.8574219zm-0.890625 8.103516v1.896484h1.8691407v-1.896484h-1.8691407z"/>'
         '</svg>')
     plus_svg = (
         '<svg id="svg1" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'
-            '<path id="path3" d="m8 0c-3.8660365 0-7 3.1339635-7 7 0 3.866037 3.1339635 7 7 7 3.866037 0 7-3.133963 7-7 0-3.8660365-3.133963-7-7-7zm0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6zm0 1c-0.5 0-1 0.25-1 0.75v3.25h-3.25c-0.5 0-0.75 0.5-0.75 1s0.25 1 0.75 1h3.25v3.25c0 0.501305 0.5026047 0.751308 1.0039062 0.75 0.4986917-0.001302 0.9960938-0.251305 0.9960938-0.75v-3.25h3.25c0.5 0 0.75-0.5 0.75-1s-0.25-1-0.75-1h-3.25v-3.25c0-0.5-0.5-0.75-1-0.75z"/>'
+        '   <path id="path3" d="m8 0c-3.8660365 0-7 3.1339635-7 7 0 3.866037 3.1339635 7 7 7 3.866037 0 7-3.133963 7-7 0-3.8660365-3.133963-7-7-7zm0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6zm0 1c-0.5 0-1 0.25-1 0.75v3.25h-3.25c-0.5 0-0.75 0.5-0.75 1s0.25 1 0.75 1h3.25v3.25c0 0.501305 0.5026047 0.751308 1.0039062 0.75 0.4986917-0.001302 0.9960938-0.251305 0.9960938-0.75v-3.25h3.25c0.5 0 0.75-0.5 0.75-1s-0.25-1-0.75-1h-3.25v-3.25c0-0.5-0.5-0.75-1-0.75z"/>'
         '</svg>')
     book_svg = (
         '<svg id="svg1" class="bi bi-book-fill" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'
-        '   <path id="path33" d="m5.6542969 1.0175781c-0.937649-0.0077798-2.1562033 0.2320406-3.6542969 0.9824219h-2v1 9h6v0.537109c0 0.277 0.223 0.5 0.5 0.5h1.5 1.5c0.277 0 0.5-0.223 0.5-0.5v-0.537109h6v-9-1h-2c-3.963706-1.9853839-5.9689162-0.3897194-6-0.1191406-0.0193356-0.1683128-0.8024892-0.8504769-2.3457031-0.8632813zm-0.1054688 1.0019531c1.097007-0.023041 2.0464501 0.2806373 2.4511719 0.9804688 0.8094436-1.3996629 3.795659-1.2153323 5.791016 0l1.208984 1v7h-14v-7l1.2089844-1c0.9976785-0.6076661 2.2428367-0.9574273 3.3398437-0.9804688zm-2.5488281 1.9804688v1h4v-1h-4zm6 0v1h4v-1h-4zm-6 2v1h4v-1h-4zm6 0v1h4v-1h-4zm-6 2v1h4v-1h-4zm6 0v1h4v-1h-4z"/>'
+        '   <path id="path33" d="m5.6542969 1.0175781c-0.937649-0.0077798-2.1562033 0.2320406-3.6542969 0.9824219h-2v11l5-0.462891c0 0.277 0.223 0.5 0.5 0.5h5c0.277 0 0.5-0.223 0.5-0.5l5 0.462891v-11h-2c-3.963706-1.9853839-5.9689162-0.3897194-6-0.1191406-0.0193356-0.1683128-0.8024892-0.8504769-2.3457031-0.8632813zm-0.1054688 1.0019531c1.097007-0.023041 2.0464501 0.2806373 2.4511719 0.9804688 0.8094436-1.3996629 3.795659-1.2153323 5.791016 0l1.208984 1v7.613345l-3-0.613345s-3-1-4 1c-1-2-4-1-4-1s-1.9847374 0.410213-3 0.671912v-7.671912l1.2089844-1c0.9976785-0.6076661 2.2428367-0.9574273 3.3398437-0.9804688zm-2.5488281 1.9804688v1h4v-1zm6 0v1h4v-1zm-6 2v1h4v-1zm6 0v1h4v-1zm-6 2v1h4v-1zm6 0v1h4v-1z"/>'
         '</svg>')
 
     for ref in references:
@@ -131,6 +132,25 @@ def ref_versions(content: str) -> str:
     return details_html if details_html else content
 
 
+def font_link(html) -> str:
+    # <a class="stylelink" href="https://lifelessonsfrombible...">lifelessonsfrombible</a>
+    link_icon = (
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">'
+        '  <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>'
+        '  <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>'
+        '</svg>')
+
+    for font in re.findall(r'\(font:[^)]+\)', html):
+        new_font = '<small>' + font.lstrip('(font:').rstrip(')').replace(
+            'class="stylelink"',
+            'class="text-secondary text-decoration-none" target="_blank"'
+            ).replace('</a>', f'{link_icon}</a>') + '</small>'
+
+        html = html.replace(font, new_font)
+
+    return html
+
+
 def clear_style(html:str, docx=False) -> str:
     html = re.sub(
         r'(^.+<body[^>]*>|</body.+$)', '',
@@ -143,8 +163,6 @@ def clear_style(html:str, docx=False) -> str:
     html = clear_mark(html)
     html = clear_h(html)
     html = clear_spaces(html)
-
-    # '<h2 style="mso-pagination:widow-orphan lines-together;page-break-after:avoid;margin-top:8pt;margin-bottom:4pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="color:#2e75b5;mso-style-textfill-fill-color:#2e75b5">USO CORRETO DO NOME DE DEUS</span></h2>'
 
     top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>.....</p>'
     return top_space + html.split(div_body)[1] if div_body in html else html
@@ -169,7 +187,7 @@ def clear_a(html: str) -> str:
 
 def clear_h(html: str) -> str:
     soup = BeautifulSoup(html, 'html5lib')
-    for tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'p']:
+    for tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9']:
         for t in soup.find_all(tag):
             if t:
                 t.attrs.clear()  # remove style, class etc.
@@ -193,6 +211,8 @@ def clear_p(html: str) -> str:
         '<span>')
 
     for span in re.findall(r'<span>[^<]*</span>', html):
+        # if '<img ' in str(span):
+        #     continue
         text = span.replace('<span>', '').replace('</span>', '')
         html = html.replace(span, text)
 
@@ -208,15 +228,22 @@ def clear_p(html: str) -> str:
 def clear_spaces(html: str) -> str:
     soup = BeautifulSoup(html, 'html5lib')
 
+    images = []
     for p in soup.find_all('p'):
         # pega texto normalizando espaços e NBSP
-        texto = p.get_text().replace('\xa0', '').strip()
-        if not texto:
+        text = p.get_text().replace('\xa0', '').strip()
+
+        if '<img ' in str(p):
+            images.append(str(p))
+            continue
+
+        if not text:
             p.decompose()
 
-    for span in soup.find_all('span'):
-        texto = span.get_text().replace('\xa0', '').strip()
-        if not texto:
-            span.decompose()
+    html = str(soup)
 
-    return str(soup)
+    # for img in images:
+    #     new_img = img.replace('<p', '<p class="text-center"')
+    #     html = html.replace(img, new_img)
+
+    return html
