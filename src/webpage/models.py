@@ -153,6 +153,14 @@ class Icon(models.Model):
         default='icons/default/plus.svg', upload_to='icons/')
     plus_icon = models.TextField(default='')
 
+    plus_ref_file = models.FileField(
+        default='icons/default/plus_ref.svg', upload_to='icons/')
+    plus_ref_icon = models.TextField(default='')
+
+    quest_ref_file = models.FileField(
+        default='icons/default/quest_ref.svg', upload_to='icons/')
+    quest_ref_icon = models.TextField(default='')
+
     trash_file = models.FileField(
         default='icons/default/trash.svg', upload_to='icons/')
     trash_icon = models.TextField(default='')

@@ -28,7 +28,7 @@ def image(html: str) -> str:
     return html
 
 
-def ref_button(html: str) -> str:
+def ref_button(html: str, icons) -> str:
     # {b1 ? }     ->  ?
     # {b1 + }     ->  +
     # {b1 }       ->  +
@@ -37,36 +37,49 @@ def ref_button(html: str) -> str:
 
     # {w1 ... }
     references = re.findall(r'\{b\d+[^}]*}', html)
-    question_svg = (
-        '<svg id="svg1" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'
-        '   <path id="rect3" d="m8 0c-3.8660364 0-7 3.1339636-7 7 0 3.866036 3.1339636 7 7 7 3.866036 0 7-3.133964 7-7 0-3.8660364-3.133964-7-7-7zm0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6zm0.4863281 1c-1.020279 0-1.8446984 0.2810671-2.4746093 0.84375-0.6254791 0.5626829-0.9629258 1.2469722-1.0117188 2.0527344l1.7167969 0.2167968c0.119772-0.5626826 0.3388111-0.9812704 0.6582031-1.2558593 0.319392-0.274589 0.7167542-0.4121094 1.1914062-0.4121094 0.4923951 0 0.8835351 0.1328516 1.171875 0.3984375 0.2927758 0.2610847 0.4394528 0.5761924 0.4394528 0.9453125 0 0.2655866-0.083919 0.5079444-0.2480465 0.7285156-0.106464 0.1395458-0.4309355 0.4346192-0.9765625 0.8847657-0.545627 0.4501462-0.9099229 0.8547267-1.0917969 1.2148437-0.181877 0.360117-0.2734375 0.8207244-0.2734375 1.3789063 0 0.0540169 0.0034125 0.2035908 0.0078125 0.4511718h1.6953125c-0.0089-0.5221698 0.0337901-0.8833716 0.1269532-1.0859375 0.09759-0.2025658 0.3434782-0.4715789 0.7382812-0.8046875 0.762991-0.643709 1.259563-1.1517693 1.490234-1.5253906 0.235118-0.3736213 0.353516-0.7708165 0.353516-1.1894531 0-0.7562456-0.316825-1.417191-0.951172-1.984375-0.634347-0.5716859-1.4889889-0.8574219-2.5624999-0.8574219zm-0.890625 8.103516v1.896484h1.8691407v-1.896484h-1.8691407z"/>'
-        '</svg>')
-    plus_svg = (
-        '<svg id="svg1" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'
-        '   <path id="path3" d="m8 0c-3.8660365 0-7 3.1339635-7 7 0 3.866037 3.1339635 7 7 7 3.866037 0 7-3.133963 7-7 0-3.8660365-3.133963-7-7-7zm0 1a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6zm0 1c-0.5 0-1 0.25-1 0.75v3.25h-3.25c-0.5 0-0.75 0.5-0.75 1s0.25 1 0.75 1h3.25v3.25c0 0.501305 0.5026047 0.751308 1.0039062 0.75 0.4986917-0.001302 0.9960938-0.251305 0.9960938-0.75v-3.25h3.25c0.5 0 0.75-0.5 0.75-1s-0.25-1-0.75-1h-3.25v-3.25c0-0.5-0.5-0.75-1-0.75z"/>'
-        '</svg>')
-    book_svg = (
-        '<svg id="svg1" class="bi bi-book-fill" width="16" height="16" fill="currentColor" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'
-        '   <path id="path33" d="m5.6542969 1.0175781c-0.937649-0.0077798-2.1562033 0.2320406-3.6542969 0.9824219h-2v11l5-0.462891c0 0.277 0.223 0.5 0.5 0.5h5c0.277 0 0.5-0.223 0.5-0.5l5 0.462891v-11h-2c-3.963706-1.9853839-5.9689162-0.3897194-6-0.1191406-0.0193356-0.1683128-0.8024892-0.8504769-2.3457031-0.8632813zm-0.1054688 1.0019531c1.097007-0.023041 2.0464501 0.2806373 2.4511719 0.9804688 0.8094436-1.3996629 3.795659-1.2153323 5.791016 0l1.208984 1v7.613345l-3-0.613345s-3-1-4 1c-1-2-4-1-4-1s-1.9847374 0.410213-3 0.671912v-7.671912l1.2089844-1c0.9976785-0.6076661 2.2428367-0.9574273 3.3398437-0.9804688zm-2.5488281 1.9804688v1h4v-1zm6 0v1h4v-1zm-6 2v1h4v-1zm6 0v1h4v-1zm-6 2v1h4v-1zm6 0v1h4v-1z"/>'
-        '</svg>')
-
     for ref in references:
         text = re.findall(r'\{b\d+([^}]*)}', ref)[0].strip()
         num = re.findall(r'\{b(\d+)[^}]*}', ref)[0]
         if text == '?':
-            content = question_svg
+            svg, name = icons.quest_ref_icon, 'quest_ref_icon'
         elif text == 'b':
-            content = book_svg
+            svg, name = icons.book_icon, 'book_icon'
         elif not text or text == '+':
-            content = plus_svg
+            svg, name = icons.plus_ref_icon, 'plus_ref_icon'
         else:
-            content = text
+            svg, name = text, 'text'
 
         html = html.replace(
             ref, (
-                '<a type="button" class="ref_plus_button d-print-none"'
-                f'data-bs-toggle="modal" data-bs-target="#ref{num}"> {content}'
-                '</a>'))
+                '<!-- {ref_icon ' f'{name} --> <a type="button" '
+                'class="ref_plus_button d-print-none" data-bs-toggle="modal" '
+                f'data-bs-target="#ref{num}">{svg.strip()}</a>'
+                '<!-- ref_icon} -->'))
+    return html
+
+
+def ref_buttons_update(html: str, icons) -> str:
+    for tag in re.findall(r'<!-- {ref_icon [^\}]+\} -->', html):
+        print(tag)
+        print('-----')
+        name = re.findall(r'<!-- {ref_icon ([^ ]+) -->', tag)[0]
+        num = re.findall(r'data-bs-target=\"#ref(\d+)\"', tag)[0]
+        if name == 'quest_ref_icon':
+            svg = icons.quest_ref_icon
+        elif name == 'book_icon':
+            svg = icons.book_icon
+        elif name == 'plus_ref_icon':
+            svg = icons.plus_ref_icon
+        elif name == 'text':
+            svg = re.findall(r'<a [^>]+>([^<]+)</a>', tag)[0]
+
+        html = html.replace(
+            tag, (
+                '<!-- {ref_icon ' f'{name} --> <a type="button" '
+                'class="ref_plus_button d-print-none" data-bs-toggle="modal" '
+                f'data-bs-target="#ref{num}">{svg}</a>'
+                '<!-- ref_icon} -->'))
+
     return html
 
 
@@ -267,4 +280,4 @@ def svg_to_html(svg_path: str) -> str:
     optimized = scour.scourString(svg_text, options)
     # with open("output.svg", "w", encoding="utf-8") as f:
     #     f.write(optimized)
-    return optimized
+    return optimized.strip()

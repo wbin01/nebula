@@ -50,6 +50,8 @@ def default_context(request):
         icons.light_icon = html_mdl.svg_to_html(icons.light_file.url)
         icons.check_icon = html_mdl.svg_to_html(icons.check_file.url)
         icons.plus_icon = html_mdl.svg_to_html(icons.plus_file.url)
+        icons.plus_ref_icon = html_mdl.svg_to_html(icons.plus_ref_file.url)
+        icons.quest_ref_icon = html_mdl.svg_to_html(icons.quest_ref_file.url)
         icons.trash_icon = html_mdl.svg_to_html(icons.trash_file.url)
         icons.save()
     else:
@@ -411,7 +413,7 @@ def post(request, lang, url):
             with open(output_file, 'r') as html_file:
                 html = html_mdl.clear_style(html_file.read())
                 html = html_mdl.image(html)
-                html = html_mdl.ref_button(html)
+                html = html_mdl.ref_button(html, context['icons'])
                 html = html_mdl.ref_content(html)
                 post_obj.content = html_mdl.clear_spaces(html)
                 post_obj.save()
@@ -421,6 +423,8 @@ def post(request, lang, url):
 
         if ('content_file' in request.FILES and
                 request.FILES['content_file'].name.lower().endswith('.html')):
+            # update_icons(context['icons'])
+            
             post_obj.content_file = request.FILES['content_file']
             post_obj.save()
 
@@ -431,7 +435,7 @@ def post(request, lang, url):
             with open(path_file, 'r') as html_file:
                 html = html_mdl.clear_style(html_file.read())
                 html = html_mdl.image(html)
-                html = html_mdl.ref_button(html)
+                html = html_mdl.ref_button(html, context['icons'])
                 html = html_mdl.ref_content(html)
                 html = html_mdl.font_link(html)
 
@@ -911,3 +915,19 @@ def settings_posts(
 
 def admin():
     pass
+
+
+def update_icons(icons):
+    icons.book_icon = html_mdl.svg_to_html(icons.book_file.url)
+    icons.close_icon = html_mdl.svg_to_html(icons.close_file.url)
+    icons.light_icon = html_mdl.svg_to_html(icons.light_file.url)
+    icons.check_icon = html_mdl.svg_to_html(icons.check_file.url)
+    icons.plus_icon = html_mdl.svg_to_html(icons.plus_file.url)
+    icons.plus_ref_icon = html_mdl.svg_to_html(icons.plus_ref_file.url)
+    icons.quest_ref_icon = html_mdl.svg_to_html(icons.quest_ref_file.url)
+    icons.trash_icon = html_mdl.svg_to_html(icons.trash_file.url)
+    icons.save()
+
+    for post in Post.objects.all():
+        post.content = html_mdl.ref_buttons_update(post.content, icons)
+        post.save()
