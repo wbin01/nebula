@@ -133,45 +133,57 @@ class PageStyle(models.Model):
 
 
 class Icon(models.Model):
+    admin = models.TextField(default='')
+    admin_file = models.FileField(
+        default='icons/default/admin.svg', upload_to='icons/')
+    arrow_restore = models.TextField(default='')
     arrow_restore_file = models.FileField(
         default='icons/default/arrow-restore.svg', upload_to='icons/')
-    arrow_restore_icon = models.TextField(default='')
-
+    arrow_restore_45 = models.TextField(default='')
     arrow_restore_45_file = models.FileField(
         default='icons/default/arrow-restore-45deg.svg', upload_to='icons/')
-    arrow_restore_45_icon = models.TextField(default='')
-
+    book = models.TextField(default='')
     book_file = models.FileField(
         default='icons/default/biblius.svg', upload_to='icons/')
-    book_icon = models.TextField(default='')
-
-    check_file = models.FileField(
-        default='icons/default/check.svg', upload_to='icons/')
-    check_icon = models.TextField(default='')
-
+    ok = models.TextField(default='')
+    ok_file = models.FileField(
+        default='icons/default/ok.svg', upload_to='icons/')
+    close = models.TextField(default='')
     close_file = models.FileField(
         default='icons/default/close.svg', upload_to='icons/')
-    close_icon = models.TextField(default='')
-
+    image = models.TextField(default='')
+    image_file = models.FileField(
+        default='icons/default/image.svg', upload_to='icons/')
+    light = models.TextField(default='')
     light_file = models.FileField(
         default='icons/default/light.svg', upload_to='icons/')
-    light_icon = models.TextField(default='')
-
+    plus = models.TextField(default='')
     plus_file = models.FileField(
         default='icons/default/plus.svg', upload_to='icons/')
-    plus_icon = models.TextField(default='')
-
+    plus_ref = models.TextField(default='')
     plus_ref_file = models.FileField(
         default='icons/default/plus_ref.svg', upload_to='icons/')
-    plus_ref_icon = models.TextField(default='')
-
+    post = models.TextField(default='')
+    post_file = models.FileField(
+        default='icons/default/post.svg', upload_to='icons/')
+    quest_ref = models.TextField(default='')
     quest_ref_file = models.FileField(
         default='icons/default/quest_ref.svg', upload_to='icons/')
-    quest_ref_icon = models.TextField(default='')
-
+    search = models.TextField(default='')
+    search_file = models.FileField(
+        default='icons/default/search.svg', upload_to='icons/')
+    settings = models.TextField(default='')
+    settings_file = models.FileField(
+        default='icons/default/settings.svg', upload_to='icons/')
+    style = models.TextField(default='')
+    style_file = models.FileField(
+        default='icons/default/style.svg', upload_to='icons/')
+    translate = models.TextField(default='')
+    translate_file = models.FileField(
+        default='icons/default/translate.svg', upload_to='icons/')
+    trash = models.TextField(default='')
     trash_file = models.FileField(
         default='icons/default/trash.svg', upload_to='icons/')
-    trash_icon = models.TextField(default='')
 
     def __str__(self):
         return 'Icons'

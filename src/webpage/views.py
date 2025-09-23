@@ -40,14 +40,14 @@ def default_context(request):
     else:
         page_settings = page_settings[0]
 
-    icons = Icon.objects.all()
-    if not icons:
-        icons = Icon.objects.create()
-        icons.save()
+    icon = Icon.objects.all()
+    if not icon:
+        icon = Icon.objects.create()
+        icon.save()
         
-        html_mdl.update_icons(icons, Post.objects.all())
+        html_mdl.update_icons(icon, Post.objects.all())
     else:
-        icons = icons[0]
+        icon = icon[0]
 
     cookie_lang = request.COOKIES.get('cookie_language')
     cookie_language = cookie_lang if cookie_lang else page_settings.default_lang
@@ -75,7 +75,7 @@ def default_context(request):
 
     return {
         'settings': page_settings,
-        'icons': icons,
+        'icon': icon,
         'style': PageStyle.objects.get(code=page_settings.style),
         'tab_title': page_settings.name.title(),
         'nav_items': NavItem.objects.filter(local='menu').order_by('index'),

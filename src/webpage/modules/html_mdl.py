@@ -284,17 +284,24 @@ def svg_to_html(svg_path: str) -> str:
 
 
 def update_icons(icon, posts):
+    icon.admin_icon = svg_to_html(icon.admin_file.url)
     icon.arrow_restore_icon = svg_to_html(icon.arrow_restore_file.url)
     icon.arrow_restore_45_icon = svg_to_html(icon.arrow_restore_45_file.url)
     icon.book_icon = svg_to_html(icon.book_file.url)
     icon.close_icon = svg_to_html(icon.close_file.url)
+    icon.image_icon = svg_to_html(icon.image_file.url)
     icon.light_icon = svg_to_html(icon.light_file.url)
     icon.check_icon = svg_to_html(icon.check_file.url)
     icon.plus_icon = svg_to_html(icon.plus_file.url)
     icon.plus_ref_icon = svg_to_html(icon.plus_ref_file.url)
+    icon.post_icon = svg_to_html(icon.post_file.url)
     icon.quest_ref_icon = svg_to_html(icon.quest_ref_file.url)
+    icon.search_icon = svg_to_html(icon.search_file.url)
+    icon.settings_icon = svg_to_html(icon.settings_file.url)
+    icon.style_icon = svg_to_html(icon.style_file.url)
+    icon.translate_icon = svg_to_html(icon.translate_file.url)
     icon.trash_icon = svg_to_html(icon.trash_file.url)
-    
+
     icon.save()
 
     for post in posts:

@@ -399,7 +399,7 @@ details[open] {
   position: relative;
   width: 24px; height: 24px;
   cursor: pointer;
-  color: #666; /* cor inicial */
+  color: #999; /* cor inicial */
   transition: color .12s ease, transform .12s ease;
 }
 
@@ -421,9 +421,10 @@ details[open] {
 .check-icon .unchecked { opacity: 1; }
 .check-icon .checked { opacity: 0; }
 
-/* hover afeta o ícone visível */
+/* hover afeta o ícone visível 
 .check-icon:hover .unchecked { transform: scale(1.1); }
 .check-icon:hover input:checked ~ .checked { transform: scale(1.1); }
+*/
 
 /* quando marcado, troca visibilidade e cor base */
 .check-icon input:checked + .unchecked { opacity: 0; }
@@ -433,5 +434,5 @@ details[open] {
 }
 
 /* hover só altera temporariamente */
-.check-icon:hover { color: #999; }
+.check-icon:hover { color: #AAA; }
 .check-icon input:checked:hover ~ .checked { color: #4196fd; }
