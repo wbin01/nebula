@@ -136,21 +136,36 @@ class Icon(models.Model):
     admin = models.TextField(default='')
     admin_file = models.FileField(
         default='icons/default/admin.svg', upload_to='icons/')
+    arrow_left = models.TextField(default='')
+    arrow_left_file = models.FileField(
+        default='icons/default/arrow-left.svg', upload_to='icons/')
     arrow_restore = models.TextField(default='')
     arrow_restore_file = models.FileField(
         default='icons/default/arrow-restore.svg', upload_to='icons/')
     arrow_restore_45 = models.TextField(default='')
     arrow_restore_45_file = models.FileField(
         default='icons/default/arrow-restore-45deg.svg', upload_to='icons/')
+    arrow_right = models.TextField(default='')
+    arrow_right_file = models.FileField(
+        default='icons/default/arrow-right.svg', upload_to='icons/')
     book = models.TextField(default='')
     book_file = models.FileField(
         default='icons/default/biblius.svg', upload_to='icons/')
+    card = models.TextField(default='')
+    card_file = models.FileField(
+        default='icons/default/card.svg', upload_to='icons/')
+    category = models.TextField(default='')
+    category_file = models.FileField(
+        default='icons/default/category.svg', upload_to='icons/')
     clock = models.TextField(default='')
     clock_file = models.FileField(
         default='icons/default/clock.svg', upload_to='icons/')
     close = models.TextField(default='')
     close_file = models.FileField(
         default='icons/default/close.svg', upload_to='icons/')
+    content_text = models.TextField(default='')
+    content_text_file = models.FileField(
+        default='icons/default/content_text.svg', upload_to='icons/')
     hidden = models.TextField(default='')
     hidden_file = models.FileField(
         default='icons/default/hidden.svg', upload_to='icons/')
@@ -187,6 +202,12 @@ class Icon(models.Model):
     style = models.TextField(default='')
     style_file = models.FileField(
         default='icons/default/style.svg', upload_to='icons/')
+    tag = models.TextField(default='')
+    tag_file = models.FileField(
+        default='icons/default/tag.svg', upload_to='icons/')
+    title = models.TextField(default='')
+    title_file = models.FileField(
+        default='icons/default/title.svg', upload_to='icons/')
     translate = models.TextField(default='')
     translate_file = models.FileField(
         default='icons/default/translate.svg', upload_to='icons/')

@@ -1,4 +1,4 @@
-
+{% load replace %}
 <div class="modal fade" data-bs-theme="dark" id="publishedModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="publishedModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -8,42 +8,30 @@
 
         {% if post.display %}
         <p class="text-light my-0 py-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-          </svg>&nbsp;&nbsp;It is currently published!
+          {{ icon.visible|safe }}&nbsp;&nbsp;It is currently published!
         </p>
         <p class="mt-4">Confirm to hide the post from the public</p>
         {% else %}
         {% if post.url != 'new' %}
         <p class="text-light my-0 py-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
-            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
-            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
-          </svg>&nbsp;&nbsp;It is currently unpublished!
+          {{ icon.hidden|safe }}&nbsp;&nbsp;It is currently unpublished!
         </p>
         <p class="mt-4">Confirm to make the post visible to the public</p>
         {% else %}
           <p>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-            </svg>&nbsp;&nbsp;Rename the title to save the content as a valid post.
+            {{ icon.warning|replace:'class="|class="mb-1 '|safe }}&nbsp;&nbsp;Rename the title to save the content as a valid post.
           </p>
         {% endif %}
         {% endif %}
 
         <div class="d-grid gap-2 d-flex justify-content-end mt-3">
         <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-          </svg>
+          {{ icon.close|safe }}
         </button>
         {% if post.url != 'new' %}
         <input type="hidden" name="id" value="{{ post.id }}">
         <button type="submit" name="{% if post.display %}is-published{% else %}is-not-published{% endif %}" class="btn btn-outline-light btn-sm border border-0" data-bs-target="#deleteModal2" data-bs-toggle="modal">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-          </svg>
+          {{ icon.ok|safe }}
         </button>
         {% endif %}
         </div>

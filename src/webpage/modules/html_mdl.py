@@ -60,8 +60,6 @@ def ref_button(html: str, icons) -> str:
 
 def ref_buttons_update(html: str, icons) -> str:
     for tag in re.findall(r'<!-- {ref_icon [^\}]+\} -->', html):
-        print(tag)
-        print('-----')
         name = re.findall(r'<!-- {ref_icon ([^ ]+) -->', tag)[0]
         num = re.findall(r'data-bs-target=\"#ref(\d+)\"', tag)[0]
         if 'quest_ref' in name:
@@ -285,11 +283,16 @@ def svg_to_html(svg_path: str) -> str:
 
 def update_icons(icon, posts):
     icon.admin = svg_to_html(icon.admin_file.url)
+    icon.arrow_left = svg_to_html(icon.arrow_left_file.url)
     icon.arrow_restore = svg_to_html(icon.arrow_restore_file.url)
     icon.arrow_restore_45 = svg_to_html(icon.arrow_restore_45_file.url)
+    icon.arrow_right = svg_to_html(icon.arrow_right_file.url)
     icon.book = svg_to_html(icon.book_file.url)
+    icon.card = svg_to_html(icon.card_file.url)
+    icon.category = svg_to_html(icon.category_file.url)
     icon.clock = svg_to_html(icon.clock_file.url)
     icon.close = svg_to_html(icon.close_file.url)
+    icon.content_text = svg_to_html(icon.content_text_file.url)
     icon.hidden = svg_to_html(icon.hidden_file.url)
     icon.image = svg_to_html(icon.image_file.url)
     icon.light = svg_to_html(icon.light_file.url)
@@ -302,6 +305,8 @@ def update_icons(icon, posts):
     icon.search = svg_to_html(icon.search_file.url)
     icon.settings = svg_to_html(icon.settings_file.url)
     icon.style = svg_to_html(icon.style_file.url)
+    icon.tag = svg_to_html(icon.tag_file.url)
+    icon.title = svg_to_html(icon.title_file.url)
     icon.translate = svg_to_html(icon.translate_file.url)
     icon.trash = svg_to_html(icon.trash_file.url)
     icon.visible = svg_to_html(icon.visible_file.url)
