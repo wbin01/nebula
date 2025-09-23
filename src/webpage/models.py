@@ -133,6 +133,14 @@ class PageStyle(models.Model):
 
 
 class Icon(models.Model):
+    arrow_restore_file = models.FileField(
+        default='icons/default/arrow-restore.svg', upload_to='icons/')
+    arrow_restore_icon = models.TextField(default='')
+
+    arrow_restore_45_file = models.FileField(
+        default='icons/default/arrow-restore-45deg.svg', upload_to='icons/')
+    arrow_restore_45_icon = models.TextField(default='')
+
     book_file = models.FileField(
         default='icons/default/biblius.svg', upload_to='icons/')
     book_icon = models.TextField(default='')

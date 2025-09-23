@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load split %}
+{% load replace %}
 {% block content %}
 {% include '_nav.html'%}
 
@@ -191,7 +192,19 @@
 
         <label for="logo_image" class="mt-4"><h4>Logo image</h4></label>
         <div class="text-opacity-75">
-          <img src="{{ settings.logo.url }}" width="30" height="30" class="m-0 mb-1 p-0 d-inline-block align-text-center"> (30x30) <span class="opacity-50">&nbsp;png &nbsp;jpg &nbsp;jpeg</span>
+          <img src="{{ settings.logo.url }}" width="30" height="30" class="m-0 mb-1 p-0 d-inline-block align-text-center"> (30x30) <span class="opacity-50">&nbsp;png &nbsp;jpg &nbsp;jpeg</span>&nbsp;&nbsp;&nbsp;
+          <!-- Restore -->
+          <label class="check-icon">
+            <input type="checkbox">
+            <span class="icon unchecked">
+              {{ icons.arrow_restore_icon|safe }}
+            </span>
+
+            <span class="icon checked">
+              {{ icons.arrow_restore_45_icon|safe }}
+            </span>&nbsp; <!-- Need &nbsp; for remove space -->
+          </label>
+          <!-- Restore end -->
         </div>
         <div class="input-group">
           <input type="file" class="form-control" id="logo_image" name="logo_image">

@@ -280,4 +280,23 @@ def svg_to_html(svg_path: str) -> str:
     optimized = scour.scourString(svg_text, options)
     # with open("output.svg", "w", encoding="utf-8") as f:
     #     f.write(optimized)
-    return optimized.strip()
+    return re.sub(r'\s*fill\s*=\s*\"#[^\"]*\"', '', optimized.strip())
+
+
+def update_icons(icon, posts):
+    icon.arrow_restore_icon = svg_to_html(icon.arrow_restore_file.url)
+    icon.arrow_restore_45_icon = svg_to_html(icon.arrow_restore_45_file.url)
+    icon.book_icon = svg_to_html(icon.book_file.url)
+    icon.close_icon = svg_to_html(icon.close_file.url)
+    icon.light_icon = svg_to_html(icon.light_file.url)
+    icon.check_icon = svg_to_html(icon.check_file.url)
+    icon.plus_icon = svg_to_html(icon.plus_file.url)
+    icon.plus_ref_icon = svg_to_html(icon.plus_ref_file.url)
+    icon.quest_ref_icon = svg_to_html(icon.quest_ref_file.url)
+    icon.trash_icon = svg_to_html(icon.trash_file.url)
+    
+    icon.save()
+
+    for post in posts:
+        post.content = ref_buttons_update(post.content, icon)
+        post.save()
