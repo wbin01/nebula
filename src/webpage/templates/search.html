@@ -9,15 +9,13 @@
 <div class="container-md mt-3" style="min-height: 500px;">
   <div class="mb-3 text-center" style="font-size: 15pt;">
     {% if search.type == 'search' %}
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
-    </svg>
+    {{ icon.search|safe }}
     <span class="bg-dark bg-opacity-10 rounded pb-1">
       &nbsp;{{ search.text }}&nbsp;
     </span>
     {% else %}
     <span class="m-0 bg-dark bg-opacity-25 rounded-start-pill pb-1">
-      <svg class="bi bi-file-earmark-plus" width="22" height="22" fill="currentColor" version="1.1" viewBox="0 0 16 16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+      <svg class="bi bi-file-earmark-plus mt-1" width="22" height="22" fill="currentColor" version="1.1" viewBox="0 0 16 16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
         <circle cx="8" cy="7" r="3" fill="#dcdcdc" stroke-dasharray="7.21134, 7.21134" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2019" style="paint-order:stroke fill markers"/>
       </svg>
       {{ search.text }}

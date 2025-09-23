@@ -290,6 +290,7 @@ def update_icons(icon, posts):
     icon.book = svg_to_html(icon.book_file.url)
     icon.clock = svg_to_html(icon.clock_file.url)
     icon.close = svg_to_html(icon.close_file.url)
+    icon.hidden = svg_to_html(icon.hidden_file.url)
     icon.image = svg_to_html(icon.image_file.url)
     icon.light = svg_to_html(icon.light_file.url)
     icon.link = svg_to_html(icon.link_file.url)
@@ -303,6 +304,7 @@ def update_icons(icon, posts):
     icon.style = svg_to_html(icon.style_file.url)
     icon.translate = svg_to_html(icon.translate_file.url)
     icon.trash = svg_to_html(icon.trash_file.url)
+    icon.visible = svg_to_html(icon.visible_file.url)
     icon.warning = svg_to_html(icon.warning_file.url)
 
     icon.save()

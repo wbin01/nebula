@@ -145,15 +145,15 @@ class Icon(models.Model):
     book = models.TextField(default='')
     book_file = models.FileField(
         default='icons/default/biblius.svg', upload_to='icons/')
-    ok = models.TextField(default='')
-    ok_file = models.FileField(
-        default='icons/default/ok.svg', upload_to='icons/')
     clock = models.TextField(default='')
     clock_file = models.FileField(
         default='icons/default/clock.svg', upload_to='icons/')
     close = models.TextField(default='')
     close_file = models.FileField(
         default='icons/default/close.svg', upload_to='icons/')
+    hidden = models.TextField(default='')
+    hidden_file = models.FileField(
+        default='icons/default/hidden.svg', upload_to='icons/')
     image = models.TextField(default='')
     image_file = models.FileField(
         default='icons/default/image.svg', upload_to='icons/')
@@ -163,6 +163,9 @@ class Icon(models.Model):
     link = models.TextField(default='')
     link_file = models.FileField(
         default='icons/default/link.svg', upload_to='icons/')
+    ok = models.TextField(default='')
+    ok_file = models.FileField(
+        default='icons/default/ok.svg', upload_to='icons/')
     plus = models.TextField(default='')
     plus_file = models.FileField(
         default='icons/default/plus.svg', upload_to='icons/')
@@ -190,6 +193,9 @@ class Icon(models.Model):
     trash = models.TextField(default='')
     trash_file = models.FileField(
         default='icons/default/trash.svg', upload_to='icons/')
+    visible = models.TextField(default='')
+    visible_file = models.FileField(
+        default='icons/default/visible.svg', upload_to='icons/')
     warning = models.TextField(default='')
     warning_file = models.FileField(
         default='icons/default/warning.svg', upload_to='icons/')
