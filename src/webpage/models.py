@@ -148,6 +148,9 @@ class Icon(models.Model):
     ok = models.TextField(default='')
     ok_file = models.FileField(
         default='icons/default/ok.svg', upload_to='icons/')
+    clock = models.TextField(default='')
+    clock_file = models.FileField(
+        default='icons/default/clock.svg', upload_to='icons/')
     close = models.TextField(default='')
     close_file = models.FileField(
         default='icons/default/close.svg', upload_to='icons/')
@@ -157,6 +160,9 @@ class Icon(models.Model):
     light = models.TextField(default='')
     light_file = models.FileField(
         default='icons/default/light.svg', upload_to='icons/')
+    link = models.TextField(default='')
+    link_file = models.FileField(
+        default='icons/default/link.svg', upload_to='icons/')
     plus = models.TextField(default='')
     plus_file = models.FileField(
         default='icons/default/plus.svg', upload_to='icons/')
@@ -184,6 +190,9 @@ class Icon(models.Model):
     trash = models.TextField(default='')
     trash_file = models.FileField(
         default='icons/default/trash.svg', upload_to='icons/')
+    warning = models.TextField(default='')
+    warning_file = models.FileField(
+        default='icons/default/warning.svg', upload_to='icons/')
 
     def __str__(self):
         return 'Icons'

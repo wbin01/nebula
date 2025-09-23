@@ -41,11 +41,11 @@ def ref_button(html: str, icons) -> str:
         text = re.findall(r'\{b\d+([^}]*)}', ref)[0].strip()
         num = re.findall(r'\{b(\d+)[^}]*}', ref)[0]
         if text == '?':
-            svg, name = icons.quest_ref_icon, 'quest_ref_icon'
+            svg, name = icons.quest_ref, 'quest_ref'
         elif text == 'b':
-            svg, name = icons.book_icon, 'book_icon'
+            svg, name = icons.book, 'book'
         elif not text or text == '+':
-            svg, name = icons.plus_ref_icon, 'plus_ref_icon'
+            svg, name = icons.plus_ref, 'plus_ref'
         else:
             svg, name = text, 'text'
 
@@ -64,13 +64,13 @@ def ref_buttons_update(html: str, icons) -> str:
         print('-----')
         name = re.findall(r'<!-- {ref_icon ([^ ]+) -->', tag)[0]
         num = re.findall(r'data-bs-target=\"#ref(\d+)\"', tag)[0]
-        if name == 'quest_ref_icon':
-            svg = icons.quest_ref_icon
-        elif name == 'book_icon':
-            svg = icons.book_icon
-        elif name == 'plus_ref_icon':
-            svg = icons.plus_ref_icon
-        elif name == 'text':
+        if 'quest_ref' in name:
+            svg = icons.quest_ref
+        elif 'book' in name:
+            svg = icons.book
+        elif 'plus_ref' in name:
+            svg = icons.plus_ref
+        elif 'text' in name:
             svg = re.findall(r'<a [^>]+>([^<]+)</a>', tag)[0]
 
         html = html.replace(
@@ -284,23 +284,26 @@ def svg_to_html(svg_path: str) -> str:
 
 
 def update_icons(icon, posts):
-    icon.admin_icon = svg_to_html(icon.admin_file.url)
-    icon.arrow_restore_icon = svg_to_html(icon.arrow_restore_file.url)
-    icon.arrow_restore_45_icon = svg_to_html(icon.arrow_restore_45_file.url)
-    icon.book_icon = svg_to_html(icon.book_file.url)
-    icon.close_icon = svg_to_html(icon.close_file.url)
-    icon.image_icon = svg_to_html(icon.image_file.url)
-    icon.light_icon = svg_to_html(icon.light_file.url)
-    icon.check_icon = svg_to_html(icon.check_file.url)
-    icon.plus_icon = svg_to_html(icon.plus_file.url)
-    icon.plus_ref_icon = svg_to_html(icon.plus_ref_file.url)
-    icon.post_icon = svg_to_html(icon.post_file.url)
-    icon.quest_ref_icon = svg_to_html(icon.quest_ref_file.url)
-    icon.search_icon = svg_to_html(icon.search_file.url)
-    icon.settings_icon = svg_to_html(icon.settings_file.url)
-    icon.style_icon = svg_to_html(icon.style_file.url)
-    icon.translate_icon = svg_to_html(icon.translate_file.url)
-    icon.trash_icon = svg_to_html(icon.trash_file.url)
+    icon.admin = svg_to_html(icon.admin_file.url)
+    icon.arrow_restore = svg_to_html(icon.arrow_restore_file.url)
+    icon.arrow_restore_45 = svg_to_html(icon.arrow_restore_45_file.url)
+    icon.book = svg_to_html(icon.book_file.url)
+    icon.clock = svg_to_html(icon.clock_file.url)
+    icon.close = svg_to_html(icon.close_file.url)
+    icon.image = svg_to_html(icon.image_file.url)
+    icon.light = svg_to_html(icon.light_file.url)
+    icon.link = svg_to_html(icon.link_file.url)
+    icon.ok = svg_to_html(icon.ok_file.url)
+    icon.plus = svg_to_html(icon.plus_file.url)
+    icon.plus_ref = svg_to_html(icon.plus_ref_file.url)
+    icon.post = svg_to_html(icon.post_file.url)
+    icon.quest_ref = svg_to_html(icon.quest_ref_file.url)
+    icon.search = svg_to_html(icon.search_file.url)
+    icon.settings = svg_to_html(icon.settings_file.url)
+    icon.style = svg_to_html(icon.style_file.url)
+    icon.translate = svg_to_html(icon.translate_file.url)
+    icon.trash = svg_to_html(icon.trash_file.url)
+    icon.warning = svg_to_html(icon.warning_file.url)
 
     icon.save()
 
