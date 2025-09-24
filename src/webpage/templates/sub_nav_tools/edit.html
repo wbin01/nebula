@@ -1,4 +1,5 @@
 {% load replace %}
+
 {% if sub_nav_item.warning == 'translate' %}
 <a type="button" class="btn btn-dark btn-sm border-0 opacity-75 m-0 p-0 ps-1 d-print-none" data-bs-toggle="modal" data-bs-target="#sub{{ sub_nav_item.id }}"><span class="text-danger">{{ icon.warning|replace:'class="|class="my-2 '|safe }}</span>{{ icon.edit|safe }}</a>
 {% elif not sub_nav_item.display or sub_nav_item.warning_id_exists %}

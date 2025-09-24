@@ -16,8 +16,6 @@
           {% include 'sub_nav_tools/display.html'%}
           </span>
           <span class="btn-group m-0 p-0 border border-1 border-light border-opacity-10 rounded-2" role="group" aria-label="Category edition">
-<!--            {% include 'sub_nav_tools/category.html'%}-->
-<!--            {% include 'sub_nav_tools/tag.html'%}-->
             {% include 'sub_nav_tools/image.html'%}
           </span>
           <span class="btn-group m-0 p-0 border border-1 border-light border-opacity-10 rounded-2" role="group" aria-label="Category edit remove">
@@ -90,28 +88,18 @@
             </div>
 
           <br>
-
-<!-- Categories -->
-<!-- Categories end -->
-
           </div>
-
-
 
           <div class="d-grid gap-2 d-flex justify-content-end">
 
           <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-            </svg>
+            {{ icon.close|safe }}
           </button>
 
           <input type="hidden" name="nav-item-id" value="{{ sub_nav_item.id }}">
           <input type="hidden" name="nav-item-main-edit-modal">
           <button type="submit" class="btn btn-outline-light btn-sm border border-0">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-            </svg>
+            {{ icon.ok|safe }}
           </button>
 
           </div>
@@ -122,9 +110,5 @@
   </div>
 </div>
 {% include 'sub_nav_tools/display_modal.html'%}
-
-{% include 'sub_nav_tools/category_modal.html'%}
-{% include 'sub_nav_tools/tag_modal.html'%}
 {% include 'sub_nav_tools/image_modal.html'%}
-
 {% include 'sub_nav_tools/delete_modal.html'%}
