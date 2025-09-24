@@ -297,6 +297,7 @@ def update_icons(icon, posts):
     icon.close = svg_to_html(icon.close_file.url)
     icon.content_text = svg_to_html(icon.content_text_file.url)
     icon.edit = svg_to_html(icon.edit_file.url)
+    icon.grid = svg_to_html(icon.grid_file.url)
     icon.hidden = svg_to_html(icon.hidden_file.url)
     icon.image = svg_to_html(icon.image_file.url)
     icon.light = svg_to_html(icon.light_file.url)

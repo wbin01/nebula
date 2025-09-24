@@ -73,6 +73,17 @@ def add_warning():
             nav_item.warning = ''
             nav_item.save()
 
+    for nav_item in NavItem.objects.all():
+        for sub_nav_item in NavItem.objects.filter(local='category'):
+            if sub_nav_item.parent == nav_item.code:
+
+                if sub_nav_item.warning == 'translate':
+                    nav_item.warning = 'translate'
+                    nav_item.save()
+                elif not sub_nav_item.display or sub_nav_item.warning_id_exists:
+                    nav_item.warning_id_exists = 1
+                    nav_item.save()
+
 
 def add_strings_for_langs(context, nav_item):
     string_langs = [

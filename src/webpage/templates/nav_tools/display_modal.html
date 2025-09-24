@@ -3,10 +3,8 @@
     <div class="modal-content">
       <div class="modal-body text-light">
 
-        <button class="btn btn-outline-light btn-sm border border-0" data-bs-target="#{{ nav_item.id }}" data-bs-toggle="modal">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
-          </svg> &nbsp;Back
+        <button class="btn btn-outline-light btn-sm border" data-bs-target="#{{ nav_item.id }}" data-bs-toggle="modal">
+          {{ icon.arrow_left|safe }} &nbsp;Back
         </button>
 
         <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -23,15 +21,9 @@
 
         <p>
         {% if nav_item.display %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-          <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-          <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-        </svg>
+          {{ icon.visible|safe }}
         {% else %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
-          <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
-          <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
-        </svg>
+          {{ icon.hidden|safe }}
         {% endif %}
         Visibility<small class="text-light text-opacity-50"><small>&nbsp;({{ nav_item.code }})</small></small>
         </p>
@@ -51,17 +43,13 @@
 
         <div class="d-grid gap-2 d-flex justify-content-end mt-3">
         <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-          </svg>
+          {{ icon.close|safe }}
         </button>
         {% if nav_item.code != 'item' %}
         <input type="hidden" name="nav-item-id" value="{{ nav_item.id }}">
         <input type="hidden" name="nav-item-display-modal">
         <button type="submit" name="{% if nav_item.display %}is-display{% else %}is-not-display{% endif %}" class="btn btn-outline-light btn-sm border border-0" data-bs-target="#deleteModal2" data-bs-toggle="modal">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-          </svg>
+          {{ icon.ok|safe }}
         </button>
         {% endif %}
         </div>

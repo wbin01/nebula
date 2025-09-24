@@ -169,6 +169,9 @@ class Icon(models.Model):
     edit = models.TextField(default='')
     edit_file = models.FileField(
         default='icons/default/edit.svg', upload_to='icons/')
+    grid = models.TextField(default='')
+    grid_file = models.FileField(
+        default='icons/default/grid.svg', upload_to='icons/')
     hidden = models.TextField(default='')
     hidden_file = models.FileField(
         default='icons/default/hidden.svg', upload_to='icons/')
