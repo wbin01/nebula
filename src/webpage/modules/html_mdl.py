@@ -275,10 +275,13 @@ def svg_to_html(svg_path: str) -> str:
     with open(svg_path, 'r', encoding='utf-8') as f:
         svg_text = f.read()
 
-    optimized = scour.scourString(svg_text, options)
+    optimized = scour.scourString(svg_text, options) # 
+    optimized = re.sub(r'\s*fill\s*=\s*\"#[^\"]*\"', '', optimized.strip())
+    if 'fill="currentColor"' not in optimized:
+        optimized = optimized.replace('class="', 'fill="currentColor" class="')
     # with open("output.svg", "w", encoding="utf-8") as f:
-    #     f.write(optimized)
-    return re.sub(r'\s*fill\s*=\s*\"#[^\"]*\"', '', optimized.strip())
+    #     f.write(optimized) 
+    return optimized
 
 
 def update_icons(icon, posts):
@@ -293,6 +296,7 @@ def update_icons(icon, posts):
     icon.clock = svg_to_html(icon.clock_file.url)
     icon.close = svg_to_html(icon.close_file.url)
     icon.content_text = svg_to_html(icon.content_text_file.url)
+    icon.edit = svg_to_html(icon.edit_file.url)
     icon.hidden = svg_to_html(icon.hidden_file.url)
     icon.image = svg_to_html(icon.image_file.url)
     icon.light = svg_to_html(icon.light_file.url)

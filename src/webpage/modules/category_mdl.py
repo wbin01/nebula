@@ -67,9 +67,10 @@ def add_warning():
                 code=nav_item.code, lang=lang.code)
             if not nav_it_st.text:
                 nav_item.warning = 'translate'
-            else:
-                nav_item.warning = ''
-
+                nav_item.save()
+                break
+            
+            nav_item.warning = ''
             nav_item.save()
 
 

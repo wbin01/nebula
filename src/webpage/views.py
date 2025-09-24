@@ -73,6 +73,8 @@ def default_context(request):
     if cookie_language not in [x.code for x in languages]:
         cookie_language = page_settings.default_lang
 
+    category_mdl.add_warning()
+
     return {
         'settings': page_settings,
         'icon': icon,
