@@ -18,7 +18,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.utils import timezone
 
 from .models import *
-from .modules import category_mdl, nav_item_mdl, html_mdl, post_mdl
+from .modules import category_mdl, nav_item_mdl, module_html, post_mdl
 
 
 def default_context(request):
@@ -45,7 +45,7 @@ def default_context(request):
         icon = Icon.objects.create()
         icon.save()
         
-        html_mdl.update_icons(icon, Post.objects.all())
+        module_html.update_icons(icon, Post.objects.all())
     else:
         icon = icon[0]
 
@@ -376,9 +376,11 @@ def post(request, lang, url):
 
         if 'cover-image-credits' in request.POST:
             post_obj.cover_image_credits = request.POST['cover-image-credits']
+
         if 'cover-image-credits-link' in request.POST:
             post_obj.cover_image_credits_link = request.POST[
                 'cover-image-credits-link']
+
         if ('content_file' in request.FILES and
                 request.FILES['content_file'].name.lower().endswith('.docx')):
             post_obj.content_file = request.FILES['content_file']
@@ -405,11 +407,7 @@ def post(request, lang, url):
                 extra_args=['--standalone', '--embed-resources'],)
 
             with open(output_file, 'r') as html_file:
-                html = html_mdl.clear_style(html_file.read())
-                html = html_mdl.image(html)
-                html = html_mdl.ref_button(html, context['icons'])
-                html = html_mdl.ref_content(html)
-                post_obj.content = html_mdl.clear_spaces(html)
+                html = module_html.clear_html(html_file.read())
                 post_obj.save()
                 os.remove(path_file)
                 os.remove(input_file)
@@ -425,13 +423,8 @@ def post(request, lang, url):
                 post_obj.content_file.url)
 
             with open(path_file, 'r') as html_file:
-                html = html_mdl.clear_style(html_file.read())
-                html = html_mdl.image(html)
-                html = html_mdl.ref_button(html, context['icon'])
-                html = html_mdl.ref_content(html)
-                html = html_mdl.font_link(html, context['icon'])
-
-                post_obj.content = html
+                post_obj.content = module_html.clear_html(
+                    html_file.read(), context['icon'])
                 post_obj.save()
                 os.remove(path_file)
 

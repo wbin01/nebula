@@ -163,7 +163,7 @@ def font_link(html, icon) -> str:
     return html
 
 
-def clear_style(html:str, docx=False) -> str:
+def clear_style(html: str, icon) -> str:
     html = re.sub(
         r'(^.+<body[^>]*>|</body.+$)', '',
         html.replace('\n', ''))
@@ -176,9 +176,17 @@ def clear_style(html:str, docx=False) -> str:
     html = clear_h(html)
     html = clear_spaces(html)
 
-    top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>.....</p>'
-    return top_space + html.split(div_body)[1] if div_body in html else html
+    # top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>.....</p>'
+    # html = top_space + html.split(div_body)[1] if div_body in html else html
 
+    html = image(html)
+    html = ref_button(html, icon)
+    html = ref_content(html)
+    html = font_link(html, icon)
+
+    top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>.....</p>'
+    html = top_space + html.split(div_body)[1] if div_body in html else html
+    return html
 
 def clear_a(html: str) -> str:
     for a in re.findall(
