@@ -417,8 +417,6 @@ def post(request, lang, url):
 
         if ('content_file' in request.FILES and
                 request.FILES['content_file'].name.lower().endswith('.html')):
-            # update_icons(context['icons'])
-
             post_obj.content_file = request.FILES['content_file']
             post_obj.save()
 
@@ -429,9 +427,9 @@ def post(request, lang, url):
             with open(path_file, 'r') as html_file:
                 html = html_mdl.clear_style(html_file.read())
                 html = html_mdl.image(html)
-                html = html_mdl.ref_button(html, context['icons'])
+                html = html_mdl.ref_button(html, context['icon'])
                 html = html_mdl.ref_content(html)
-                html = html_mdl.font_link(html)
+                html = html_mdl.font_link(html, context['icon'])
 
                 post_obj.content = html
                 post_obj.save()

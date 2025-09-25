@@ -95,7 +95,8 @@
 }
 
 body {
-    background: rgb(220, 220, 220);
+    background: rgb(222, 222, 205);
+    /* background: rgb(220, 220, 220); */
     /* font-family: "Zen Maru Gothic Regular"; */
     font-family: "OpenSans-Light";
     font-size: 12pt;
@@ -296,11 +297,11 @@ a.stylelink:hover {
 a.ref_plus_button, a.ref_plus_button:link, a.ref_plus_button:active, a.ref_plus_button:visited {
     text-decoration: none;
     text-decoration-color: rgba(44, 109, 188, 1.0);
-    color: #2c6dbc;
+    color: #4783b0;
 }
 a.ref_plus_button:hover {
     text-decoration: none;
-    color: #3482dc;
+    color: #6099ce;
 }
 .inverted-style-link a, .inverted-style-link a:link, .inverted-style-link a:active, .inverted-style-link a:visited {
     text-decoration: none;

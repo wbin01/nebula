@@ -169,6 +169,12 @@ class Icon(models.Model):
     edit = models.TextField(default='')
     edit_file = models.FileField(
         default='icons/default/edit.svg', upload_to='icons/')
+    font = models.TextField(default='')
+    font_file = models.FileField(
+        default='icons/default/font.svg', upload_to='icons/')
+    font_ref = models.TextField(default='')
+    font_ref_file = models.FileField(
+        default='icons/default/font_ref.svg', upload_to='icons/')
     grid = models.TextField(default='')
     grid_file = models.FileField(
         default='icons/default/grid.svg', upload_to='icons/')

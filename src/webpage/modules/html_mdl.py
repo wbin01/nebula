@@ -40,18 +40,21 @@ def ref_button(html: str, icons) -> str:
     for ref in references:
         text = re.findall(r'\{b\d+([^}]*)}', ref)[0].strip()
         num = re.findall(r'\{b(\d+)[^}]*}', ref)[0]
+
         if text == '?':
-            svg, name = icons.quest_ref, 'quest_ref'
-        elif text == 'b':
+            svg, name = icons.quest_ref, 'quest'
+        elif text == 'b' or text == 'book':
             svg, name = icons.book, 'book'
+        elif text == 'f' or text == 'font':
+            svg, name = icons.font_ref, 'font'
         elif not text or text == '+':
-            svg, name = icons.plus_ref, 'plus_ref'
+            svg, name = icons.plus_ref, 'plus'
         else:
-            svg, name = text, 'text'
+            svg, name = icons.plus_ref, 'text'
 
         html = html.replace(
             ref, (
-                '<!-- {ref_icon ' f'{name} --> <a type="button" '
+                '<!-- {ref_icon ' f'{name} --><a type="button" '
                 'class="ref_plus_button d-print-none" data-bs-toggle="modal" '
                 f'data-bs-target="#ref{num}">{svg.strip()}</a>'
                 '<!-- ref_icon} -->'))
@@ -62,18 +65,21 @@ def ref_buttons_update(html: str, icons) -> str:
     for tag in re.findall(r'<!-- {ref_icon [^\}]+\} -->', html):
         name = re.findall(r'<!-- {ref_icon ([^ ]+) -->', tag)[0]
         num = re.findall(r'data-bs-target=\"#ref(\d+)\"', tag)[0]
-        if 'quest_ref' in name:
+
+        if 'quest' in name:
             svg = icons.quest_ref
         elif 'book' in name:
             svg = icons.book
-        elif 'plus_ref' in name:
+        elif 'font' in name:
+            svg = icons.font_ref
+        elif 'plus' in name:
             svg = icons.plus_ref
         elif 'text' in name:
-            svg = re.findall(r'<a [^>]+>([^<]+)</a>', tag)[0]
+            svg = icons.plus_ref
 
         html = html.replace(
             tag, (
-                '<!-- {ref_icon ' f'{name} --> <a type="button" '
+                '<!-- {ref_icon ' f'{name} --><a type="button" '
                 'class="ref_plus_button d-print-none" data-bs-toggle="modal" '
                 f'data-bs-target="#ref{num}">{svg}</a>'
                 '<!-- ref_icon} -->'))
@@ -145,19 +151,12 @@ def ref_versions(content: str) -> str:
     return details_html if details_html else content
 
 
-def font_link(html) -> str:
-    # <a class="stylelink" href="https://lifelessonsfrombible...">lifelessonsfrombible</a>
-    link_icon = (
-        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">'
-        '  <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>'
-        '  <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>'
-        '</svg>')
-
+def font_link(html, icon) -> str:
     for font in re.findall(r'\(font:[^)]+\)', html):
         new_font = '<small>' + font.lstrip('(font:').rstrip(')').replace(
             'class="stylelink"',
             'class="text-secondary text-decoration-none" target="_blank"'
-            ).replace('</a>', f'{link_icon}</a>') + '</small>'
+            ).replace('</a>', f'{icon.font}</a>') + '</small>'
 
         html = html.replace(font, new_font)
 
@@ -275,12 +274,14 @@ def svg_to_html(svg_path: str) -> str:
     with open(svg_path, 'r', encoding='utf-8') as f:
         svg_text = f.read()
 
-    optimized = scour.scourString(svg_text, options) # 
+    optimized = scour.scourString(svg_text, options)
     optimized = re.sub(r'\s*fill\s*=\s*\"#[^\"]*\"', '', optimized.strip())
+    if 'class="' not in optimized:
+        optimized = optimized.replace('<svg ', '<svg class="" ')
+
     if 'fill="currentColor"' not in optimized:
         optimized = optimized.replace('class="', 'fill="currentColor" class="')
-    # with open("output.svg", "w", encoding="utf-8") as f:
-    #     f.write(optimized) 
+
     return optimized
 
 
@@ -297,6 +298,8 @@ def update_icons(icon, posts):
     icon.close = svg_to_html(icon.close_file.url)
     icon.content_text = svg_to_html(icon.content_text_file.url)
     icon.edit = svg_to_html(icon.edit_file.url)
+    icon.font = svg_to_html(icon.font_file.url)
+    icon.font_ref = svg_to_html(icon.font_ref_file.url)
     icon.grid = svg_to_html(icon.grid_file.url)
     icon.hidden = svg_to_html(icon.hidden_file.url)
     icon.image = svg_to_html(icon.image_file.url)
