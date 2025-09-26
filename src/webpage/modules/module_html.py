@@ -126,30 +126,6 @@ def clear_mark(html: str) -> str:
         ).replace('<mark>', '').replace('</mark>', '')
 
 
-def svg_to_html(svg_path: str) -> str:
-    path = pathlib.Path(__file__).resolve().parent.parent.parent
-
-    svg_path = path.as_posix() + svg_path
-
-    options = scour.sanitizeOptions()
-    options.remove_metadata = True
-    options.strip_xml_prolog = True
-    ## options.enable_viewboxing = True
-
-    with open(svg_path, 'r', encoding='utf-8') as f:
-        svg_text = f.read()
-
-    optimized = scour.scourString(svg_text, options)
-    optimized = re.sub(r'\s*fill\s*=\s*\"#[^\"]*\"', '', optimized.strip())
-    if 'class="' not in optimized:
-        optimized = optimized.replace('<svg ', '<svg class="" ')
-
-    if 'fill="currentColor"' not in optimized:
-        optimized = optimized.replace('class="', 'fill="currentColor" class="')
-
-    return optimized
-
-
 def create_font_links(html, icon) -> str:
     for font in re.findall(r'\(font:[^)]+\)', html):
         new_font = '<small>' + font.lstrip('(font:').rstrip(')').replace(
@@ -175,14 +151,20 @@ def create_modal_buttons(html: str, icon) -> str:
         if text == '?':
             svg, name = icon.quest_ref, 'quest'
         elif text == 'b' or text == 'book':
-            svg, name = icon.book.replace(
-                'class="', 'style="margin-left:2px;" class="'), 'book'
+            svg, name = icon.book, 'book'
         elif text == 'f' or text == 'font':
             svg, name = icon.font_ref, 'font'
         elif not text or text == '+':
             svg, name = icon.plus_ref, 'plus'
         else:
             svg, name = icon.plus_ref, 'text'
+
+        if text == 'b' or text == 'book':
+            svg = svg.replace(
+                'class="', 'style="margin:0px 0px 2px 2px;" class="')
+        else:
+            svg = svg.replace(
+                'class="', 'style="margin:0px 0px 2px 0px;" class="')
 
         html = html.replace(
             ref, (
@@ -257,6 +239,30 @@ def create_modal_windows(html: str) -> str:
     return html
 
 
+def svg_to_html(svg_path: str) -> str:
+    path = pathlib.Path(__file__).resolve().parent.parent.parent
+
+    svg_path = path.as_posix() + svg_path
+
+    options = scour.sanitizeOptions()
+    options.remove_metadata = True
+    options.strip_xml_prolog = True
+    ## options.enable_viewboxing = True
+
+    with open(svg_path, 'r', encoding='utf-8') as f:
+        svg_text = f.read()
+
+    optimized = scour.scourString(svg_text, options)
+    optimized = re.sub(r'\s*fill\s*=\s*\"#[^\"]*\"', '', optimized.strip())
+    if 'class="' not in optimized:
+        optimized = optimized.replace('<svg ', '<svg class="" ')
+
+    if 'fill="currentColor"' not in optimized:
+        optimized = optimized.replace('class="', 'fill="currentColor" class="')
+
+    return optimized
+
+
 def update_icons(icon, posts):
     icon.admin = svg_to_html(icon.admin_file.url)
     icon.arrow_left = svg_to_html(icon.arrow_left_file.url)
@@ -309,6 +315,13 @@ def update_icons(icon, posts):
                 svg = icon.plus_ref
             elif 'text' in name:
                 svg = icon.plus_ref
+
+            if 'book' in name:
+                svg = svg.replace(
+                    'class="', 'style="margin:0px 0px 2px 2px;" class="')
+            else:
+                svg = svg.replace(
+                    'class="', 'style="margin:0px 0px 2px 0px;" class="')
 
             html = html.replace(
                 tag, (
