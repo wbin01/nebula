@@ -18,144 +18,12 @@ def clear_html(html: str, icon) -> str:
     html = clear_spaces(html)
     html = clear_image(html)
     html = clear_mark(html)
-    html = create_reference_buttons(html, icon)
-    html = create_reference_modals(html)
+    html = create_modal_buttons(html, icon)
+    html = create_modal_windows(html)
     html = create_font_links(html, icon)
 
     top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>.....</p>'
     return top_space + html.split(div_body)[1] if div_body in html else html
-
-
-def create_reference_buttons(html: str, icons) -> str:
-    # {b1 ? }     ->  ?
-    # {b1 + }     ->  +
-    # {b1 }       ->  +
-    # {b1 b }     ->  📖
-    references = re.findall(r'\{b\d+[^}]*}', html)
-    for ref in references:
-        text = re.findall(r'\{b\d+([^}]*)}', ref)[0].strip()
-        num = re.findall(r'\{b(\d+)[^}]*}', ref)[0]
-
-        if text == '?':
-            svg, name = icons.quest_ref, 'quest'
-        elif text == 'b' or text == 'book':
-            svg, name = icons.book.replace(
-                'class="', 'style="margin-left:2px;" class="'), 'book'
-        elif text == 'f' or text == 'font':
-            svg, name = icons.font_ref, 'font'
-        elif not text or text == '+':
-            svg, name = icons.plus_ref, 'plus'
-        else:
-            svg, name = icons.plus_ref, 'text'
-
-        html = html.replace(
-            ref, (
-                '<!-- {ref_icon ' f'{name} --><a type="button" '
-                'class="ref_plus_button d-print-none" data-bs-toggle="modal" '
-                f'data-bs-target="#ref{num}">{svg.strip()}</a>'
-                '<!-- ref_icon} -->'))
-    return html
-
-
-def ref_buttons_update(html: str, icons) -> str:
-    for tag in re.findall(r'<!-- {ref_icon [^\}]+\} -->', html):
-        name = re.findall(r'<!-- {ref_icon ([^ ]+) -->', tag)[0]
-        num = re.findall(r'data-bs-target=\"#ref(\d+)\"', tag)[0]
-
-        if 'quest' in name:
-            svg = icons.quest_ref
-        elif 'book' in name:
-            svg = icons.book
-        elif 'font' in name:
-            svg = icons.font_ref
-        elif 'plus' in name:
-            svg = icons.plus_ref
-        elif 'text' in name:
-            svg = icons.plus_ref
-
-        html = html.replace(
-            tag, (
-                '<!-- {ref_icon ' f'{name} --><a type="button" '
-                'class="ref_plus_button d-print-none" data-bs-toggle="modal" '
-                f'data-bs-target="#ref{num}">{svg}</a>'
-                '<!-- ref_icon} -->'))
-
-    return html
-
-
-def create_reference_modals(html: str) -> str:
-    references = re.findall(r'\{w\d+[^}]+}', html)
-    for ref in references:  # '{w1 ... }'
-        content = re.findall(r'\{w\d+([^}]+)}', ref)[0]
-
-        # content = ref_versions(content)
-        details_html = ''
-        if '<p>+++</p>' in content:
-            for num, body in enumerate(content.split('<p>+++</p>')):
-                title = re.findall(r'<p[^>]*>[^<]+</p>', body)
-                title = title[0] if title else 'Item'
-
-                body = body.replace(title, '')
-
-                open_ = ' open' if num == 0 else ''
-                details_html += (    
-                    f'<details{open_}>'
-                    '  <summary>'
-                    f'    {title.replace('<p>', '').replace('</p>', '')}'
-                    '  </summary>'
-                    f'  {body}'
-                    '</details>')
-
-        content = details_html if details_html else content
-        
-        num = re.findall(r'\{w(\d+)[^}]+}', ref)[0]
-        html = html.replace(
-            ref, (  # data-bs-theme="light"
-                '<div class="modal fade" '
-                f'id="ref{num}" data-bs-backdrop="static" tabindex="-1"'
-                f'aria-labelledby="ref{num}Label" aria-hidden="true" '
-                'data-bs-theme="read">'
-                
-                '<div class="modal-dialog modal-lg modal-dialog-scrollable">'
-                '<div class="modal-content">'
-                '<div class="modal-body p-0 m-0">'
-                
-                '<div class="px-2 mt-2">'
-                f'{content}'
-                '</div>'
-                
-                '<div class="modal-footer p-0 m-1">'
-
-                '<div class="d-grid gap-2 d-flex justify-content-end">'
-                '<button type="button" class="btn btn-outline-danger btn-sm '
-                'border border-0" data-bs-dismiss="modal" aria-label="Close">'
-          
-                '<svg xmlns="http://www.w3.org/2000/svg" width="16" '
-                'height="16" fill="currentColor" class="bi bi-x-lg" '
-                'viewBox="0 0 16 16">'
-                '<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.'
-                '147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.'
-                '708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>'
-                '</svg>'
-                
-                '</button></div>'
-                '</div>'
-
-                '</div></div></div></div>'))
-
-    return html
-
-
-def create_font_links(html, icon) -> str:
-    for font in re.findall(r'\(font:[^)]+\)', html):
-        new_font = '<small>' + font.lstrip('(font:').rstrip(')').replace(
-            'class="stylelink"',
-            'class="text-secondary text-decoration-none" target="_blank"'
-            ).replace('</a>', f'{icon.font}</a>') + '</small>'
-
-        html = html.replace(font, new_font)
-
-    return html
 
 
 def clear_p(html: str) -> str:
@@ -282,6 +150,113 @@ def svg_to_html(svg_path: str) -> str:
     return optimized
 
 
+def create_font_links(html, icon) -> str:
+    for font in re.findall(r'\(font:[^)]+\)', html):
+        new_font = '<small>' + font.lstrip('(font:').rstrip(')').replace(
+            'class="stylelink"',
+            'class="text-secondary text-decoration-none" target="_blank"'
+            ).replace('</a>', f'{icon.font}</a>') + '</small>'
+
+        html = html.replace(font, new_font)
+
+    return html
+
+
+def create_modal_buttons(html: str, icon) -> str:
+    # {b1 ? }     ->  ?
+    # {b1 + }     ->  +
+    # {b1 }       ->  +
+    # {b1 b }     ->  📖
+    references = re.findall(r'\{b\d+[^}]*}', html)
+    for ref in references:
+        text = re.findall(r'\{b\d+([^}]*)}', ref)[0].strip()
+        num = re.findall(r'\{b(\d+)[^}]*}', ref)[0]
+
+        if text == '?':
+            svg, name = icon.quest_ref, 'quest'
+        elif text == 'b' or text == 'book':
+            svg, name = icon.book.replace(
+                'class="', 'style="margin-left:2px;" class="'), 'book'
+        elif text == 'f' or text == 'font':
+            svg, name = icon.font_ref, 'font'
+        elif not text or text == '+':
+            svg, name = icon.plus_ref, 'plus'
+        else:
+            svg, name = icon.plus_ref, 'text'
+
+        html = html.replace(
+            ref, (
+                '<!-- {ref_icon ' f'{name} --><a type="button" '
+                'class="ref_plus_button d-print-none" data-bs-toggle="modal" '
+                f'data-bs-target="#ref{num}">{svg.strip()}</a>'
+                '<!-- ref_icon} -->'))
+    return html
+
+
+def create_modal_windows(html: str) -> str:
+    for ref in re.findall(r'\{w\d+[^}]+}', html):  # '{w1 ... }'
+        code = re.findall(r'\{w\d+([^}]+)}', ref)[0]
+        if code:
+            code = code.strip().lstrip('</p>').rstrip('<p>').strip()
+            code = '<p>' + code if not code.startswith('<p>') else code
+            code = code + '</p>' if not code.startswith('</p>') else code
+
+        details_html = ''
+        if '+++++' in code:
+            for num, body in enumerate(code.split('+++++')):
+                title = re.findall(r'<p[^>]*>[^<]+</p>', body)
+                title = title[0] if title else 'Item'
+
+                body = body.replace(title, '')
+
+                open_ = ' open' if num == 0 else ''
+                details_html += (    
+                    f'<details{open_}>'
+                    '  <summary>'
+                    f'    {title.replace('<p>', '').replace('</p>', '')}'
+                    '  </summary>'
+                    f'  {body}'
+                    '</details>')
+
+        code = details_html if details_html else code
+        num = re.findall(r'\{w(\d+)[^}]+}', ref)[0]
+        html = html.replace(
+            ref, (  # data-bs-theme="light"
+                '<div class="modal fade" '
+                f'id="ref{num}" data-bs-backdrop="static" tabindex="-1"'
+                f'aria-labelledby="ref{num}Label" aria-hidden="true" '
+                'data-bs-theme="read">'
+                
+                '<div class="modal-dialog modal-lg modal-dialog-scrollable">'
+                '<div class="modal-content">'
+                '<div class="modal-body p-0 m-0">'
+                
+                '<div class="px-2 mt-2">'
+                f'{code}'
+                '</div>'
+                
+                '<div class="modal-footer p-0 m-1">'
+
+                '<div class="d-grid gap-2 d-flex justify-content-end">'
+                '<button type="button" class="btn btn-outline-danger btn-sm '
+                'border border-0" data-bs-dismiss="modal" aria-label="Close">'
+          
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" '
+                'height="16" fill="currentColor" class="bi bi-x-lg" '
+                'viewBox="0 0 16 16">'
+                '<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.'
+                '147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.'
+                '708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>'
+                '</svg>'
+                
+                '</button></div>'
+                '</div>'
+
+                '</div></div></div></div>'))
+
+    return html
+
+
 def update_icons(icon, posts):
     icon.admin = svg_to_html(icon.admin_file.url)
     icon.arrow_left = svg_to_html(icon.arrow_left_file.url)
@@ -316,9 +291,30 @@ def update_icons(icon, posts):
     icon.trash = svg_to_html(icon.trash_file.url)
     icon.visible = svg_to_html(icon.visible_file.url)
     icon.warning = svg_to_html(icon.warning_file.url)
-
     icon.save()
 
     for post in posts:
-        post.content = ref_buttons_update(post.content, icon)
+        html = post.content
+        for tag in re.findall(r'<!-- {ref_icon [^\}]+\} -->', html):
+            name = re.findall(r'<!-- {ref_icon ([^ ]+) -->', tag)[0]
+            num = re.findall(r'data-bs-target=\"#ref(\d+)\"', tag)[0]
+
+            if 'quest' in name:
+                svg = icon.quest_ref
+            elif 'book' in name:
+                svg = icon.book
+            elif 'font' in name:
+                svg = icon.font_ref
+            elif 'plus' in name:
+                svg = icon.plus_ref
+            elif 'text' in name:
+                svg = icon.plus_ref
+
+            html = html.replace(
+                tag, (
+                    '<!-- {ref_icon ' f'{name} -->'
+                    '<a type="button" class="ref_plus_button d-print-none" '
+                    f'data-bs-toggle="modal" data-bs-target="#ref{num}">{svg}'
+                    '</a><!-- ref_icon} -->'))
+        post.content = html
         post.save()
