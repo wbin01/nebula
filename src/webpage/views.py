@@ -18,7 +18,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.utils import timezone
 
 from .models import *
-from .modules import category_mdl, nav_item_mdl, module_html, post_mdl
+from .modules import module_categ, module_nav, module_html, module_post
 
 
 def default_context(request):
@@ -73,7 +73,9 @@ def default_context(request):
     if cookie_language not in [x.code for x in languages]:
         cookie_language = page_settings.default_lang
 
-    category_mdl.add_warning()
+    module_categ.add_warning()
+    all_sub_nav_items = NavItem.objects.filter(
+        local='category').order_by('index')
 
     return {
         'settings': page_settings,
@@ -81,7 +83,7 @@ def default_context(request):
         'style': PageStyle.objects.get(code=page_settings.style),
         'tab_title': page_settings.name.title(),
         'nav_items': NavItem.objects.filter(local='menu').order_by('index'),
-        'all_sub_nav_items': NavItem.objects.filter(local='category').order_by('index'),
+        'all_sub_nav_items': all_sub_nav_items,
         'categories_name': categories_name,
         'nav_items_strings': NavItemString.objects.order_by('lang'),
         'languages': languages,
@@ -111,7 +113,7 @@ def index(request, lang='', page=1):
 
     # Pagination
     context['page_num'] = page  # page_num, posts_4_page, pagination_nums
-    pagination = post_mdl.create_pagination_context(context)
+    pagination = module_post.create_pagination_context(context)
     if pagination:
         return redirect('index', context['cookie_language'], pagination)
 
@@ -122,7 +124,7 @@ def index(request, lang='', page=1):
             display=True).order_by('-publication_date')
         if 'home-highlight' in x.categories.split(',')]
 
-    category_mdl.add_warning()
+    module_categ.add_warning()
 
     return render(request, 'index.html', context)
 
@@ -130,7 +132,7 @@ def index(request, lang='', page=1):
 def category(request, lang, category_name, page=1):
     logging.info(lang)
     context = default_context(request)
-    category_mdl.add_warning()
+    module_categ.add_warning()
 
     if request.method == 'GET':
         if 'post=' in category_name:
@@ -144,10 +146,10 @@ def category(request, lang, category_name, page=1):
                 'search', context['cookie_language'], s_type, s_question)
 
         elif category_name.replace('-', '').isalpha():
-            context = category_mdl.upd_context(context, category_name)
-            # Pagination
-            context['page_num'] = page  # page_num, posts_4_page, pagination_nums
-            pagination = post_mdl.create_pagination_context(context)
+            context = module_categ.upd_context(context, category_name)
+            # Pagination: page_num, posts_4_page, pagination_nums
+            context['page_num'] = page
+            pagination = module_post.create_pagination_context(context)
             if pagination:
                 return redirect(
                     'category', context['cookie_language'],
@@ -168,20 +170,20 @@ def category(request, lang, category_name, page=1):
 
     if request.method == 'POST' and 'add-item' in request.POST:
         if 'item' in [x.code for x in NavItem.objects.all()]:
-            category_mdl.delete_nav_item(
+            module_categ.delete_nav_item(
                 context, NavItem.objects.get(code='item'))
 
         nav_item = NavItem.objects.create()
         nav_item.save()
 
-        category_mdl.add_strings_for_langs(context, nav_item)
+        module_categ.add_strings_for_langs(context, nav_item)
         context['path'] = nav_item.code
         # category_name = nav_item.code
         return redirect('category', context['settings'].lang, nav_item.code)
 
     elif request.method == 'POST' and 'add-sub-item' in request.POST:
         if 'item' in [x.code for x in NavItem.objects.all()]:
-            category_mdl.delete_nav_item(
+            module_categ.delete_nav_item(
                 context, NavItem.objects.get(code='item'))
 
         nav_item = NavItem.objects.create()
@@ -189,7 +191,7 @@ def category(request, lang, category_name, page=1):
         nav_item.parent = request.POST['category-name']  # category code
         nav_item.save()
 
-        category_mdl.add_strings_for_langs(context, nav_item)
+        module_categ.add_strings_for_langs(context, nav_item)
         context['path'] = nav_item.code
 
     elif request.method == 'POST' and 'nav-item-id' in request.POST:
@@ -198,13 +200,13 @@ def category(request, lang, category_name, page=1):
         context['path'] = nav_item.code
 
         if 'nav-item-main-edit-modal' in request.POST:
-            new_code = nav_item_mdl.new_code_from_request(request)
+            new_code = module_nav.new_code_from_request(request)
             if new_code != 'item':
                 category_name = (
                     new_code if old_code == category_name else category_name)
-                nav_item_mdl.upd_code(nav_item, new_code)
-                nav_item_mdl.upd_categories(nav_item, old_code, new_code)
-                nav_item_mdl.upd_text(request, context, nav_item)
+                module_nav.upd_code(nav_item, new_code)
+                module_nav.upd_categories(nav_item, old_code, new_code)
+                module_nav.upd_text(request, context, nav_item)
                 nav_item.display_text = (
                     True if 'nav-item-display-text' in request.POST else False)
 
@@ -213,11 +215,11 @@ def category(request, lang, category_name, page=1):
 
         elif 'nav-item-image-modal' in request.POST:
             if ('nav-item-icon' in request.FILES and
-                    category_mdl.file_ext_is_valid(request, 'nav-item-icon')):
+                    module_categ.file_ext_is_valid(request, 'nav-item-icon')):
                 nav_item.icon = request.FILES['nav-item-icon']
 
             if ('nav-item-image' in request.FILES and
-                    category_mdl.file_ext_is_valid(request, 'nav-item-image')):
+                    module_categ.file_ext_is_valid(request, 'nav-item-image')):
                 nav_item.image = request.FILES['nav-item-image']
 
             if 'nav-item-img-type' in request.POST:
@@ -228,7 +230,7 @@ def category(request, lang, category_name, page=1):
                 nav_item.display_image = True
 
             if ('nav-item-cover' in request.FILES and
-                    category_mdl.file_ext_is_valid(request, 'nav-item-cover')):
+                    module_categ.file_ext_is_valid(request, 'nav-item-cover')):
                 nav_item.cover = request.FILES['nav-item-cover']
                 nav_item.save()
 
@@ -236,11 +238,11 @@ def category(request, lang, category_name, page=1):
             if 'nav-item-display-cover' in request.POST:
                 nav_item.display_cover = True
 
-            category_mdl.clear_old_covers()
+            module_categ.clear_old_covers()
 
         elif 'nav-item-cover-modal' in request.POST:
             if ('nav-item-cover' in request.FILES and
-                    category_mdl.file_ext_is_valid(request, 'nav-item-cover')):
+                    module_categ.file_ext_is_valid(request, 'nav-item-cover')):
                 nav_item.cover = request.FILES['nav-item-cover']
                 nav_item.save()
 
@@ -248,8 +250,8 @@ def category(request, lang, category_name, page=1):
             if 'nav-item-display-cover' in request.POST:
                 nav_item.display_cover = True
 
-            category_mdl.clear_old_covers()
-            nav_item_mdl.upd_subtitle(request, context, nav_item)
+            module_categ.clear_old_covers()
+            module_nav.upd_subtitle(request, context, nav_item)
 
         elif 'nav-item-display-modal' in request.POST:
             if 'is-display' in request.POST:
@@ -292,7 +294,7 @@ def category(request, lang, category_name, page=1):
 
         elif 'nav-item-delete-modal' in request.POST:
             go_index = True if category_name == nav_item.code else False
-            category_mdl.delete_nav_item(context, nav_item)
+            module_categ.delete_nav_item(context, nav_item)
 
             if go_index:
                 return redirect('index', context['cookie_language'])
@@ -308,11 +310,11 @@ def category(request, lang, category_name, page=1):
 
 
 def sub_category(request, lang, category_name, sub_category_name, page=1):
-    context = category_mdl.upd_context(
+    context = module_categ.upd_context(
         default_context(request), sub_category_name)
 
     context['page_num'] = page  # page_num, posts_4_page, pagination_nums
-    pagination = post_mdl.create_pagination_context(context)
+    pagination = module_post.create_pagination_context(context)
     if pagination:
         return redirect(
             'sub_category', context['cookie_language'],
@@ -361,18 +363,18 @@ def post(request, lang, url):
                 post_obj.warning = ''
 
         if ('cover_image' in request.FILES and
-                post_mdl.file_ext_is_valid(request, 'cover_image')):
+                module_post.file_ext_is_valid(request, 'cover_image')):
             post_obj.cover_image = request.FILES['cover_image']
             post_obj.save()
             # https://github.com/un1t/django-cleanup
 
-            post_obj.cover_image_thumb = post_mdl.create_cover_thumb(
+            post_obj.cover_image_thumb = module_post.create_cover_thumb(
                 pathlib.Path(__file__).resolve(
                     ).parent.parent.as_posix() +
                 post_obj.cover_image.url, 500)
             post_obj.save()
 
-            post_mdl.clear_old_covers()
+            module_post.clear_old_covers()
 
         if 'cover-image-credits' in request.POST:
             post_obj.cover_image_credits = request.POST['cover-image-credits']
