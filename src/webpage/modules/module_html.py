@@ -21,7 +21,7 @@ def clear_html(html: str, icon) -> str:
     html = create_modal_buttons(html, icon)
     html = create_modal_windows(html, icon)
     html = create_details(html)
-    html = create_font_links(html, icon)
+    html = create_source_links(html, icon)
 
     top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>.....</p>'
     return top_space + html.split(div_body)[1] if div_body in html else html
@@ -127,14 +127,14 @@ def clear_mark(html: str) -> str:
         ).replace('<mark>', '').replace('</mark>', '')
 
 
-def create_font_links(html, icon) -> str:
-    for font in re.findall(r'\(font:[^)]+\)', html):
-        new_font = '<small>' + font.lstrip('(font:').rstrip(')').replace(
+def create_source_links(html, icon) -> str:
+    for src in re.findall(r'\(src:[^)]+\)', html):
+        new_src = '<small>' + src.lstrip('(src:').rstrip(')').replace(
             'class="stylelink"',
             'class="text-secondary text-decoration-none" target="_blank"'
-            ).replace('</a>', f'{icon.font}</a>') + '</small>'
+            ).replace('</a>', f'{icon.src}</a>') + '</small>'
 
-        html = html.replace(font, new_font)
+        html = html.replace(src, new_src)
 
     return html
 
@@ -153,8 +153,8 @@ def create_modal_buttons(html: str, icon) -> str:
             svg, name = icon.quest_ref, 'quest'
         elif text == 'b' or text == 'book':
             svg, name = icon.book, 'book'
-        elif text == 'f' or text == 'font':
-            svg, name = icon.font_ref, 'font'
+        elif text == 's' or text == 'src':
+            svg, name = icon.src, 'src'
         elif not text or text == '+':
             svg, name = icon.plus_ref, 'plus'
         else:
@@ -221,7 +221,7 @@ def create_details(html: str) -> str:
         code = code.strip().lstrip('</p>').rstrip('<p>').strip()
         code = '<p>' + code if not code.startswith('<p>') else code
         code = code + '</p>' if not code.startswith('</p>') else code
-        
+
         code = detail_from_html_snippet(code)
         html = html.replace(ref, code)
 
@@ -304,8 +304,6 @@ def update_icons(icon, posts):
     icon.close = svg_to_html(icon.close_file.url, 'icon.close')
     icon.content_text = svg_to_html(icon.content_text_file.url)
     icon.edit = svg_to_html(icon.edit_file.url)
-    icon.font = svg_to_html(icon.font_file.url)
-    icon.font_ref = svg_to_html(icon.font_ref_file.url, 'icon.font_ref')
     icon.grid = svg_to_html(icon.grid_file.url)
     icon.hidden = svg_to_html(icon.hidden_file.url)
     icon.image = svg_to_html(icon.image_file.url)
@@ -318,6 +316,7 @@ def update_icons(icon, posts):
     icon.quest_ref = svg_to_html(icon.quest_ref_file.url, 'icon.quest_ref')
     icon.search = svg_to_html(icon.search_file.url)
     icon.settings = svg_to_html(icon.settings_file.url)
+    icon.src = svg_to_html(icon.src_file.url, 'icon.src')
     icon.style = svg_to_html(icon.style_file.url)
     icon.tag = svg_to_html(icon.tag_file.url)
     icon.title = svg_to_html(icon.title_file.url)
@@ -335,8 +334,8 @@ def update_icons(icon, posts):
                 svg = icon.quest_ref
             elif 'book' in name:
                 svg = icon.book
-            elif 'font_ref' in name:
-                svg = icon.font_ref
+            elif 'src' in name:
+                svg = icon.src
             elif 'plus_ref' in name:
                 svg = icon.plus_ref
             elif 'close' in name:

@@ -169,12 +169,6 @@ class Icon(models.Model):
     edit = models.TextField(default='')
     edit_file = models.FileField(
         default='icons/default/edit.svg', upload_to='icons/')
-    font = models.TextField(default='')
-    font_file = models.FileField(
-        default='icons/default/font.svg', upload_to='icons/')
-    font_ref = models.TextField(default='')
-    font_ref_file = models.FileField(
-        default='icons/default/font_ref.svg', upload_to='icons/')
     grid = models.TextField(default='')
     grid_file = models.FileField(
         default='icons/default/grid.svg', upload_to='icons/')
@@ -211,6 +205,9 @@ class Icon(models.Model):
     settings = models.TextField(default='')
     settings_file = models.FileField(
         default='icons/default/settings.svg', upload_to='icons/')
+    src = models.TextField(default='')
+    src_file = models.FileField(
+        default='icons/default/src.svg', upload_to='icons/')
     style = models.TextField(default='')
     style_file = models.FileField(
         default='icons/default/style.svg', upload_to='icons/')
