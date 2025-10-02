@@ -348,18 +348,18 @@ details[open] summary::before {
   transform: rotate(90deg); /* seta gira quando abre */
 }
 details {
-  border: 1px solid #EEE;
+  /*border: 1px solid #EEE;*/
   border-radius: 8px;
   padding: .5rem 1rem;
   padding-bottom: .1rem;
   margin-bottom: .5rem;
-  background: #EEE;
-  color: #434343;
+  /*background: #EEE;
+  color: #434343;*/
 }
 
 details[open] {
-  background: #EEE;
-  /* box-shadow: 0 2px 6px rgba(0,0,0,0.1); */
+  background: rgba(255,255,255,0.2);
+  /*box-shadow: 0px 0px 3px rgba(0,0,0,0.1);*/
 }
 
 /* Cria um "tema read" usando variáveis */
@@ -368,14 +368,18 @@ details[open] {
   --bs-body-color: #434343;       /* cor do texto */
   
   /* Fundo e cores do modal */
-  --bs-modal-bg: #DEDEDE;         
+  --bs-modal-bg: #DEDEDE;
   --bs-modal-color: #434343;
-  --bs-modal-border-color: #dcdcdc;
+  --bs-modal-border-color: #434343;
+  /*--bs-modal-footer-bg: rgba(255,255,255,0.2);*/
 
   /* Botões e etc (se precisar ajustar) */
   --bs-btn-bg: #e0e0d0;
   --bs-btn-color: #000;
   --bs-btn-hover-bg: #d0d0c0;
+}
+.modal-footer {
+  border-top: none;
 }
 
 .btn-danger {

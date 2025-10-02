@@ -19,7 +19,8 @@ def clear_html(html: str, icon) -> str:
     html = clear_image(html)
     html = clear_mark(html)
     html = create_modal_buttons(html, icon)
-    html = create_modal_windows(html)
+    html = create_modal_windows(html, icon)
+    html = create_details(html)
     html = create_font_links(html, icon)
 
     top_space, div_body = '<span class="mt-4">&nbsp;</span>', '>.....</p>'
@@ -168,39 +169,22 @@ def create_modal_buttons(html: str, icon) -> str:
 
         html = html.replace(
             ref, (
-                '<!-- {ref_icon ' f'{name} --><a type="button" '
-                'class="ref_plus_button d-print-none" data-bs-toggle="modal" '
-                f'data-bs-target="#ref{num}">{svg.strip()}</a>'
-                '<!-- ref_icon} -->'))
+                '<a type="button" class="ref_plus_button d-print-none" '
+                'data-bs-toggle="modal" '
+                f'data-bs-target="#ref{num}">{svg.strip()}</a>'))
     return html
 
 
-def create_modal_windows(html: str) -> str:
+def create_modal_windows(html: str, icon) -> str:
     for ref in re.findall(r'\{w\d+[^}]+}', html):  # '{w1 ... }'
-        code = re.findall(r'\{w\d+([^}]+)}', ref)[0]
-        if code:
-            code = code.strip().lstrip('</p>').rstrip('<p>').strip()
-            code = '<p>' + code if not code.startswith('<p>') else code
-            code = code + '</p>' if not code.startswith('</p>') else code
+        code = re.findall(r'\{w\d+([^}]+)}', ref)
 
-        details_html = ''
-        if '+++++' in code:
-            for num, body in enumerate(code.split('+++++')):
-                title = re.findall(r'<p[^>]*>[^<]+</p>', body)
-                title = title[0] if title else 'Item'
+        code = code[0] if code else ref
+        code = code.strip().lstrip('</p>').rstrip('<p>').strip()
+        code = '<p>' + code if not code.startswith('<p>') else code
+        code = code + '</p>' if not code.startswith('</p>') else code
 
-                body = body.replace(title, '')
-
-                open_ = ' open' if num == 0 else ''
-                details_html += (    
-                    f'<details{open_}>'
-                    '  <summary>'
-                    f'    {title.replace('<p>', '').replace('</p>', '')}'
-                    '  </summary>'
-                    f'  {body}'
-                    '</details>')
-
-        code = details_html if details_html else code
+        code = detail_from_html_snippet(code)
         num = re.findall(r'\{w(\d+)[^}]+}', ref)[0]
         html = html.replace(
             ref, (  # data-bs-theme="light"
@@ -222,24 +206,61 @@ def create_modal_windows(html: str) -> str:
                 '<div class="d-grid gap-2 d-flex justify-content-end">'
                 '<button type="button" class="btn btn-outline-danger btn-sm '
                 'border border-0" data-bs-dismiss="modal" aria-label="Close">'
-          
-                '<svg xmlns="http://www.w3.org/2000/svg" width="16" '
-                'height="16" fill="currentColor" class="bi bi-x-lg" '
-                'viewBox="0 0 16 16">'
-                '<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.'
-                '147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.'
-                '708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>'
-                '</svg>'
-                
-                '</button></div>'
-                '</div>'
-
+                f'{icon.close}'
+                '</button></div>''</div>'
                 '</div></div></div></div>'))
 
     return html
 
 
-def svg_to_html(svg_path: str) -> str:
+def create_details(html: str) -> str:
+    for ref in re.findall(r'\{d[^}]+}', html):  # '{w1 ... }'
+        code = re.findall(r'\{d([^}]+)}', ref)
+
+        code = code[0] if code else ref
+        code = code.strip().lstrip('</p>').rstrip('<p>').strip()
+        code = '<p>' + code if not code.startswith('<p>') else code
+        code = code + '</p>' if not code.startswith('</p>') else code
+        
+        code = detail_from_html_snippet(code)
+        html = html.replace(ref, code)
+
+    return html
+
+
+def detail_from_html_snippet(html: str) -> str:
+    details_html = ''
+    if '+++++' in html:
+        for num, body in enumerate(html.split('+++++')):
+            title = re.findall(r'<p[^>]*>[^<]+</p>', body)
+            title = title[0] if title else 'Item'
+            body = body.replace(title, '')
+
+            open_ = ' open' if num == 0 else ''
+            details_html += (    
+                f'<details{open_}>'
+                '  <summary>'
+                f'    {title.replace('<p>', '').replace('</p>', '')}'
+                '  </summary>'
+                f'  {body}'
+                '</details>')
+    else:
+        title = re.findall(r'<p[^>]*>[^<]+</p>', html)
+        title = title[0] if title else 'Item'
+        body = html.replace(title, '')
+
+        details_html += (    
+                f'<details>'
+                '  <summary>'
+                f'    {title.replace('<p>', '').replace('</p>', '')}'
+                '  </summary>'
+                f'  {body}'
+                '</details>')
+
+    return details_html if details_html else html
+
+
+def svg_to_html(svg_path: str, name: str = None) -> str:
     path = pathlib.Path(__file__).resolve().parent.parent.parent
 
     svg_path = path.as_posix() + svg_path
@@ -260,7 +281,14 @@ def svg_to_html(svg_path: str) -> str:
     if 'fill="currentColor"' not in optimized:
         optimized = optimized.replace('class="', 'fill="currentColor" class="')
 
-    return optimized
+    if name == 'icon.book':
+        optimized = optimized.replace(
+            'class="', 'style="margin:0px 0px 2px 2px;" class="')
+    else:
+        optimized = optimized.replace(
+            'class="', 'style="margin:0px 0px 2px 0px;" class="')
+
+    return f'<!-- {name} -->{optimized}<!-- /{name} -->' if name else optimized
 
 
 def update_icons(icon, posts):
@@ -269,25 +297,25 @@ def update_icons(icon, posts):
     icon.arrow_restore = svg_to_html(icon.arrow_restore_file.url)
     icon.arrow_restore_45 = svg_to_html(icon.arrow_restore_45_file.url)
     icon.arrow_right = svg_to_html(icon.arrow_right_file.url)
-    icon.book = svg_to_html(icon.book_file.url)
+    icon.book = svg_to_html(icon.book_file.url, 'icon.book')
     icon.card = svg_to_html(icon.card_file.url)
     icon.category = svg_to_html(icon.category_file.url)
     icon.clock = svg_to_html(icon.clock_file.url)
-    icon.close = svg_to_html(icon.close_file.url)
+    icon.close = svg_to_html(icon.close_file.url, 'icon.close')
     icon.content_text = svg_to_html(icon.content_text_file.url)
     icon.edit = svg_to_html(icon.edit_file.url)
     icon.font = svg_to_html(icon.font_file.url)
-    icon.font_ref = svg_to_html(icon.font_ref_file.url)
+    icon.font_ref = svg_to_html(icon.font_ref_file.url, 'icon.font_ref')
     icon.grid = svg_to_html(icon.grid_file.url)
     icon.hidden = svg_to_html(icon.hidden_file.url)
     icon.image = svg_to_html(icon.image_file.url)
     icon.light = svg_to_html(icon.light_file.url)
-    icon.link = svg_to_html(icon.link_file.url)
-    icon.ok = svg_to_html(icon.ok_file.url)
+    icon.link = svg_to_html(icon.link_file.url, 'icon.link')
+    icon.ok = svg_to_html(icon.ok_file.url, 'icon.ok')
     icon.plus = svg_to_html(icon.plus_file.url)
-    icon.plus_ref = svg_to_html(icon.plus_ref_file.url)
+    icon.plus_ref = svg_to_html(icon.plus_ref_file.url, 'icon.plus_ref')
     icon.post = svg_to_html(icon.post_file.url)
-    icon.quest_ref = svg_to_html(icon.quest_ref_file.url)
+    icon.quest_ref = svg_to_html(icon.quest_ref_file.url, 'icon.quest_ref')
     icon.search = svg_to_html(icon.search_file.url)
     icon.settings = svg_to_html(icon.settings_file.url)
     icon.style = svg_to_html(icon.style_file.url)
@@ -301,33 +329,24 @@ def update_icons(icon, posts):
 
     for post in posts:
         html = post.content
-        for tag in re.findall(r'<!-- {ref_icon [^\}]+\} -->', html):
-            name = re.findall(r'<!-- {ref_icon ([^ ]+) -->', tag)[0]
-            num = re.findall(r'data-bs-target=\"#ref(\d+)\"', tag)[0]
-
-            if 'quest' in name:
+        for tag in re.findall(r'<!-- icon\.[^!]+!-- /icon\.[^>]+>', html):
+            name = re.findall(r'<!-- icon\.([^\s]+) -->', tag)[0]
+            if 'quest_ref' in name:
                 svg = icon.quest_ref
             elif 'book' in name:
                 svg = icon.book
-            elif 'font' in name:
+            elif 'font_ref' in name:
                 svg = icon.font_ref
-            elif 'plus' in name:
+            elif 'plus_ref' in name:
                 svg = icon.plus_ref
-            elif 'text' in name:
-                svg = icon.plus_ref
+            elif 'close' in name:
+                svg = icon.close
+            elif 'ok' in name:
+                svg = icon.ok
+            elif 'link' in name:
+                svg = icon.link
 
-            if 'book' in name:
-                svg = svg.replace(
-                    'class="', 'style="margin:0px 0px 2px 2px;" class="')
-            else:
-                svg = svg.replace(
-                    'class="', 'style="margin:0px 0px 2px 0px;" class="')
+            html = html.replace(tag, svg)
 
-            html = html.replace(
-                tag, (
-                    '<!-- {ref_icon ' f'{name} -->'
-                    '<a type="button" class="ref_plus_button d-print-none" '
-                    f'data-bs-toggle="modal" data-bs-target="#ref{num}">{svg}'
-                    '</a><!-- ref_icon} -->'))
         post.content = html
         post.save()
