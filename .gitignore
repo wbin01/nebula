@@ -1,6 +1,23 @@
 .directory
 .idea/
 src/db.sqlite3
+
+src/media/brand_image/*.jpg
+src/media/brand_image/*.jpeg
+src/media/brand_image/*.png
+
+src/media/category_image/*.jpg
+src/media/category_image/*.jpeg
+src/media/category_image/*.png
+
+src/media/cover_image/*.jpg
+src/media/cover_image/*.jpeg
+src/media/cover_image/*.png
+
+src/media/icons/*.jpg
+src/media/icons/*.jpeg
+src/media/icons/*.png
+
 reg.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -15,7 +32,6 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-src/media/
 downloads/
 eggs/
 .eggs/
