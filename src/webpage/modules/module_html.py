@@ -57,7 +57,7 @@ def clear_a(html: str) -> str:
             r'<a[^>]*>(<span[^>]*>)<u[^>]*>[^<]*</u></span></a>', a)[0]
 
         new_a = (a.replace(
-            '<a ', '<a class="stylelink" ').replace(
+            '<a ', '<a class="stylelink" target="_blank" ').replace(
             '<u>', '').replace('</u>', '').replace(
             span, '').replace('</span>', ''))
         # html = html.replace(a, f'<span class="style-link">{new_a}</span>')
@@ -128,11 +128,11 @@ def clear_mark(html: str) -> str:
 
 
 def create_source_links(html, icon) -> str:
-    for src in re.findall(r'\(src:[^)]+\)', html):
+    for src in re.findall(r'\(src:[^\)]+\)', html):
         new_src = '<small>' + src.lstrip('(src:').rstrip(')').replace(
             'class="stylelink"',
-            'class="text-secondary text-decoration-none" target="_blank"'
-            ).replace('</a>', f'{icon.src}</a>') + '</small>'
+            'class="stylelink" target="_blank"'
+            ).replace('</a>', f'{icon.link}</a></small>')
 
         html = html.replace(src, new_src)
 
@@ -169,7 +169,7 @@ def create_modal_buttons(html: str, icon) -> str:
 
         html = html.replace(
             ref, (
-                '<a type="button" class="ref_plus_button d-print-none" '
+                '<a type="button" class="ref_button d-print-none" '
                 'data-bs-toggle="modal" '
                 f'data-bs-target="#ref{num}">{svg.strip()}</a>'))
     return html

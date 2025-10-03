@@ -294,17 +294,17 @@ a.stylelink:hover {
     color: white;
     box-shadow: inset 0 -40px 0 -1px #194C8B;
 }
-a.ref_plus_button, a.ref_plus_button:link, a.ref_plus_button:active, a.ref_plus_button:visited {
+a.ref_button, a.ref_button:link, a.ref_button:active, a.ref_button:visited {
     text-decoration: none;
     text-decoration-color: rgba(44, 109, 188, 1.0);
-    color: #4783b0;
+    color: #1d5aa3;
     transition: transform .12s ease, opacity .12s ease;
     /*display: inline-block;
     position: relative;*/
 }
-a.ref_plus_button:hover {
+a.ref_button:hover {
     text-decoration: none;
-    color: #6099ce;
+    color: #3079b9;
     /*transform: scale(1.1);*/
 }
 
