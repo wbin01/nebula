@@ -95,8 +95,8 @@
 }
 
 body {
-    background: rgb(222, 222, 205);
-    /* background: rgb(220, 220, 220); */
+    background: var(--body-bg);
+    /* background: rgb(222, 222, 205); */
     /* font-family: "Zen Maru Gothic Regular"; */
     font-family: "OpenSans-Light";
     font-size: 12pt;
@@ -110,86 +110,88 @@ body {
     filter: brightness(120%);
 }
 
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: var(--body-bg-alt);   /* <-- background */
+  background-clip: border-box;
+  /*border: 1px solid var(--body-bg-alt);*/
+  border: 0px;
+  border-radius: .25rem;
+  color: var(--body-fg);
+}
+.card-title, .card-subtitle {
+  color: var(--body-fg);
+}
+
+.card-link-style-add {
+  background-color: var(--body-bg-alt);
+  color: var(--body-fg);
+}
+
 .card-link-style .card-grid-link-indicator-bg {
-    position: absolute;
-    top: 50%;
-    margin-top: -25px;
-    margin-left: -25px;
-    border-radius: 50%;
-    width:50px;
-    height:50px;
-    background-color: rgb(220, 220, 220);
+  position: absolute;
+  top: 50%;
+  margin-top: -25px;
+  margin-left: -25px;
+  border-radius: 50%;
+  width:50px;
+  height:50px;
+  /*background-color: rgb(220, 220, 220);*/
+  background-color: var(--body-bg);
+  color: var(--body-fg);
 }
 
 .card-link-style .card-grid-link-indicator-middle-bg {
-    position: absolute;
-    top: 50%;
-    margin-top: -19px;
-    margin-left: 6px;
-    border-radius: 50%;
-    width:38px;
-    height:38px;
-    background-color: rgb(220, 220, 220);
+  position: absolute;
+  top: 50%;
+  margin-top: -19px;
+  margin-left: 6px;
+  border-radius: 50%;
+  width:38px;
+  height:38px;
+  /*background-color: rgb(220, 220, 220);*/
+  background-color: var(--body-bg);
+  color: var(--body-fg);
 }
 .card-link-style:hover .card-grid-link-indicator-middle-bg {
-    background-color: rgb(190, 190, 190);
+    /*background-color: rgb(190, 190, 190);*/
+  background-color: var(--body-title);
+  color: var(--body-fg);
 }
 
 .card-link-style .card-grid-link-indicator-fg {
-    position: absolute;
-    top: 50%;
-    margin-top: -13px;
-    margin-left: 6px;
-    border-radius: 50%;
-    width:26px;
-    height:26px;
-    background-color: rgb(240, 240, 240);
+  position: absolute;
+  top: 50%;
+  margin-top: -13px;
+  margin-left: 6px;
+  border-radius: 50%;
+  width:26px;
+  height:26px;
+  /*background-color: rgb(240, 240, 240);*/
+  background-color: var(--body-bg-alt);
+  color: var(--body-fg);
 }
 .card-link-style:hover .card-grid-link-indicator-fg {
-    background-color: rgb(240, 240, 240);
+  /*background-color: rgb(240, 240, 240);*/
+  background-color: var(--body-bg-alt);
 }
-/*
+
 .card-link-style .card-link-indicator-fg {
-    position: absolute;
-    width: 10px;
-    height: 90%;
-    top: 5%;
-    left: -5px;
-    background-color: rgba(0, 0, 0, 0);
-    border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 0px 5px 5px 0px;
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0);
+  color: var(--body-fg);
 }
 .card-link-style:hover .card-link-indicator-fg {
-    background-color: #000;
-    border: 1px solid rgb(220, 220, 220);
-}
-*/
-/*
-.card-link-style .card-link-indicator-fg {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    top: 50%;
-    margin-top: -15px;
-    left: -15px;
-    background-color: rgba(0, 0, 0, 0);
-    border: 3px solid rgba(0, 0, 0, 0);
-    border-radius: 15px 15px 15px 15px;
-}
-.card-link-style:hover .card-link-indicator-fg {
-    background-color: #000;
-    border: 3px solid rgb(220, 220, 220);
-}
-*/
-.card-link-style .card-link-indicator-fg {
-    position: absolute;
-    width: 5px;
-    height: 100%;
-    top: 0px;
-    background-color: rgba(0, 0, 0, 0);
-}
-.card-link-style:hover .card-link-indicator-fg {
-    backdrop-filter: invert(70%);
+    /*backdrop-filter: invert(70%);*/
+    background-color: var(--body-title);
+    color: var(--body-fg);
 }
 .post-cover-title h1{
     font-family: "OpenSans-SemiBold";
@@ -206,49 +208,49 @@ body {
 .post_stl h1 {
     font-family: "Rokkitt-Bold";
     font-size: 22pt;
-    color: #434343;
+    color: var(--body-title); /* color: #434343;*/
     margin-top: 40px;
     margin-bottom: 15px;
 }
 .post_stl h2 {
     font-family: "Rokkitt-Bold";
     font-size: 20pt;
-    color: #434343;
+    color: var(--body-title); /* color: #434343;*/
     margin-top: 40px;
     margin-bottom: 15px;
 }
 .post_stl h3 {
     font-family: "Rokkitt-Bold";
     font-size: 20pt;
-    color: #434343;
+    color: var(--body-title); /* color: #434343;*/
     margin-top: 40px;
     margin-bottom: 15px;
 }
 .post_stl h4 {
     font-family: "Rokkitt-Bold";
     font-size: 18pt;
-    color: #434343;
+    color: var(--body-title); /* color: #434343;*/
     margin-top: 40px;
     margin-bottom: 15px;
 }
 .post_stl h5 {
     font-family: "Rokkitt-Bold";
     font-size: 16pt;
-    color: #434343;
+    color: var(--body-title); /* color: #434343;*/
     margin-top: 40px;
     margin-bottom: 15px;
 }
 .post_stl h6, .post_stl h7, .post_stl h8, .post_stl h9 {
     font-family: "Rokkitt-Bold";
     font-size: 14pt;
-    color: #434343;
+    color: var(--body-title);
     margin-top: 40px;
     margin-bottom: 15px;
 }
 .post_stl p {
     font-family: "Rokkitt-Light";
     font-size: 16pt;
-    color: #222;
+    color: var(--body-fg);
 }
 .post_stl img {
     border: 5px solid rgba(0, 0, 0, 0);
@@ -337,11 +339,11 @@ details summary::-webkit-details-marker {
 }
 
 details summary::before {
-  content: "➤";  /* ▶ seta fechada */
+  content: "⦊";  /* ▶ › ﹥ 〉⦊*/
   display: inline-block;
   margin-right: 8px;
   transition: transform 0.2s;
-  color: #888;
+  color: var(--body-fg);/*#888*/
 }
 
 details[open] summary::before {
@@ -353,12 +355,14 @@ details {
   padding: .5rem 1rem;
   padding-bottom: .1rem;
   margin-bottom: .5rem;
+  background: var(--body-bg);
+  color: var(--body-title);
   /*background: #EEE;
   color: #434343;*/
 }
 
 details[open] {
-  background: rgba(255,255,255,0.2);
+  background: var(--body-bg); /*rgba(255,255,255,0.2)*/
   /*box-shadow: 0px 0px 3px rgba(0,0,0,0.1);*/
 }
 

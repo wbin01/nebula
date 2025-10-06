@@ -126,7 +126,21 @@ class PageStyle(models.Model):
     nav_items_fg = models.CharField(default="#CCCCCC", max_length=10)
     nav_items_fg_hover = models.CharField(default="#FFFFFF", max_length=10)
 
-    body_fg = models.CharField(default="#555555", max_length=10)
+    body_bg = models.CharField(default="#DEDECD", max_length=10)
+    body_bg_alt = models.CharField(default="#EEEEEE", max_length=10)
+    body_fg = models.CharField(default="#434343", max_length=10)
+    body_title = models.CharField(default="#426EC1", max_length=10)
+    body_link = models.CharField(default="#1D5AA3", max_length=10)
+    body_link_hover = models.CharField(default="#194C8B", max_length=10)
+
+    is_dark = models.BooleanField(default=False)
+
+    body_bg_dark = models.CharField(default="#222222", max_length=10)
+    body_bg_alt_dark = models.CharField(default="#333333", max_length=10)
+    body_fg_dark = models.CharField(default="#EEEEEE", max_length=10)
+    body_title_dark = models.CharField(default="#426EC1", max_length=10)
+    body_link_dark = models.CharField(default="#1D5AA3", max_length=10)
+    body_link_hover_dark = models.CharField(default="#194C8B", max_length=10)
 
     def __str__(self):
         return f'Page style {self.code}'

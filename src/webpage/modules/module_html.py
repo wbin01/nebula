@@ -128,6 +128,7 @@ def clear_mark(html: str) -> str:
 
 
 def create_source_links(html, icon) -> str:
+    sources = []
     for src in re.findall(r'\(src:[^\)]+\)', html):
         new_src = '<small>' + src.lstrip('(src:').rstrip(')').replace(
             'class="stylelink"',
@@ -135,8 +136,15 @@ def create_source_links(html, icon) -> str:
             ).replace('</a>', f'{icon.link}</a></small>')
 
         html = html.replace(src, new_src)
+        sources.append(new_src)
 
-    return html
+    sources_code = r'<div class="my-5">&nbsp;</div><hr>{d <p>Sources</p>'
+    for source in sources:
+        sources_code += '<div>' + source + '</div>'
+    sources_code = create_details(sources_code + r'}').replace(
+        f'Sources', f' {icon.src}&nbsp; Sources')
+
+    return html + sources_code if sources else html
 
 
 def create_modal_buttons(html: str, icon) -> str:

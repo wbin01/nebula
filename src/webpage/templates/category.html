@@ -89,8 +89,8 @@
     {% for nav_item_string in nav_items_strings %}
     {% if nav_item_string.code == sub_nav_item.code and nav_item_string.lang == cookie_language and nav_item_string.subtitle %}
     </div>
-    <h1 class="m-0 p-0 mt-4 mb-0">{{ nav_item_string.subtitle|split:"-|0" }}</h1>
-    <p class="m-0 p-0 mt-0 mb-3 ms-2">{{ nav_item_string.summary }}</p>
+    <h1 class="m-0 p-0 mt-4 mb-0 card-title">{{ nav_item_string.subtitle|split:"-|0" }}</h1>
+    <p class="m-0 p-0 mt-0 mb-3 ms-2 card-subtitle">{{ nav_item_string.summary }}</p>
     <div class="row row-cols-1 row-cols-md-2 g-4">
     {% endif %}
     {% endfor %}
@@ -131,12 +131,13 @@
       <div class="col"></div>
 
       <div class="col" style="min-height: 150px;">
-        <div class="position-relative card-link-style w-100 h-100 align-content-center text-center bg-light rounded border border-secondary border-opacity-25">
+        <div class="position-relative card-link-style-add w-100 h-100 align-content-center text-center rounded">
           Add category
           <form action="{% url 'category' cookie_language path %}" method="post" enctype="multipart/form-data">{% csrf_token %}
             <input type="hidden" name="category-name" value="{{ nav_item.code }}">
             <input type="hidden" name="add-sub-item">
-            <button type="submit" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
+            <button type="submit" 
+            class="btn {% if style.is_dark %}btn-outline-light{% else %}btn-outline-dark{% endif %} btn-sm border border-1 {% if style.is_dark %}border-light{% else %}border-dark{% endif %} border-opacity-25">
             {{ icon.plus|safe }}
           </button>
           </form>

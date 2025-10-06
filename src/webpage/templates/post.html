@@ -121,7 +121,8 @@
 
 <!-- Content -->
 <div class="container-md px-0">
-<div class="position-relative my-0 mx-0 px-4 pb-4 post_stl" style="background:rgb(222, 222, 205);margin:0px;">
+<div class="position-relative my-0 mx-0 px-4 pb-4 post_stl" 
+  style="background:{% if style.is_dark %}{{ style.body_bg_dark }}{% else %}{{ style.body_bg }}{% endif %};margin:0px;">
   {% if post.cover_image_credits and not post.cover_image_credits_link %}
   <div class="text-dark text-end my-0 mx-0 py-0 opacity-50 d-print-none">
     <sup>{{ post.cover_image_credits }}</sup>
@@ -148,7 +149,7 @@
   <!-- Lang/Translate user col -->
   {% if post_languages|length > 1 and languages_displayed|length > 1 %}
   <div class="py-0 my-0 d-print-none">
-    <button type="button" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25" data-bs-toggle="modal" data-bs-target="#langUserModal">
+    <button type="button" class="btn {% if style.is_dark %}btn-outline-light{% else %}btn-outline-dark{% endif %} btn-sm border border-1 border-dark border-opacity-25" data-bs-toggle="modal" data-bs-target="#langUserModal">
       {{ icon.translate|safe }} {{ post.lang }}
     </button>
     <!-- Lang/Translate user modal -->
@@ -209,7 +210,14 @@
   {% endif %}
 
   </div>
-
+<!-- <div 
+  style="
+    position:fixed;
+    inset:0;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ post.cover_image.url }}') center/cover no-repeat;
+    filter:blur(20px);
+    z-index:-1;">
+</div> -->
   <div style="min-height:300px;">
     {% if not post.content %}
       Content...
