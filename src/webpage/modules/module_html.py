@@ -75,7 +75,7 @@ def clear_h(html: str) -> str:
                 for span in t.find_all('span'):
                     span.unwrap()
 
-    return str(soup)
+    return str(soup).replace('<h1>', '<h2>').replace('</h1>', '</h2>')
 
 
 def clear_spaces(html: str) -> str:
@@ -111,7 +111,7 @@ def clear_image(html: str) -> str:
         for img_ in img_content:
             img_new = re.sub(
                 img_style_pattern,
-                'style="max-width:100%;max-height:350px;" class="img-fluid"',
+                'style="max-width:100%;max-height:350px;" class="m-0 p-0 img-fluid"',
                 img_)
             img_new = re.sub(
                 img_width_pattern, '', img_new)
@@ -138,11 +138,13 @@ def create_source_links(html, icon) -> str:
         html = html.replace(src, new_src)
         sources.append(new_src)
 
-    sources_code = r'<div class="my-5">&nbsp;</div><hr>{d <p>Sources</p>'
+    sources_code = (
+        '<div class="my-5 d-print-none">&nbsp;'
+        '<hr class="text-secondary text-opacity-50">{d <p>Sources</p>')
     for source in sources:
         sources_code += '<div>' + source + '</div>'
     sources_code = create_details(sources_code + r'}').replace(
-        f'Sources', f' {icon.src}&nbsp; Sources')
+        f'Sources', f' {icon.src}&nbsp; sources') + '</div>'
 
     return html + sources_code if sources else html
 

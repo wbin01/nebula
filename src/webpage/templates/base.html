@@ -14,12 +14,14 @@
       --body-bg: {% if style.is_dark %}{{ style.body_bg_dark }}{% else %}{{ style.body_bg }}{% endif %};
       --body-bg-alt: {% if style.is_dark %}{{ style.body_bg_alt_dark }}{% else %}{{ style.body_bg_alt }}{% endif %};
       --body-fg: {% if style.is_dark %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %};
+      --body-fg-block: {% if style.is_dark %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}30;
 
       --body-title: {% if style.is_dark %}{{ style.body_title_dark }}{% else %}{{ style.body_title }}{% endif %};
       --body-link: {% if style.is_dark %}{{ style.body_link_dark }}{% else %}{{ style.body_link }}{% endif %};
       --body-link-hover: {% if style.is_dark %}{{ style.body_link_hover_dark }}{% else %}{{ style.body_link_hover }}{% endif %};
 
       --body-form-control-border: {% if style.is_dark %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}20;
+      --body-img-blend: {% if style.is_dark %}normal{% else %}multiply{% endif %};
     }
     </style>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">

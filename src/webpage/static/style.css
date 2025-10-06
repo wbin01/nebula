@@ -193,16 +193,20 @@ body {
     background-color: var(--body-title);
     color: var(--body-fg);
 }
-.post-cover-title h1{
+.post-cover-title-bg {
+    position: relative;
+    background-color: rgba(0, 0, 0, 1.0);
+}
+.post-cover-title h1 {
     font-family: "OpenSans-SemiBold";
     position: relative;
     top: -125px;
-    text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
+    /*text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);*/
     color: #DDD;
 }
 .post-cover-title h5 {
     font-family: "OpenSans-Medium";
-    text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
+    /*text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);*/
 }
 
 .post_stl h1 {
@@ -255,7 +259,7 @@ body {
 .post_stl img {
     border: 5px solid rgba(0, 0, 0, 0);
     border-radius: 10px;
-    mix-blend-mode: multiply;
+    mix-blend-mode: var(--body-img-blend);
 }
 
 .tag-category a, .tag-category a:link, .tag-category a:active, .tag-category a:visited {
@@ -285,7 +289,8 @@ a.stylelink, a.stylelink:link, a.stylelink:active, a.stylelink:visited {
     text-decoration: none;
     /* text-decoration-color: rgba(31, 92, 171, 0.4); */
     padding: 0px 2px 0px 2px;
-    color: #1d5aa3;
+    /*color: #1d5aa3;*/
+    color: var(--body-link);
     box-shadow: inset 0 -1px 0 -1px #194C8B;
     border-radius: 3px;
     /*box-shadow: inset 0 -3px 0 -1px black;*/
@@ -294,19 +299,20 @@ a.stylelink, a.stylelink:link, a.stylelink:active, a.stylelink:visited {
 a.stylelink:hover {
     text-decoration: none;
     color: white;
-    box-shadow: inset 0 -40px 0 -1px #194C8B;
+    /*box-shadow: inset 0 -40px 0 -1px #194C8B;*/
+    box-shadow: inset 0 -40px 0 -1px var(--body-link-hover);
 }
 a.ref_button, a.ref_button:link, a.ref_button:active, a.ref_button:visited {
     text-decoration: none;
     text-decoration-color: rgba(44, 109, 188, 1.0);
-    color: #1d5aa3;
+    color: var(--body-link);
     transition: transform .12s ease, opacity .12s ease;
     /*display: inline-block;
     position: relative;*/
 }
 a.ref_button:hover {
     text-decoration: none;
-    color: #3079b9;
+    color: var(--body-link-hover);
     /*transform: scale(1.1);*/
 }
 

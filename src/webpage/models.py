@@ -137,10 +137,10 @@ class PageStyle(models.Model):
 
     body_bg_dark = models.CharField(default="#272727", max_length=10)
     body_bg_alt_dark = models.CharField(default="#333333", max_length=10)
-    body_fg_dark = models.CharField(default="#EEEEEE", max_length=10)
-    body_title_dark = models.CharField(default="#426EC1", max_length=10)
-    body_link_dark = models.CharField(default="#1D5AA3", max_length=10)
-    body_link_hover_dark = models.CharField(default="#194C8B", max_length=10)
+    body_fg_dark = models.CharField(default="#DDDDDD", max_length=10)
+    body_title_dark = models.CharField(default="#3C5A86", max_length=10)
+    body_link_dark = models.CharField(default="#3B65A3", max_length=10)
+    body_link_hover_dark = models.CharField(default="#2D4E7C", max_length=10)
 
     def __str__(self):
         return f'Page style {self.code}'
