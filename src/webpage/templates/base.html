@@ -18,6 +18,8 @@
       --body-title: {% if style.is_dark %}{{ style.body_title_dark }}{% else %}{{ style.body_title }}{% endif %};
       --body-link: {% if style.is_dark %}{{ style.body_link_dark }}{% else %}{{ style.body_link }}{% endif %};
       --body-link-hover: {% if style.is_dark %}{{ style.body_link_hover_dark }}{% else %}{{ style.body_link_hover }}{% endif %};
+
+      --body-form-control-border: {% if style.is_dark %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}20;
     }
     </style>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">

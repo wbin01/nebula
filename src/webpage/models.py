@@ -127,7 +127,7 @@ class PageStyle(models.Model):
     nav_items_fg_hover = models.CharField(default="#FFFFFF", max_length=10)
 
     body_bg = models.CharField(default="#DEDECD", max_length=10)
-    body_bg_alt = models.CharField(default="#EEEEEE", max_length=10)
+    body_bg_alt = models.CharField(default="#EBEBD9", max_length=10)
     body_fg = models.CharField(default="#434343", max_length=10)
     body_title = models.CharField(default="#426EC1", max_length=10)
     body_link = models.CharField(default="#1D5AA3", max_length=10)
@@ -135,7 +135,7 @@ class PageStyle(models.Model):
 
     is_dark = models.BooleanField(default=False)
 
-    body_bg_dark = models.CharField(default="#222222", max_length=10)
+    body_bg_dark = models.CharField(default="#272727", max_length=10)
     body_bg_alt_dark = models.CharField(default="#333333", max_length=10)
     body_fg_dark = models.CharField(default="#EEEEEE", max_length=10)
     body_title_dark = models.CharField(default="#426EC1", max_length=10)
@@ -171,6 +171,9 @@ class Icon(models.Model):
     category = models.TextField(default='')
     category_file = models.FileField(
         default='icons/default/category.svg', upload_to='icons/')
+    circle_half = models.TextField(default='')
+    circle_half_file = models.FileField(
+        default='icons/default/circle-half.svg', upload_to='icons/')
     clock = models.TextField(default='')
     clock_file = models.FileField(
         default='icons/default/clock.svg', upload_to='icons/')
@@ -198,6 +201,9 @@ class Icon(models.Model):
     link = models.TextField(default='')
     link_file = models.FileField(
         default='icons/default/link.svg', upload_to='icons/')
+    moon = models.TextField(default='')
+    moon_file = models.FileField(
+        default='icons/default/moon.svg', upload_to='icons/')
     ok = models.TextField(default='')
     ok_file = models.FileField(
         default='icons/default/ok.svg', upload_to='icons/')
@@ -225,6 +231,9 @@ class Icon(models.Model):
     style = models.TextField(default='')
     style_file = models.FileField(
         default='icons/default/style.svg', upload_to='icons/')
+    sun = models.TextField(default='')
+    sun_file = models.FileField(
+        default='icons/default/sun.svg', upload_to='icons/')
     tag = models.TextField(default='')
     tag_file = models.FileField(
         default='icons/default/tag.svg', upload_to='icons/')

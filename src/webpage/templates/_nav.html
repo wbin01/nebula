@@ -59,6 +59,45 @@
         </div>
       </div> <!-- modal end -->
 
+      <!-- Dark mode -->
+      <a class="ms-3 text-decoration-none" style="color:{{ style.nav_top_fg }};" onMouseOver="this.style.color='{{ style.nav_top_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_top_fg }}'" type="button" data-bs-toggle="modal" data-bs-target="#darkModeModal">
+        {{ icon.circle_half|safe }}
+      </a>
+      <!-- Dark mode modal -->
+      <div class="modal fade text-light" data-bs-theme="dark" id="darkModeModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="darkModeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <form action="{% url 'settings' cookie_language 'dark_mode' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+                <div>
+                  <input class="form-check-input" type="radio" name="dark_mode" id="dark_mode_dark" value="dark" {% if style.is_dark %}checked{% endif %}>
+                  <label class="form-check-label" for="dark_mode_dark">&nbsp; {{ icon.moon|safe }}&nbsp; <small class="opacity-50">Dark</small>
+                  </label>
+                </div>
+                <div>
+                  <input class="form-check-input" type="radio" name="dark_mode" id="dark_mode_light" value="light" {% if not style.is_dark %}checked{% endif %}>
+                  <label class="form-check-label" for="dark_mode_light">&nbsp; {{ icon.sun|safe }}&nbsp; <small class="opacity-50">Light</small>
+                  </label>
+                </div>
+
+                <div class="d-grid gap-2 d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-danger btn-sm border border-0" data-bs-dismiss="modal" aria-label="Close">
+                  {{ icon.close|safe }}
+                </button>
+
+                <button type="submit" class="btn btn-outline-light btn-sm border border-0" data-bs-target="#deleteModal2" data-bs-toggle="modal">
+                  {{ icon.ok|safe }}
+                </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Dark mode end -->
+
       <!-- Translate -->
       {% if languages_displayed|length > 1 %}
       <a class="ms-3 me-3 text-decoration-none" style="color:{{ style.nav_top_fg }};" onMouseOver="this.style.color='{{ style.nav_top_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_top_fg }}'" type="button" data-bs-toggle="modal" data-bs-target="#translateModal">

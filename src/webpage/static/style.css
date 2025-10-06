@@ -362,26 +362,144 @@ details {
 }
 
 details[open] {
-  background: var(--body-bg); /*rgba(255,255,255,0.2)*/
+  background: var(--body-bg-alt); /*rgba(255,255,255,0.2)*/
   /*box-shadow: 0px 0px 3px rgba(0,0,0,0.1);*/
 }
 
 /* Cria um "tema read" usando variáveis */
 [data-bs-theme="read"] {
-  --bs-body-bg: #DEDEDE;          /* fundo do body dcdcdc */
-  --bs-body-color: #434343;       /* cor do texto */
+  --bs-body-bg: var(--body-bg);    /* fundo do body dcdcdc */
+  --bs-body-color: var(--body-fg); /* cor do texto */
   
   /* Fundo e cores do modal */
-  --bs-modal-bg: #DEDEDE;
-  --bs-modal-color: #434343;
-  --bs-modal-border-color: #434343;
+  --bs-modal-bg: var(--body-bg);
+  --bs-modal-color: var(--body-fg);
+  --bs-modal-border-color: var(--body-bg);
   /*--bs-modal-footer-bg: rgba(255,255,255,0.2);*/
 
-  /* Botões e etc (se precisar ajustar) */
-  --bs-btn-bg: #e0e0d0;
+  /* Botões */
+  /*--bs-btn-bg: #e0e0d0;
   --bs-btn-color: #000;
-  --bs-btn-hover-bg: #d0d0c0;
+  --bs-btn-hover-bg: #d0d0c0;*/
 }
+[data-bs-theme="dark"] {
+  --bs-body-bg: #222;    /* fundo do body dcdcdc */
+  --bs-body-color: #EEE; /* cor do texto */
+  
+  /* Fundo e cores do modal */
+  --bs-modal-bg: #222;
+  --bs-modal-color: #EEE;
+  --bs-modal-border-color: #222;
+  /*--bs-modal-footer-bg: rgba(255,255,255,0.2);*/
+
+  /* Botões */
+  --bs-btn-bg: #222;
+  --bs-btn-color: #EEE;
+  --bs-btn-hover-bg: #333;
+}
+
+/* Inputs tipo number: remover setinhas */
+[data-bs-theme="dark"] input[type=number]::-webkit-inner-spin-button,
+[data-bs-theme="dark"] input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+[data-bs-theme="dark"] input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* Labels/addons */
+[data-bs-theme="dark"] .input-group-text {
+  background-color: #333;          /* fundo da label */
+  color: #eee;                     /* cor do texto */
+  border: 1px solid rgba(255,255,255,0.2); /* borda */
+}
+
+/* Botões dentro do input group */
+[data-bs-theme="dark"] .input-group .btn {
+  background-color: #444;          /* fundo do botão */
+  color: #fff;                     /* texto */
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+[data-bs-theme="dark"] .input-group .btn:hover {
+  background-color: #555;
+  border-color: #bb86fc;
+  color: #fff;
+}
+
+/* Inputs dentro do input group */
+[data-bs-theme="dark"] .input-group .form-control {
+  background-color: #222;
+  color: #eee;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Focus do input */
+[data-bs-theme="dark"] .input-group .form-control:focus {
+  background-color: #111;
+  color: #fff;
+  border-color: #bb86fc;
+  box-shadow: none;
+}
+/* Placeholder */
+[data-bs-theme="dark"] .form-control::placeholder {
+  color: #999;
+  opacity: 1; /* garante que a cor apareça */
+}
+
+/* Input file dark */
+[data-bs-theme="dark"] .form-control[type="file"] {
+  background-color: #222;                 /* fundo da área de input */
+  color: #eee;                            /* texto do nome do arquivo */
+  border: 1px solid rgba(255,255,255,0.2); /* borda */
+}
+
+/* Botão Browse */
+[data-bs-theme="dark"] .form-control[type="file"]::-webkit-file-upload-button {
+  background-color: #444;                 /* fundo do botão */
+  color: #fff;                            /* cor do texto */
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.375rem 0.75rem;             /* tamanho padrão do Bootstrap */
+  margin-right: 0.25rem;                  /* espaçamento interno */
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+/* Hover do botão Browse */
+[data-bs-theme="dark"] .form-control[type="file"]::-webkit-file-upload-button:hover {
+  background-color: #555;
+  border-color: #bb86fc;
+  color: #fff;
+}
+
+/* botão Browse Firefox */
+[data-bs-theme="dark"] .form-control[type="file"]::file-selector-button {
+  background-color: #444;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+[data-bs-theme="dark"] .form-control[type="file"]::file-selector-button:hover {
+  background-color: #555;
+  border-color: #bb86fc;
+}
+.btn-dark {
+    background-color: #222;
+    color: #EEE;
+}
+
+.bg-dark, .bg-light {
+  background-color: var(--body-bg);
+}
+.text-dark, .text-light {
+  color: var(--body-fg);
+}
+
 .modal-footer {
   border-top: none;
 }
@@ -450,3 +568,29 @@ details[open] {
 /* hover só altera temporariamente */
 .check-icon:hover { color: #AAA; }
 .check-icon input:checked:hover ~ .checked { color: #4196fd; }
+
+.form-control {
+  background-color: var(--body-bg-alt);
+  color: var(--body-fg);
+  border: 1px solid var(--body-form-control-border);
+}
+.form-control:focus {
+  background-color: var(--body-bg-alt);
+  color: var(--body-fg);
+  border-color: var(--body-bg-alt);
+  /*box-shadow: none; /* remove o azul padrão */*/
+}
+.form-control::placeholder {
+  color: var(--body-fg);
+  opacity: 1;
+  /*font-style: italic;*/
+}
+.form-control::-webkit-inner-spin-button,
+.form-control::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-control[type=number] {
+  -moz-appearance: textfield;
+}

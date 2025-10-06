@@ -843,6 +843,16 @@ def settings(request, lang, text='resume'):
 
             return redirect('settings', context['cookie_language'], 'style')
 
+        elif 'dark_mode' in request.POST:
+            if 'dark_mode' in request.POST:
+                context['style'].is_dark = False
+                if request.POST['dark_mode'] == 'dark':
+                    context['style'].is_dark = True
+                
+                context['style'].save()
+
+            return redirect('index', context['cookie_language'])
+
     return render(request, 'settings.html', context)
 
 
