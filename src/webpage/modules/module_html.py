@@ -128,13 +128,6 @@ def clear_mark(html: str) -> str:
 
 
 def create_source_links(html, icon) -> str:
-    # {src-site 
-    # url: lifelessonsfrombible, 
-    # date:7/10/2025, 
-    # title:The Restoration of the Divine Name in the “New Testament”, 
-    # autor:Leonard Muñez
-    # }
-
     sources = []
     for src in re.findall(r'\{src[^\}]+\}', html):
         new_src = src
@@ -185,28 +178,6 @@ def create_source_links(html, icon) -> str:
 
         html = html.replace(src, preview)
         sources.append(f'<p><small>{new_src}</small></p>')
-
-    sources_code = (
-        '<div class="my-5 d-print-none">&nbsp;'
-        '<hr class="text-secondary text-opacity-50">{d <p>Sources</p>')
-    for source in sources:
-        sources_code += '<div>' + source + '</div>'
-    sources_code = create_details(sources_code + r'}').replace(
-        f'Sources', f' {icon.src}&nbsp; sources') + '</div>'
-
-    return html + sources_code if sources else html
-
-
-def create_source_links_bkp(html, icon) -> str:
-    sources = []
-    for src in re.findall(r'\(src:[^\)]+\)', html):
-        new_src = '<small>' + src.lstrip('(src:').rstrip(')').replace(
-            'class="stylelink"',
-            'class="stylelink" target="_blank"'
-            ).replace('</a>', f'{icon.link}</a></small>')
-
-        html = html.replace(src, new_src)
-        sources.append(new_src)
 
     sources_code = (
         '<div class="my-5 d-print-none">&nbsp;'
