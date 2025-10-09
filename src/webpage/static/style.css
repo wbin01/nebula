@@ -102,8 +102,8 @@ body {
     font-size: 12pt;
 }
 ::selection {
-  background: #79a847;
-  color: #fff;
+  background: var(--body-selection-bg);
+  color: var(--body-selection-fg);
 }
 
 .nav-text a, .nav-text a:link, .nav-text a:active, .nav-text a:visited {
