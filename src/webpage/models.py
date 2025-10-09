@@ -129,7 +129,7 @@ class PageStyle(models.Model):
     body_bg = models.CharField(default="#DEDECD", max_length=10)
     body_bg_alt = models.CharField(default="#EBEBD9", max_length=10)
     body_fg = models.CharField(default="#434343", max_length=10)
-    body_title = models.CharField(default="#426EC1", max_length=10)
+    body_title = models.CharField(default="#766646", max_length=10)
     body_link = models.CharField(default="#1D5AA3", max_length=10)
     body_link_hover = models.CharField(default="#194C8B", max_length=10)
 

@@ -128,24 +128,63 @@ def clear_mark(html: str) -> str:
 
 
 def create_source_links(html, icon) -> str:
+    # {src-site 
+    # url: lifelessonsfrombible, 
+    # date:7/10/2025, 
+    # title:The Restoration of the Divine Name in the “New Testament”, 
+    # autor:Leonard Muñez
+    # }
+
     sources = []
     for src in re.findall(r'\{src[^\}]+\}', html):
         new_src = src
 
-        if src.startswith('{src-site'):
-            print('>>>>>>> site')
+        src_type, url, url_text, date, title, autor = '', '', '', '', '', ''
+        edition, pub, page, preview = '', '', '', ''
+        for src_t in ['site', 'book', 'cap', 'periodic']:
+            if src.startswith('{src-' + src_t):
+                src_type = src_t
 
-        elif src.startswith('{src-book'):
-            print('>>>>>>> book')
-        
-        elif src.startswith('{src-book-cap'):
-            print('>>>>>>> book-cap')
-        
-        elif src.startswith('{src-site'):
-            print('>>>>>>> site')
+        for item in src.replace(
+                '{src-' + src_type, '').replace('}', '').split('|'):
+            if item.strip().startswith('url:'):
+                url = item.replace('url:', '').strip()
+                url_text = url.split('>')[1].replace('</a>', '').strip()
 
-        html = html.replace(src, new_src)
-        sources.append(new_src)
+            elif item.strip().startswith('autor:'):
+                autor = item.replace('autor:', '').strip()
+            
+            elif item.strip().startswith('date:'):
+                date = item.replace('date:', '').strip()
+
+            elif item.strip().startswith('title:'):
+                title = item.replace('title:', '').strip()
+
+            elif item.strip().startswith('edition:'):
+                edition = item.replace('edition:', '').strip()
+
+            elif item.strip().startswith('pub:'):
+                pub = item.replace('pub:', '').strip()
+
+            elif item.strip().startswith('year:'):
+                year = item.replace('year:', '').strip()
+
+            elif item.strip().startswith('page:'):
+                page = item.replace('page:', '').strip()
+
+        preview = f'<small>({icon.src} {title}-{date})</small>'
+        if src_type == 'site':
+            preview = f'<small>({icon.src} {url})</small>'
+            new_src = f'{autor}. {title}. {url}. {date}.'
+
+        elif src_type == 'book':
+            new_src = f'{autor}. {title}. {edition}. {pub}. {date}.'
+
+        elif src_type == 'cap' or src_type == 'periodic':
+            new_src = f'{autor}. {title}. {edition}. {pub}. {date}. {page}.'
+
+        html = html.replace(src, preview)
+        sources.append(f'<p><small>{new_src}</small></p>')
 
     sources_code = (
         '<div class="my-5 d-print-none">&nbsp;'

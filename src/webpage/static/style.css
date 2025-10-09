@@ -101,6 +101,10 @@ body {
     font-family: "OpenSans-Light";
     font-size: 12pt;
 }
+::selection {
+  background: #79a847;
+  color: #fff;
+}
 
 .nav-text a, .nav-text a:link, .nav-text a:active, .nav-text a:visited {
     font-family: "OpenSans-Light";
@@ -301,14 +305,14 @@ a.stylelink:hover {
 a.ref_button, a.ref_button:link, a.ref_button:active, a.ref_button:visited {
     text-decoration: none;
     text-decoration-color: rgba(44, 109, 188, 1.0);
-    color: var(--body-link);
+    color: var(--body-ref-button);
     transition: transform .12s ease, opacity .12s ease;
     /*display: inline-block;
     position: relative;*/
 }
 a.ref_button:hover {
     text-decoration: none;
-    color: var(--body-link-hover);
+    color: var(--body-ref-button-hover);
     /*transform: scale(1.1);*/
 }
 
