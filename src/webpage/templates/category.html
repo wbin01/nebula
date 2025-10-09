@@ -137,7 +137,7 @@
             <input type="hidden" name="category-name" value="{{ nav_item.code }}">
             <input type="hidden" name="add-sub-item">
             <button type="submit" 
-            class="btn {% if style.is_dark %}btn-outline-light{% else %}btn-outline-dark{% endif %} btn-sm border border-1 {% if style.is_dark %}border-light{% else %}border-dark{% endif %} border-opacity-25">
+            class="btn {% if cookie_dark_mode == "dark" %}btn-outline-light{% else %}btn-outline-dark{% endif %} btn-sm border border-1 {% if cookie_dark_mode == "dark" %}border-light{% else %}border-dark{% endif %} border-opacity-25">
             {{ icon.plus|safe }}
           </button>
           </form>

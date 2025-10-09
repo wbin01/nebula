@@ -49,8 +49,13 @@ def default_context(request):
     else:
         icon = icon[0]
 
+    page_style = PageStyle.objects.get(code=page_settings.style)
+
     cookie_lang = request.COOKIES.get('cookie_language')
     cookie_language = cookie_lang if cookie_lang else page_settings.default_lang
+
+    cookie_dark = request.COOKIES.get('cookie_dark_mode')
+    cookie_dark_mode = cookie_dark if cookie_dark else page_style.is_dark
 
     categories_name = {}
     for nav_i_str in NavItemString.objects.order_by('code'):
@@ -80,7 +85,7 @@ def default_context(request):
     return {
         'settings': page_settings,
         'icon': icon,
-        'style': PageStyle.objects.get(code=page_settings.style),
+        'style': page_style,
         'tab_title': page_settings.name.title(),
         'nav_items': NavItem.objects.filter(local='menu').order_by('index'),
         'all_sub_nav_items': all_sub_nav_items,
@@ -90,7 +95,8 @@ def default_context(request):
         'languages_displayed': Language.objects.filter(display=True),
         'categories': Category.objects.order_by('code'),
         'path': '#',
-        'cookie_language': cookie_language
+        'cookie_language': cookie_language,
+        'cookie_dark_mode': cookie_dark_mode,
     }
 
 
@@ -844,14 +850,19 @@ def settings(request, lang, text='resume'):
             return redirect('settings', context['cookie_language'], 'style')
 
         elif 'dark_mode' in request.POST:
-            if 'dark_mode' in request.POST:
-                context['style'].is_dark = False
-                if request.POST['dark_mode'] == 'dark':
-                    context['style'].is_dark = True
-                
-                context['style'].save()
+            response = render(request, 'settings.html', context)
+            max_age = 382 * 24 * 60 * 60
+            expires = datetime.datetime.strftime(
+                datetime.datetime.now(datetime.UTC) + datetime.timedelta(
+                    seconds=max_age),
+                "%a, %d-%b-%Y %H:%M:%S GMT")
 
-            return redirect('index', context['cookie_language'])
+            response.set_cookie(
+                'cookie_dark_mode',
+                request.POST['dark_mode'],
+                max_age=max_age,
+                expires=expires)
+            return response
 
     return render(request, 'settings.html', context)
 

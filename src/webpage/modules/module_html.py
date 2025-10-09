@@ -129,6 +129,37 @@ def clear_mark(html: str) -> str:
 
 def create_source_links(html, icon) -> str:
     sources = []
+    for src in re.findall(r'\{src[^\}]+\}', html):
+        new_src = src
+
+        if src.startswith('{src-site'):
+            print('>>>>>>> site')
+
+        elif src.startswith('{src-book'):
+            print('>>>>>>> book')
+        
+        elif src.startswith('{src-book-cap'):
+            print('>>>>>>> book-cap')
+        
+        elif src.startswith('{src-site'):
+            print('>>>>>>> site')
+
+        html = html.replace(src, new_src)
+        sources.append(new_src)
+
+    sources_code = (
+        '<div class="my-5 d-print-none">&nbsp;'
+        '<hr class="text-secondary text-opacity-50">{d <p>Sources</p>')
+    for source in sources:
+        sources_code += '<div>' + source + '</div>'
+    sources_code = create_details(sources_code + r'}').replace(
+        f'Sources', f' {icon.src}&nbsp; sources') + '</div>'
+
+    return html + sources_code if sources else html
+
+
+def create_source_links_bkp(html, icon) -> str:
+    sources = []
     for src in re.findall(r'\(src:[^\)]+\)', html):
         new_src = '<small>' + src.lstrip('(src:').rstrip(')').replace(
             'class="stylelink"',

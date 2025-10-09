@@ -70,14 +70,14 @@
             <div class="modal-body">
               <form action="{% url 'settings' cookie_language 'dark_mode' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
 
-                <div>
-                  <input class="form-check-input" type="radio" name="dark_mode" id="dark_mode_dark" value="dark" {% if style.is_dark %}checked{% endif %}>
-                  <label class="form-check-label" for="dark_mode_dark">&nbsp; {{ icon.moon|safe }}&nbsp; <small class="opacity-50">Dark</small>
+                <div class="my-3">
+                  <input class="form-check-input" type="radio" name="dark_mode" id="dark_mode_dark" value="dark" {% if cookie_dark_mode == "dark" %}checked{% endif %}>
+                  <label class="form-check-label w-75" for="dark_mode_dark">&nbsp; {{ icon.moon|safe }}&nbsp; <small class="opacity-50">Dark</small>
                   </label>
                 </div>
                 <div>
-                  <input class="form-check-input" type="radio" name="dark_mode" id="dark_mode_light" value="light" {% if not style.is_dark %}checked{% endif %}>
-                  <label class="form-check-label" for="dark_mode_light">&nbsp; {{ icon.sun|safe }}&nbsp; <small class="opacity-50">Light</small>
+                  <input class="form-check-input" type="radio" name="dark_mode" id="dark_mode_light" value="light" {% if not cookie_dark_mode == "dark" %}checked{% endif %}>
+                  <label class="form-check-label w-75" for="dark_mode_light">&nbsp; {{ icon.sun|safe }}&nbsp; <small class="opacity-50">Light</small>
                   </label>
                 </div>
 

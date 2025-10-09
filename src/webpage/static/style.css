@@ -193,20 +193,16 @@ body {
     background-color: var(--body-title);
     color: var(--body-fg);
 }
-.post-cover-title-bg {
-    position: relative;
-    background-color: rgba(0, 0, 0, 1.0);
-}
 .post-cover-title h1 {
     font-family: "OpenSans-SemiBold";
     position: relative;
     top: -125px;
-    /*text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);*/
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
     color: #DDD;
 }
 .post-cover-title h5 {
     font-family: "OpenSans-Medium";
-    /*text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);*/
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
 }
 
 .post_stl h1 {
