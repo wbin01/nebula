@@ -25,7 +25,8 @@
       --body-form-control-border: {% if cookie_dark_mode == "dark" %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}20;
       --body-img-blend: {% if cookie_dark_mode == "dark" %}normal{% else %}multiply{% endif %};
       --body-selection-bg: {% if cookie_dark_mode == "dark" %}{{ style.body_selection_bg_dark }}{% else %}{{ style.body_selection_bg }}{% endif %} ;
-      --body-selection-fg: {% if cookie_dark_mode == "dark" %}{{ style.body_selection_fg_dark }}{% else %}{{ style.body_selection_fg }}{% endif %} ;
+      --body-highlight-bg: {% if cookie_dark_mode == "dark" %}{{ style.body_highlight_bg_dark }}{% else %}{{ style.body_highlight_bg }}{% endif %};
+      --body-selection-fg: {% if cookie_dark_mode == "dark" %}{{ style.body_selection_fg_dark }}{% else %}{{ style.body_selection_fg }}{% endif %};
     }
     </style>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">

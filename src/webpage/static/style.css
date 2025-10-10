@@ -261,7 +261,13 @@ body {
     border-radius: 10px;
     mix-blend-mode: var(--body-img-blend);
 }
-
+.title_color {
+    color: var(--body-title);
+}
+.bg_highlight {
+    background: var(--body-highlight-bg);
+    border-radius: 3px;
+}
 .tag-category a, .tag-category a:link, .tag-category a:active, .tag-category a:visited {
     color: #111111;
     background: #858585;

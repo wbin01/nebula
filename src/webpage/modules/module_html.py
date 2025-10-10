@@ -232,10 +232,27 @@ def create_modal_windows(html: str, icon) -> str:
 
         code = code[0] if code else ref
         code = code.strip().lstrip('</p>').rstrip('<p>').strip()
+
+        title_code = code.split('</p>')[0]
+        title = ''
+        if title_code.startswith('(') and title_code.endswith(')'):
+            code = code.lstrip(title_code)
+            title = (
+                '<p class="text-center p-0 m-0"><small class="title_color">' + 
+                title_code + '</small></p>')
+
         code = '<p>' + code if not code.startswith('<p>') else code
         code = code + '</p>' if not code.startswith('</p>') else code
+        code = code.replace(
+            '<span style="background-color:#ffff00;color:#000000;'
+            'mso-style-textfill-fill-color:#000000">',
+            '<span class="bg_highlight">')
 
-        code = detail_from_html_snippet(code)
+        if '+++++' in code:
+            code = detail_from_html_snippet(code)
+        else:
+            code = f'<div class="mb-0 mt-2 mx-3">{code}</div>'
+
         num = re.findall(r'\{w(\d+)[^}]+}', ref)[0]
         html = html.replace(
             ref, (  # data-bs-theme="light"
@@ -249,6 +266,7 @@ def create_modal_windows(html: str, icon) -> str:
                 '<div class="modal-body p-0 m-0">'
                 
                 '<div class="px-2 mt-2">'
+                f'{title}'
                 f'{code}'
                 '</div>'
                 
