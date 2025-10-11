@@ -18,6 +18,7 @@ def clear_html(html: str, icon) -> str:
     html = clear_spaces(html)
     html = clear_image(html)
     html = clear_mark(html)
+    html = create_small(html)
     html = create_modal_buttons(html, icon)
     html = create_modal_windows(html, icon)
     html = create_details(html)
@@ -127,67 +128,51 @@ def clear_mark(html: str) -> str:
         ).replace('<mark>', '').replace('</mark>', '')
 
 
-def create_source_links(html, icon) -> str:
-    sources = []
-    for src in re.findall(r'\{src[^\}]+\}', html):
-        new_src = src
+def create_details(html: str) -> str:
+    for ref in re.findall(r'\{d[^}]+}', html):  # '{w1 ... }'
+        code = re.findall(r'\{d([^}]+)}', ref)
 
-        src_type, url, url_text, date, title, autor = '', '', '', '', '', ''
-        edition, pub, page, preview = '', '', '', ''
-        for src_t in ['site', 'book', 'cap', 'periodic']:
-            if src.startswith('{src-' + src_t):
-                src_type = src_t
+        code = code[0] if code else ref
+        code = code.strip().lstrip('</p>').rstrip('<p>').strip()
+        code = '<p>' + code if not code.startswith('<p>') else code
+        code = code + '</p>' if not code.startswith('</p>') else code
 
-        for item in src.replace(
-                '{src-' + src_type, '').replace('}', '').split('|'):
-            if item.strip().startswith('url:'):
-                url = item.replace('url:', '').strip()
-                url_text = url.split('>')[1].replace('</a>', '').strip()
+        code = create_detail_from_html_snippet(code)
+        html = html.replace(ref, code)
 
-            elif item.strip().startswith('autor:'):
-                autor = item.replace('autor:', '').strip()
-            
-            elif item.strip().startswith('date:'):
-                date = item.replace('date:', '').strip()
+    return html
 
-            elif item.strip().startswith('title:'):
-                title = item.replace('title:', '').strip()
 
-            elif item.strip().startswith('edition:'):
-                edition = item.replace('edition:', '').strip()
+def create_detail_from_html_snippet(html: str) -> str:
+    details_html = ''
+    if '+++++' in html:
+        for num, body in enumerate(html.split('+++++')):
+            title = re.findall(r'<p[^>]*>[^<]+</p>', body)
+            title = title[0] if title else 'Item'
+            body = body.replace(title, '')
 
-            elif item.strip().startswith('pub:'):
-                pub = item.replace('pub:', '').strip()
+            open_ = ' open' if num == 0 else ''
+            details_html += (    
+                f'<details{open_}>'
+                '  <summary>'
+                f'    {title.replace('<p>', '').replace('</p>', '')}'
+                '  </summary>'
+                f'  {body}'
+                '</details>')
+    else:
+        title = re.findall(r'<p[^>]*>[^<]+</p>', html)
+        title = title[0] if title else 'Item'
+        body = html.replace(title, '')
 
-            elif item.strip().startswith('year:'):
-                year = item.replace('year:', '').strip()
+        details_html += (    
+                f'<details>'
+                '  <summary>'
+                f'    {title.replace('<p>', '').replace('</p>', '')}'
+                '  </summary>'
+                f'  {body}'
+                '</details>')
 
-            elif item.strip().startswith('page:'):
-                page = item.replace('page:', '').strip()
-
-        preview = f'<small>({icon.src} {title}-{date})</small>'
-        if src_type == 'site':
-            preview = f'<small>({icon.src} {url})</small>'
-            new_src = f'{autor}. {title}. {url}. {date}.'
-
-        elif src_type == 'book':
-            new_src = f'{autor}. {title}. {edition}. {pub}. {date}.'
-
-        elif src_type == 'cap' or src_type == 'periodic':
-            new_src = f'{autor}. {title}. {edition}. {pub}. {date}. {page}.'
-
-        html = html.replace(src, preview)
-        sources.append(f'<p><small>{new_src}</small></p>')
-
-    sources_code = (
-        '<div class="my-5 d-print-none">&nbsp;'
-        '<hr class="text-secondary text-opacity-50">{d <p>Sources</p>')
-    for source in sources:
-        sources_code += '<div>' + source + '</div>'
-    sources_code = create_details(sources_code + r'}').replace(
-        f'Sources', f' {icon.src}&nbsp; sources') + '</div>'
-
-    return html + sources_code if sources else html
+    return details_html if details_html else html
 
 
 def create_modal_buttons(html: str, icon) -> str:
@@ -249,7 +234,7 @@ def create_modal_windows(html: str, icon) -> str:
             '<span class="bg_highlight">')
 
         if '+++++' in code:
-            code = detail_from_html_snippet(code)
+            code = create_detail_from_html_snippet(code)
         else:
             code = f'<div class="mb-0 mt-2 mx-3">{code}</div>'
 
@@ -257,7 +242,7 @@ def create_modal_windows(html: str, icon) -> str:
         html = html.replace(
             ref, (  # data-bs-theme="light"
                 '<div class="modal fade" '
-                f'id="ref{num}" data-bs-backdrop="static" tabindex="-1"'
+                f'id="ref{num}" tabindex="-1"'  # data-bs-backdrop="static"
                 f'aria-labelledby="ref{num}Label" aria-hidden="true" '
                 'data-bs-theme="read">'
                 
@@ -282,51 +267,73 @@ def create_modal_windows(html: str, icon) -> str:
     return html
 
 
-def create_details(html: str) -> str:
-    for ref in re.findall(r'\{d[^}]+}', html):  # '{w1 ... }'
-        code = re.findall(r'\{d([^}]+)}', ref)
-
-        code = code[0] if code else ref
-        code = code.strip().lstrip('</p>').rstrip('<p>').strip()
-        code = '<p>' + code if not code.startswith('<p>') else code
-        code = code + '</p>' if not code.startswith('</p>') else code
-
-        code = detail_from_html_snippet(code)
-        html = html.replace(ref, code)
-
+def create_small(html: str) -> str:
+    for ref in re.findall(r'\([^ ]+ \d[^\{]+\{b\d[^}]+}\)', html):
+        html = html.replace(ref, f'<small>{ref}</small>')
     return html
 
 
-def detail_from_html_snippet(html: str) -> str:
-    details_html = ''
-    if '+++++' in html:
-        for num, body in enumerate(html.split('+++++')):
-            title = re.findall(r'<p[^>]*>[^<]+</p>', body)
-            title = title[0] if title else 'Item'
-            body = body.replace(title, '')
+def create_source_links(html, icon) -> str:
+    sources = []
+    for src in re.findall(r'\{src[^\}]+\}', html):
+        new_src = src
 
-            open_ = ' open' if num == 0 else ''
-            details_html += (    
-                f'<details{open_}>'
-                '  <summary>'
-                f'    {title.replace('<p>', '').replace('</p>', '')}'
-                '  </summary>'
-                f'  {body}'
-                '</details>')
-    else:
-        title = re.findall(r'<p[^>]*>[^<]+</p>', html)
-        title = title[0] if title else 'Item'
-        body = html.replace(title, '')
+        src_type, url, url_text, date, title, autor = '', '', '', '', '', ''
+        edition, pub, page, preview = '', '', '', ''
+        for src_t in ['site', 'book', 'cap', 'periodic']:
+            if src.startswith('{src-' + src_t):
+                src_type = src_t
 
-        details_html += (    
-                f'<details>'
-                '  <summary>'
-                f'    {title.replace('<p>', '').replace('</p>', '')}'
-                '  </summary>'
-                f'  {body}'
-                '</details>')
+        for item in src.replace(
+                '{src-' + src_type, '').replace('}', '').split('|'):
+            if item.strip().startswith('url:'):
+                url = item.replace('url:', '').strip()
+                url_text = url.split('>')[1].replace('</a>', '').strip()
 
-    return details_html if details_html else html
+            elif item.strip().startswith('autor:'):
+                autor = item.replace('autor:', '').strip()
+            
+            elif item.strip().startswith('date:'):
+                date = item.replace('date:', '').strip()
+
+            elif item.strip().startswith('title:'):
+                title = item.replace('title:', '').strip()
+
+            elif item.strip().startswith('edition:'):
+                edition = item.replace('edition:', '').strip()
+
+            elif item.strip().startswith('pub:'):
+                pub = item.replace('pub:', '').strip()
+
+            elif item.strip().startswith('year:'):
+                year = item.replace('year:', '').strip()
+
+            elif item.strip().startswith('page:'):
+                page = item.replace('page:', '').strip()
+
+        preview = f'<small>({icon.src} {title}-{date})</small>'
+        if src_type == 'site':
+            preview = f'<small>({icon.src} {url})</small>'
+            new_src = f'{autor}. {title}. {url}. {date}.'
+
+        elif src_type == 'book':
+            new_src = f'{autor}. {title}. {edition}. {pub}. {date}.'
+
+        elif src_type == 'cap' or src_type == 'periodic':
+            new_src = f'{autor}. {title}. {edition}. {pub}. {date}. {page}.'
+
+        html = html.replace(src, preview)
+        sources.append(f'<p><small>{new_src}</small></p>')
+
+    sources_code = (
+        '<div class="my-5 d-print-none">&nbsp;'
+        '<hr class="text-secondary text-opacity-50">{d <p>Sources</p>')
+    for source in sources:
+        sources_code += '<div>' + source + '</div>'
+    sources_code = create_details(sources_code + r'}').replace(
+        f'Sources', f' {icon.src}&nbsp; sources') + '</div>'
+
+    return html + sources_code if sources else html
 
 
 def svg_to_html(svg_path: str, name: str = None) -> str:
