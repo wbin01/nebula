@@ -14,6 +14,7 @@
       --body-bg: {% if cookie_dark_mode == "dark" %}{{ style.body_bg_dark }}{% else %}{{ style.body_bg }}{% endif %};
       --body-bg-alt: {% if cookie_dark_mode == "dark" %}{{ style.body_bg_alt_dark }}{% else %}{{ style.body_bg_alt }}{% endif %};
       --body-fg: {% if cookie_dark_mode == "dark" %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %};
+      --body-fg-5: {% if cookie_dark_mode == "dark" %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}05;
       --body-fg-10: {% if cookie_dark_mode == "dark" %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}23;
       --body-fg-25: {% if cookie_dark_mode == "dark" %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}37;
       --body-fg-50: {% if cookie_dark_mode == "dark" %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}70;
@@ -25,12 +26,13 @@
       --body-ref-button: {% if cookie_dark_mode == "dark" %}{{ style.body_link_dark }}{% else %}{{ style.body_link }}{% endif %}CC;
       --body-ref-button-hover: {% if cookie_dark_mode == "dark" %}{{ style.body_link_dark }}{% else %}{{ style.body_link }}{% endif %}88;
       --body-link-hover: {% if cookie_dark_mode == "dark" %}{{ style.body_link_hover_dark }}{% else %}{{ style.body_link_hover }}{% endif %};
-
       --body-form-control-border: {% if cookie_dark_mode == "dark" %}{{ style.body_fg_dark }}{% else %}{{ style.body_fg }}{% endif %}20;
       --body-img-blend: {% if cookie_dark_mode == "dark" %}normal{% else %}multiply{% endif %};
+
       --body-selection-bg: {% if cookie_dark_mode == "dark" %}{{ style.body_selection_bg_dark }}{% else %}{{ style.body_selection_bg }}{% endif %} ;
-      --body-highlight-bg: {% if cookie_dark_mode == "dark" %}{{ style.body_highlight_bg_dark }}{% else %}{{ style.body_highlight_bg }}{% endif %};
       --body-selection-fg: {% if cookie_dark_mode == "dark" %}{{ style.body_selection_fg_dark }}{% else %}{{ style.body_selection_fg }}{% endif %};
+
+      --body-highlight-bg: {% if cookie_dark_mode == "dark" %}{{ style.body_highlight_bg_dark }}{% else %}{{ style.body_highlight_bg }}{% endif %};
     }
     </style>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">

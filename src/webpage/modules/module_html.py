@@ -19,8 +19,8 @@ def clear_html(html: str, icon) -> str:
     html = clear_image(html)
     html = clear_mark(html)
     html = create_small(html)
-    html = create_modal_buttons(html, icon)
     html = create_modal_windows(html, icon)
+    html = create_modal_buttons(html, icon)
     html = create_details(html)
     html = create_source_links(html, icon)
 
@@ -129,8 +129,8 @@ def clear_mark(html: str) -> str:
 
 
 def create_details(html: str) -> str:
-    for ref in re.findall(r'\{d[^}]+}', html):  # '{w1 ... }'
-        code = re.findall(r'\{d([^}]+)}', ref)
+    for ref in re.findall(r'\{d[^\}]+\}', html):
+        code = re.findall(r'\{d([^\}]+)\}', ref)
 
         code = code[0] if code else ref
         code = code.strip().lstrip('</p>').rstrip('<p>').strip()
@@ -176,14 +176,14 @@ def create_detail_from_html_snippet(html: str) -> str:
 
 
 def create_modal_buttons(html: str, icon) -> str:
-    # {b1 ? }     ->  ?
-    # {b1 + }     ->  +
-    # {b1 }       ->  +
-    # {b1 b }     ->  📖
-    references = re.findall(r'\{b\d+[^}]*}', html)
+    # {1 ?}     ->  ?
+    # {1 +}     ->  +
+    # {1}       ->  +
+    # {1 b}     ->  📖
+    references = re.findall(r'\{\d+[^\}]*\}', html)
     for ref in references:
-        text = re.findall(r'\{b\d+([^}]*)}', ref)[0].strip()
-        num = re.findall(r'\{b(\d+)[^}]*}', ref)[0]
+        text = re.findall(r'\{\d+([^\}]*)\}', ref)[0].strip()
+        num = re.findall(r'\{(\d+)[^\}]*\}', ref)[0]
 
         if text == '?':
             svg, name = icon.quest_ref, 'quest'
@@ -212,8 +212,8 @@ def create_modal_buttons(html: str, icon) -> str:
 
 
 def create_modal_windows(html: str, icon) -> str:
-    for ref in re.findall(r'\{w\d+[^}]+}', html):  # '{w1 ... }'
-        code = re.findall(r'\{w\d+([^}]+)}', ref)
+    for ref in re.findall(r'\{\{\d+[^\}]+\}\}', html):
+        code = re.findall(r'\{\{\d+([^\}]+)\}\}', ref)
 
         code = code[0] if code else ref
         code = code.strip().lstrip('</p>').rstrip('<p>').strip()
@@ -238,7 +238,7 @@ def create_modal_windows(html: str, icon) -> str:
         else:
             code = f'<div class="mb-0 mt-2 mx-3">{code}</div>'
 
-        num = re.findall(r'\{w(\d+)[^}]+}', ref)[0]
+        num = re.findall(r'\{\{(\d+)[^\}]+\}\}', ref)[0]
         html = html.replace(
             ref, (  # data-bs-theme="light"
                 '<div class="modal fade" '
@@ -263,6 +263,9 @@ def create_modal_windows(html: str, icon) -> str:
                 f'{icon.close}'
                 '</button></div>''</div>'
                 '</div></div></div></div>'))
+
+    for ver in re.findall(r'v\d+ ', html):
+        html = html.replace(ver, f'<span class="verse">{ver[1:-1]}</span> ')
 
     return html
 

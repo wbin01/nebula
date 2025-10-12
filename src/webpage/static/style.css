@@ -103,7 +103,7 @@ body {
 }
 ::selection {
   /*background: var(--body-selection-bg);*/
-  background: #888;
+  background: var(--body-selection-bg);
   color: var(--body-selection-fg);
 }
 
@@ -611,17 +611,25 @@ details[open] {
 .check-icon input:checked:hover ~ .checked { color: #4196fd; }
 
 .text-dark-mode-auto {
-    color: var(--body-fg);
+  color: var(--body-fg);
 }
 .text-dark-mode-auto-opacity-10 {
-    color: var(--body-fg-10);
+  color: var(--body-fg-10);
 }
 .text-dark-mode-auto-opacity-25 {
-    color: var(--body-fg-25);
+  color: var(--body-fg-25);
 }
 .text-dark-mode-auto-opacity-50 {
-    color: var(--body-fg-50);
+  color: var(--body-fg-50);
 }
 .text-dark-mode-auto-opacity-75 {
-    color: var(--body-fg-75);
+  color: var(--body-fg-75);
+}
+.verse {
+  color: var(--body-title);
+/*  background-color: var(--body-fg-10);
+  padding: 0px;
+  border-radius: 5px;*/
+  font-size: 14pt;
+  font-family: 'Rokkitt-Bold';
 }
