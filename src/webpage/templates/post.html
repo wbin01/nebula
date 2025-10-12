@@ -125,19 +125,19 @@
 <div class="position-relative my-0 mx-0 px-4 pb-4 post_stl" 
   style="background:{% if cookie_dark_mode == "dark" %}{{ style.body_bg_dark }}{% else %}{{ style.body_bg }}{% endif %};margin:0px;">
   {% if post.cover_image_credits and not post.cover_image_credits_link %}
-  <div class="{% if cookie_dark_mode == "dark" %}text-light{% else %}text-dark{% endif %} text-end my-0 mx-0 py-0 opacity-50 d-print-none">
+  <div class="text-dark-mode-auto text-end my-0 mx-0 py-0 opacity-50 d-print-none">
     <sup>{{ post.cover_image_credits }}</sup>
   </div>
   {% elif post.cover_image_credits and post.cover_image_credits_link %}
   <div class="text-end my-0 mx-0 py-0 opacity-50 d-print-none">
     <sup>
-      <a href="{{ post.cover_image_credits_link }}" target="_blank" class="text-decoration-none {% if cookie_dark_mode == "dark" %}text-light{% else %}text-dark{% endif %}">
+      <a href="{{ post.cover_image_credits_link }}" target="_blank" class="text-decoration-none text-dark-mode-auto">
         {{ post.cover_image_credits }}{{ icon.link|safe }}
       </a>
     </sup>
   </div>
   {% else %}
-  <div class="{% if cookie_dark_mode == "dark" %}text-light{% else %}text-dark{% endif %} text-end my-0 mx-0 py-0 opacity-50 d-print-none">
+  <div class="text-end my-0 mx-0 py-0 opacity-50 d-print-none">
     <sup>&nbsp;</sup>
   </div>
   {% endif %}

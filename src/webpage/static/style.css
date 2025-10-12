@@ -102,7 +102,8 @@ body {
     font-size: 12pt;
 }
 ::selection {
-  background: var(--body-selection-bg);
+  /*background: var(--body-selection-bg);*/
+  background: #888;
   color: var(--body-selection-fg);
 }
 
@@ -177,16 +178,18 @@ body {
   height:26px;
   /*background-color: rgb(240, 240, 240);*/
   background-color: var(--body-bg-alt);
+  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.1);
   color: var(--body-fg);
 }
 .card-link-style:hover .card-grid-link-indicator-fg {
   /*background-color: rgb(240, 240, 240);*/
   background-color: var(--body-bg-alt);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.0);
 }
 
 .card-link-style .card-link-indicator-fg {
   position: absolute;
-  width: 5px;
+  width: 7px;
   height: 100%;
   top: 0px;
   background-color: rgba(0, 0, 0, 0);
@@ -334,6 +337,32 @@ a.ref_button:hover {
     box-shadow: inset 0 -40px 0 -1px white;
 }
 
+/*.form-control {
+  background-color: var(--body-bg-alt);
+  color: var(--body-fg);
+  border: 1px solid var(--body-form-control-border);
+}
+.form-control:focus {
+  background-color: var(--body-bg-alt);
+  color: var(--body-fg);
+  border-color: var(--body-bg-alt);
+  /*box-shadow: none;  remove o azul padrão *
+}
+.form-control::placeholder {
+  color: var(--body-fg-50);
+  opacity: 1;
+
+}
+.form-control::-webkit-inner-spin-button,
+.form-control::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-control[type=number] {
+  -moz-appearance: textfield;
+}*/
+
 details summary {
   list-style: none; /* remove marcador em alguns navegadores */
   cursor: pointer;
@@ -453,7 +482,7 @@ details[open] {
   background-color: #111;
   color: #fff;
   border-color: #4196fd;
-  box-shadow: none;
+  /*box-shadow: none;*/
 }
 /* Placeholder */
 [data-bs-theme="dark"] .form-control::placeholder {
@@ -581,34 +610,8 @@ details[open] {
 .check-icon:hover { color: #AAA; }
 .check-icon input:checked:hover ~ .checked { color: #4196fd; }
 
-.form-control {
-  background-color: var(--body-bg-alt);
-  color: var(--body-fg);
-  border: 1px solid var(--body-form-control-border);
-}
-.form-control:focus {
-  background-color: var(--body-bg-alt);
-  color: var(--body-fg);
-  border-color: var(--body-bg-alt);
-  /*box-shadow: none; /* remove o azul padrão */*/
-}
-.form-control::placeholder {
-  color: var(--body-fg);
-  opacity: 1;
-  /*font-style: italic;*/
-}
-.form-control::-webkit-inner-spin-button,
-.form-control::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.form-control[type=number] {
-  -moz-appearance: textfield;
-}
 .text-dark-mode-auto {
     color: var(--body-fg);
-}
 }
 .text-dark-mode-auto-opacity-10 {
     color: var(--body-fg-10);

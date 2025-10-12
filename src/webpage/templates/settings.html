@@ -5,7 +5,7 @@
 {% block content %}
 {% include '_nav.html'%}
 
-<div class="container-md" 
+<div class="container-md" {% if cookie_dark_mode == 'dark' %}data-bs-theme="dark"{% endif%} 
   {% if cookie_dark_mode == 'dark' %} style="color:{{ style.body_fg_dark }};background-color:{{ style.body_bg_dark }};min-height: 500px;" {% else %} style="color:{{ style.body_fg }};background-color:{{ style.body_bg }};min-height: 500px;" {% endif%}>
 
 <!-- cookie_language -->
@@ -212,7 +212,7 @@
             <span class="icon checked">
               {{ icon.arrow_restore_45|safe }}
             </span>
-            <span style="margin-top: 1px;" class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %}">
+            <span style="margin-top: 1px;" class="text-dark-mode-auto">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default
             </span>
           </label>
@@ -307,7 +307,7 @@
           {{ icon.close|safe }}
         </p>
         {% else %}
-          <p class="m-0 p-0 px-2 {% if cookie_dark_mode == 'dark' %}text-light text-opacity-75{%else%}text-dark text-opacity-50{% endif %}">
+          <p class="m-0 p-0 px-2">
             {% if post.display %}
               {{ icon.visible|replace:'class="|class="mb-1 '|safe }}
             {% else %}
@@ -341,7 +341,7 @@
               <div class="mx-auto" style="width: 50px;">
                 <input type="color" class="form-control" id="nav_top_bg" name="nav_top_bg" value="{{ style.nav_top_bg }}">
               </div>
-              <small class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50">{{ style.nav_top_bg|upper }}</small>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.nav_top_bg|upper }}</small>
             </div>
 
             <div class="col">
@@ -349,7 +349,7 @@
               <div class="mx-auto" style="width: 50px;">
                 <input type="color" class="form-control" id="nav_top_fg" name="nav_top_fg" value="{{ style.nav_top_fg }}">
               </div>
-              <small class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50">{{ style.nav_top_fg|upper }}</small>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.nav_top_fg|upper }}</small>
             </div>
 
             <div class="col">
@@ -357,10 +357,10 @@
               <div class="mx-auto" style="width: 50px;">
                 <input type="color" class="form-control" id="nav_top_fg_hover" name="nav_top_fg_hover" value="{{ style.nav_top_fg_hover }}">
               </div>
-              <small class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50">{{ style.nav_top_fg_hover|upper }}</small>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.nav_top_fg_hover|upper }}</small>
             </div>
 
-            <div class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50 mt-4"><hr></div>
+            <div class="text-dark-mode-auto-opacity-50 mt-4"><hr></div>
             <h2 class="text-start">Menu</h2>
 
             <div class="col">
@@ -368,7 +368,7 @@
               <div class="mx-auto" style="width: 50px;">
                 <input type="color" class="form-control" id="nav_bottom_bg" name="nav_bottom_bg" value="{{ style.nav_bottom_bg }}">
               </div>
-              <small class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50">{{ style.nav_bottom_bg|upper }}</small>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.nav_bottom_bg|upper }}</small>
             </div>
 
             <div class="col">
@@ -376,7 +376,7 @@
               <div class="mx-auto" style="width: 50px;">
                 <input type="color" class="form-control" id="nav_items_fg" name="nav_items_fg" value="{{ style.nav_items_fg }}">
               </div>
-              <small class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50">{{ style.nav_items_fg|upper }}</small>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.nav_items_fg|upper }}</small>
             </div>
 
             <div class="col">
@@ -384,10 +384,10 @@
               <div class="mx-auto" style="width: 50px;">
                 <input type="color" class="form-control" id="nav_items_fg_hover" name="nav_items_fg_hover" value="{{ style.nav_items_fg_hover }}">
               </div>
-              <small class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50">{{ style.nav_items_fg_hover|upper }}</small>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.nav_items_fg_hover|upper }}</small>
             </div>
 
-            <!-- <div class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50 mt-4"><hr></div>
+            <!-- <div class="text-dark-mode-auto-opacity-50 mt-4"><hr></div>
             <h2 class="text-start">Page</h2>
 
             <div class="col">
@@ -398,7 +398,7 @@
             </div>
 
             <div class="col"></div> <div class="col"></div> -->
-            <div class="{% if cookie_dark_mode == 'dark' %}text-light{% else %}text-dark{% endif %} text-opacity-50 m-0 mt-4"><hr></div>
+            <div class="text-dark-mode-auto-opacity-50 m-0 mt-4"><hr></div>
 
           </div>
         </div>
