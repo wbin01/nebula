@@ -36,6 +36,6 @@ urlpatterns = [
     path('<str:lang>/<str:category_name>/<str:sub_category_name>/page=<int:page>/',
          views.sub_category, name='sub_category'),
 
-    path('admin/',
+    path('f66h337p6u81pm1559112fad/', # admin/
          views.admin, name='admin'),
 ]

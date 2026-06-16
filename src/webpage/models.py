@@ -134,7 +134,7 @@ class PageStyle(models.Model):
     body_link_hover = models.CharField(default="#194C8B", max_length=10)
     body_selection_bg = models.CharField(default="#BBBBBB", max_length=10)
     body_selection_fg = models.CharField(default="#000000", max_length=10)
-    body_highlight_bg = models.CharField(default="#FFF23877", max_length=10)
+    body_highlight_bg = models.CharField(default="#887142", max_length=10)
 
     is_dark = models.BooleanField(default=False)
 
@@ -146,8 +146,7 @@ class PageStyle(models.Model):
     body_link_hover_dark = models.CharField(default="#2D4E7C", max_length=10)
     body_selection_bg_dark = models.CharField(default="#3D3D3D", max_length=10)
     body_selection_fg_dark = models.CharField(default="#FFFFFF", max_length=10)
-    body_highlight_bg_dark = models.CharField(
-        default="#FFF23877", max_length=10)
+    body_highlight_bg_dark = models.CharField(default="#766646", max_length=10)
 
     def __str__(self):
         return f'Page style {self.code}'
