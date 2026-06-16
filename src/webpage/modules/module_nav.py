@@ -9,8 +9,8 @@ def new_code_from_request(request) -> str:
             request.POST['nav-item-url-id'].lower().strip() != 'item'):
         url_id = ''.join([
             x for x in request.POST['nav-item-url-id'].lower().strip()
-            if x in string.digits + string.ascii_lowercase + '-'])
-    return url_id
+            if x in string.digits + string.ascii_lowercase + '-' + ' '])
+    return url_id.replace(' ', '-')
 
 
 def upd_code(nav_item: NavItem, new_code: str) -> None:

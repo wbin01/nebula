@@ -22,24 +22,23 @@
 
             <div class="text-light">
             {% for category in categories %}
-            {% if category.code in post.categories|split:"," %}
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" value="" name="{{ category.code }}" id="{{ category.code }}0" checked>
-              <label class="form-check-label" for="{{ category.code }}0">
-                {{ category.code }}
-              </label>
-            </div>
-            {% else %}
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" value="" name="{{ category.code }}" id="{{ category.code }}1">
-              <label class="form-check-label" for="{{ category.code }}1">
-                {{ category.code }}
-              </label>
-            </div>
-            {% endif %}
+              {% if category.code in post.categories|split:"," %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="" name="{{ category.code }}" id="{{ category.code }}0" checked>
+                <label class="form-check-label" for="{{ category.code }}0">
+                  {{ category.code }}
+                </label>
+              </div>
+              {% else %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="" name="{{ category.code }}" id="{{ category.code }}1">
+                <label class="form-check-label" for="{{ category.code }}1">
+                  {{ category.code }}
+                </label>
+              </div>
+              {% endif %}
             {% endfor %}
             </div>
-
 
             <div class="d-grid gap-2 d-flex justify-content-end">
 

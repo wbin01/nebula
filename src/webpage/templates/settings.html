@@ -387,25 +387,86 @@
               <small class="text-dark-mode-auto-opacity-50">{{ style.nav_items_fg_hover|upper }}</small>
             </div>
 
-            <!-- <div class="text-dark-mode-auto-opacity-50 mt-4"><hr></div>
+            <div class="text-dark-mode-auto-opacity-50 mt-4"><hr></div>
             <h2 class="text-start">Page</h2>
+
+            <div class="col">
+              <label for="body_bg">background</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="body_bg" name="body_bg" value="{{ style.body_bg }}">
+              </div>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.body_bg|upper }}</small>
+            </div>
 
             <div class="col">
               <label for="body_fg">text</label>
               <div class="mx-auto" style="width: 50px;">
                 <input type="color" class="form-control" id="body_fg" name="body_fg" value="{{ style.body_fg }}">
               </div>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.body_fg|upper }}</small>
             </div>
 
-            <div class="col"></div> <div class="col"></div> -->
+            <div class="col">
+              <label for="body_title">highlight</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="body_title" name="body_title" value="{{ style.body_title }}">
+              </div>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.body_title|upper }}</small>
+            </div>
+
+            <div class="text-dark-mode-auto-opacity-50 mt-4"></div>
+            <div class="col">
+              <label for="body_bg_alt">background 2</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="body_bg_alt" name="body_bg_alt" value="{{ style.body_bg_alt }}">
+              </div>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.body_bg_alt|upper }}</small>
+            </div><div class="col"></div><div class="col"></div>
+
+            <div class="text-dark-mode-auto-opacity-50 mt-4"><hr></div>
+            <h2 class="text-start">Page <small class="opacity-50">(dark mode)</small></h2>
+
+            <div class="col">
+              <label for="body_bg_dark">background</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="body_bg_dark" name="body_bg_dark" value="{{ style.body_bg_dark }}">
+              </div>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.body_bg_dark|upper }}</small>
+            </div>
+
+            <div class="col">
+              <label for="body_fg_dark">text</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="body_fg_dark" name="body_fg_dark" value="{{ style.body_fg_dark }}">
+              </div>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.body_fg_dark|upper }}</small>
+            </div>
+
+            <div class="col">
+              <label for="body_title_dark">highlight</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="body_title_dark" name="body_title_dark" value="{{ style.body_title_dark }}">
+              </div>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.body_title_dark|upper }}</small>
+            </div>
+
+            <div class="text-dark-mode-auto-opacity-50 mt-4"></div>
+            <div class="col">
+              <label for="body_bg_alt_dark">background 2</label>
+              <div class="mx-auto" style="width: 50px;">
+                <input type="color" class="form-control" id="body_bg_alt_dark" name="body_bg_alt_dark" value="{{ style.body_bg_alt_dark }}">
+              </div>
+              <small class="text-dark-mode-auto-opacity-50">{{ style.body_bg_alt_dark|upper }}</small>
+            </div><div class="col"></div><div class="col"></div>
+
             <div class="text-dark-mode-auto-opacity-50 m-0 mt-4"><hr></div>
 
           </div>
         </div>
 
       <div class="mb-5 mx-2 d-flex align-items-end flex-column">
-        <button type="submit" name="settings_style" class="btn btn-outline-dark btn-sm border border-1 border-dark border-opacity-25">
-          {{ icon.ok|safe }} Save
+        <button type="submit" name="settings_style" class="btn btn-sm {% if cookie_dark_mode == 'dark' %}btn-outline-light border border-1 border-light{% else %}btn-outline-dark border border-1 border-dark{% endif%} border-opacity-25" href="{% url 'post' cookie_language 'create-new-post' %}">
+        {{ icon.ok|safe }} Save
         </button>
       </div>
       

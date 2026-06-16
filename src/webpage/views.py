@@ -835,6 +835,7 @@ def settings(request, lang, text='resume'):
             if 'nav_top_fg_hover' in request.POST:
                 context['style'
                     ].nav_top_fg_hover = request.POST['nav_top_fg_hover']
+
             if 'nav_bottom_bg' in request.POST:
                 context['style'
                     ].nav_bottom_bg = request.POST['nav_bottom_bg']
@@ -844,6 +845,32 @@ def settings(request, lang, text='resume'):
             if 'nav_items_fg_hover' in request.POST:
                 context['style'
                     ].nav_items_fg_hover = request.POST['nav_items_fg_hover']
+
+            if 'body_bg' in request.POST:
+                context['style'
+                    ].body_bg = request.POST['body_bg']
+            if 'body_bg_alt' in request.POST:
+                context['style'
+                    ].body_bg_alt = request.POST['body_bg_alt']
+            if 'body_fg' in request.POST:
+                context['style'
+                    ].body_fg = request.POST['body_fg']
+            if 'body_title' in request.POST:
+                context['style'
+                    ].body_title = request.POST['body_title']
+
+            if 'body_bg_dark' in request.POST:
+                context['style'
+                    ].body_bg_dark = request.POST['body_bg_dark']
+            if 'body_bg_alt_dark' in request.POST:
+                context['style'
+                    ].body_bg_alt_dark = request.POST['body_bg_alt_dark']
+            if 'body_fg_dark' in request.POST:
+                context['style'
+                    ].body_fg_dark = request.POST['body_fg_dark']
+            if 'body_title_dark' in request.POST:
+                context['style'
+                    ].body_title_dark = request.POST['body_title_dark']
 
             context['style'].save()
 
