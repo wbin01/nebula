@@ -20,7 +20,7 @@
             </p>
             </div>
 
-            <div class="text-light">
+            <!-- <div class="text-light">
             {% for category in categories %}
               {% if category.code in post.categories|split:"," %}
               <div class="form-check form-check-inline">
@@ -38,6 +38,89 @@
               </div>
               {% endif %}
             {% endfor %}
+            </div> -->
+
+            <!-- home -->
+            <div>
+              {% if "home" in post.categories|split:"," %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="" name="home" id="home0" checked>
+                <label class="form-check-label" for="home0">home</label>
+              </div>
+              {% else %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="" name="home" id="home1">
+                <label class="form-check-label" for="home1">home</label>
+              </div>
+              {% endif %}
+
+              <!-- home-highlight -->
+              {% if "home-highlight" in post.categories|split:"," %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="" name="home-highlight" id="home-highlight0" checked>
+                <label class="form-check-label" for="home-highlight0">home-highlight</label>
+              </div>
+              {% else %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="" name="home-highlight" id="home-highlight1">
+                <label class="form-check-label" for="home-highlight1">home-highlight</label>
+              </div>
+              {% endif %}
+
+              <!-- nav categs -->
+              {% for category in categories %}
+
+              {% for nav_item in nav_items %}
+                {% if nav_item.code == category.code %}
+
+                  <div class="m-0 p-0 mt-2 pt-2 border-top border-1 border-secondary border-opacity-10">
+                    {% if category.code in post.categories|split:"," %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" value="" name="{{ nav_item.code }}" id="{{ nav_item.code }}0" checked>
+                      <label class="form-check-label" for="{{ nav_item.code }}0">
+                        {{ nav_item.code }}
+                      </label>
+                    </div>
+                    {% else %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" value="" name="{{ nav_item.code }}" id="{{ nav_item.code }}1">
+                      <label class="form-check-label" for="{{ nav_item.code }}1">
+                        {{ nav_item.code }}
+                      </label>
+                    </div>
+                    {% endif %}
+                  </div>
+                  
+                  <!-- sub nav categs -->
+                  <div class="m-0 p-0 ms-3">
+                  {% for sub_nav_item in all_sub_nav_items%}
+                  {% if sub_nav_item.parent == nav_item.code %}
+
+                    {% if sub_nav_item.code in post.categories|split:"," %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" value="" name="{{ sub_nav_item.code }}" id="{{ sub_nav_item.code }}0" checked>
+                      <label class="form-check-label" for="{{ sub_nav_item.code }}0">
+                        {{ sub_nav_item.code }}
+                      </label>
+                    </div>
+                    {% else %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" value="" name="{{ sub_nav_item.code }}" id="{{ sub_nav_item.code }}1">
+                      <label class="form-check-label" for="{{ sub_nav_item.code }}1">
+                        {{ sub_nav_item.code }}
+                      </label>
+                    </div>
+                    {% endif %}
+
+                  {% endif %}
+                  {% endfor %}
+                  </div>
+                
+                {% endif %}
+              {% endfor %}
+             
+
+              {% endfor %}
             </div>
 
             <div class="d-grid gap-2 d-flex justify-content-end">
