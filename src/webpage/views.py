@@ -141,16 +141,19 @@ def category(request, lang, category_name, page=1):
     module_categ.add_warning()
 
     if request.method == 'GET':
+        # Redirect to Post
         if 'post=' in category_name:
             post_url = category_name.split('=')[1]
             return redirect(
                 'post', context['cookie_language'], post_url)
 
+        # Redirect to Search
         elif 'search=' in category_name or 'tag=' in category_name:
             s_type, s_question = category_name.split('=')
             return redirect(
                 'search', context['cookie_language'], s_type, s_question)
 
+        # Pagination
         elif category_name.replace('-', '').isalpha():
             context = module_categ.upd_context(context, category_name)
             # Pagination: page_num, posts_4_page, pagination_nums
@@ -171,15 +174,26 @@ def category(request, lang, category_name, page=1):
         else:
             return redirect('index', context['cookie_language'])
 
+    # Redirect POST frog
     if not request.user.is_superuser:
         return redirect('index', context['cookie_language'])
 
+    # New menu item
     if request.method == 'POST' and 'add-item' in request.POST:
         if 'item' in [x.code for x in NavItem.objects.all()]:
             module_categ.delete_nav_item(
                 context, NavItem.objects.get(code='item'))
 
+
+        index_list = [x.index for x in NavItem.objects.all() if not x.parent]
+        index_num = 1
+        for num in range(1, len(index_list) + 1):
+            if int(num) not in index_list:
+                index_num = num
+                break
+
         nav_item = NavItem.objects.create()
+        nav_item.index = index_num
         nav_item.save()
 
         module_categ.add_strings_for_langs(context, nav_item)
@@ -187,12 +201,21 @@ def category(request, lang, category_name, page=1):
         # category_name = nav_item.code
         return redirect('category', context['settings'].lang, nav_item.code)
 
+    # New sub menu item
     elif request.method == 'POST' and 'add-sub-item' in request.POST:
         if 'item' in [x.code for x in NavItem.objects.all()]:
             module_categ.delete_nav_item(
                 context, NavItem.objects.get(code='item'))
 
+        index_list = [x.index for x in NavItem.objects.all() if x.parent]
+        index_num = 1
+        for num in range(1, len(index_list) + 1):
+            if int(num) not in index_list:
+                index_num = num
+                break
+
         nav_item = NavItem.objects.create()
+        nav_item.index = index_num
         nav_item.local = 'category'
         nav_item.parent = request.POST['category-name']  # category code
         nav_item.save()
@@ -200,6 +223,7 @@ def category(request, lang, category_name, page=1):
         module_categ.add_strings_for_langs(context, nav_item)
         context['path'] = nav_item.code
 
+    # Edit ID code and strings
     elif request.method == 'POST' and 'nav-item-id' in request.POST:
         nav_item = NavItem.objects.get(pk=request.POST['nav-item-id'])
         old_code = nav_item.code
@@ -216,9 +240,23 @@ def category(request, lang, category_name, page=1):
                 nav_item.display_text = (
                     True if 'nav-item-display-text' in request.POST else False)
 
+                # Update index
                 if 'nav-item-index' in request.POST:
-                    nav_item.index = int(request.POST['nav-item-index'])
+                    new_index = request.POST['nav-item-index']
+                    old_index = nav_item.index
 
+                    if new_index != old_index:
+                        nav_item.index = new_index
+
+                        # Update other item with the same index
+                        for item in NavItem.objects.all():
+                            if item.parent != '':
+                                if item.index == int(new_index):
+                                    item.index = old_index
+                                    item.save()
+                                    break
+
+        # Edit icon
         elif 'nav-item-image-modal' in request.POST:
             if ('nav-item-icon' in request.FILES and
                     module_categ.file_ext_is_valid(request, 'nav-item-icon')):
@@ -246,6 +284,7 @@ def category(request, lang, category_name, page=1):
 
             module_categ.clear_old_covers()
 
+        # Edit sub menu cover
         elif 'nav-item-cover-modal' in request.POST:
             if ('nav-item-cover' in request.FILES and
                     module_categ.file_ext_is_valid(request, 'nav-item-cover')):
@@ -259,6 +298,7 @@ def category(request, lang, category_name, page=1):
             module_categ.clear_old_covers()
             module_nav.upd_subtitle(request, context, nav_item)
 
+        # Edit visibility
         elif 'nav-item-display-modal' in request.POST:
             if 'is-display' in request.POST:
                 nav_item.display = False
@@ -266,6 +306,7 @@ def category(request, lang, category_name, page=1):
                 if nav_item.code != 'item':
                     nav_item.display = True
 
+        # Edit category list
         elif 'nav-item-category-modal' in request.POST:
             categories_code = [x.code for x in Category.objects.all()]
 
@@ -298,6 +339,7 @@ def category(request, lang, category_name, page=1):
                             new_c = Category.objects.create(code=new_category)
                             new_c.save()
 
+        # Delete
         elif 'nav-item-delete-modal' in request.POST:
             go_index = True if category_name == nav_item.code else False
             module_categ.delete_nav_item(context, nav_item)
@@ -305,6 +347,7 @@ def category(request, lang, category_name, page=1):
             if go_index:
                 return redirect('index', context['cookie_language'])
 
+        # Edit view type: list, grid, post
         if 'nav-item-local-type' in request.POST:
             nav_item.local_type = request.POST['nav-item-local-type']
             nav_item.save()
