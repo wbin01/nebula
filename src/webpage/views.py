@@ -855,9 +855,9 @@ def settings(request, lang, text='resume'):
             if 'body_fg' in request.POST:
                 context['style'
                     ].body_fg = request.POST['body_fg']
-            if 'body_title' in request.POST:
+            if 'body_highlight_bg' in request.POST:
                 context['style'
-                    ].body_title = request.POST['body_title']
+                    ].body_highlight_bg = request.POST['body_highlight_bg']
 
             if 'body_bg_dark' in request.POST:
                 context['style'
@@ -868,9 +868,9 @@ def settings(request, lang, text='resume'):
             if 'body_fg_dark' in request.POST:
                 context['style'
                     ].body_fg_dark = request.POST['body_fg_dark']
-            if 'body_title_dark' in request.POST:
+            if 'body_highlight_bg_dark' in request.POST:
                 context['style'
-                    ].body_title_dark = request.POST['body_title_dark']
+                    ].body_highlight_bg_dark = request.POST['body_highlight_bg_dark']
 
             context['style'].save()
 

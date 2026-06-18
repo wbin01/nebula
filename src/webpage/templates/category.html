@@ -34,16 +34,35 @@
     <!-- Title -->
     <div class="container text-center">
       {% if nav_item.parent %}
+        {% if "-" in categories_name|dict_key:nav_item.code %}
+        <a href="{% url 'category' cookie_language nav_item.parent %}" style="position: relative; top: -90px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #AAA;">
+        {{ categories_name|dict_key:nav_item.parent|split:"-|0" }}
+        </a>
+        {% else %}
         <a href="{% url 'category' cookie_language nav_item.parent %}" style="position: relative; top: -90px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #AAA;">
         {{ categories_name|dict_key:nav_item.parent }}
         </a>
+        {% endif %}
+
+        {% if "-" in categories_name|dict_key:nav_item.code %}
         <h1 style="position: relative; top: -90px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #DDD;">
-        {{ categories_name|dict_key:nav_item.code }}
+        {{ categories_name|dict_key:nav_item.code|split:"-|0" }}
         </h1>
+        {% else %}
+        <h1 style="position: relative; top: -90px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #DDD;">
+        {{ categories_name|dict_key:nav_item.code }} xx
+        </h1>
+        {% endif %}
       {% else %}
+        {% if "-" in categories_name|dict_key:nav_item.code %}
         <h1 style="position: relative; top: -65px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #DDD;">
-        {{ categories_name|dict_key:nav_item.code }}
+        {{ categories_name|dict_key:nav_item.code|split:"-|0" }}
         </h1>
+        {% else %}
+        <h1 style="position: relative; top: -65px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); color: #DDD;">
+          {{ categories_name|dict_key:nav_item.code }}
+        </h1>
+        {% endif %}
       {% endif %}
     </div>
 
@@ -81,6 +100,13 @@
   <!-- grid -->
   {% if nav_item.local_type == 'grid' %}
   <div class="m-0 p-0">
+
+    {% if "-" in categories_name|dict_key:nav_item.code %}
+    <p class="card-text text-center m-0 p-0">
+    {{ categories_name|dict_key:nav_item.code|split:"-|1" }}
+    </p>
+    {% endif %}
+
   <div class="row row-cols-1 row-cols-md-2 m-0 p-0 g-4">
 
   {% for sub_nav_item in sub_nav_items %}
@@ -106,10 +132,15 @@
       </div>
       <a class="text-decoration-none text-dark" href="{% url 'sub_category' cookie_language sub_nav_item.parent sub_nav_item.code %}">
       <img src="{{ sub_nav_item.cover.url }}" class="card-img-top" alt="{{ sub_nav_item.code }}" style="width:100%;height:100px;object-fit:cover;margin: 0px;">
+      
       <div class="card-body">
-        <h5 class="card-title">{{ categories_name|dict_key:sub_nav_item.code }}</h5>
-        <!-- <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
+        {% if "-" in categories_name|dict_key:sub_nav_item.code %}
+        <h4 class="card-title m-0 p-0">{{ categories_name|dict_key:sub_nav_item.code|split:"-|0" }}</h4>
+        {% else %}
+        <h4 class="card-title m-0 p-0">{{ categories_name|dict_key:sub_nav_item.code }}</h4>
+        {% endif %}
       </div>
+
       <div class="card-grid-link-indicator-bg">
         <div class="card-grid-link-indicator-middle-bg">
           <div class="card-grid-link-indicator-fg">
