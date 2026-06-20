@@ -82,6 +82,18 @@ def default_context(request):
     all_sub_nav_items = NavItem.objects.filter(
         local='category').order_by('index')
 
+    # 3 highlight posts
+    highlight_posts = [
+        x for x in Post.objects.all().order_by('-publication_date')
+        if 'home-highlight' in x.categories]
+
+    if len(highlight_posts) > 3:
+        highlight_posts.reverse()
+        for post in highlight_posts[3:]:
+            post.categories = post.categories.replace(
+                'home-highlight', '').replace(',,', ',')
+            post.save()
+
     return {
         'settings': page_settings,
         'icon': icon,
@@ -124,11 +136,14 @@ def index(request, lang='', page=1):
         return redirect('index', context['cookie_language'], pagination)
 
     # Posts Highlight
-    context['posts_highlight'] = [
+    posts_highlight = [
         x for x in Post.objects.filter(
             lang=context['cookie_language'],
             display=True).order_by('-publication_date')
         if 'home-highlight' in x.categories.split(',')]
+    
+    posts_highlight.reverse()
+    context['posts_highlight'] = posts_highlight
 
     module_categ.add_warning()
 
