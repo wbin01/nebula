@@ -62,9 +62,7 @@ def upd_categories(
             n_item.save()
 
 
-def upd_text(
-        request, context: dict, nav_item: NavItem) -> None:
-
+def upd_text(request, context: dict, nav_item: NavItem) -> None:
     if not nav_item.warning_id_exists:
         for lang in context['languages']:
 
@@ -72,6 +70,12 @@ def upd_text(
                 nav_i_s = NavItemString.objects.get(
                     code=nav_item.code, lang=lang.code)
                 nav_i_s.text = request.POST[lang.code].strip()
+                nav_i_s.save()
+
+            if lang.code + '-summary' in request.POST:
+                nav_i_s = NavItemString.objects.get(
+                    code=nav_item.code, lang=lang.code)
+                nav_i_s.summary = request.POST[lang.code + '-summary'].strip()
                 nav_i_s.save()
 
 
@@ -84,9 +88,9 @@ def upd_subtitle(
                 code=nav_item.code, lang=lang.code)
             nav_i_s.subtitle = request.POST[lang.code].strip()
 
-            if '-' in nav_i_s.subtitle:
-                nav_i_s.summary = nav_i_s.subtitle.split('-')[1].strip()
-            else:
-                nav_i_s.summary = ''
+            # if '-' in nav_i_s.subtitle:
+            #     nav_i_s.summary = nav_i_s.subtitle.split('-')[1].strip()
+            # else:
+            #     nav_i_s.summary = ''
 
             nav_i_s.save()

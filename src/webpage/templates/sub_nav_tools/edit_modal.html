@@ -75,13 +75,28 @@
 
                 {% for nav_item_string in nav_items_strings %}
                 {% if nav_item_string.code == sub_nav_item.code %}
+                <div class="row">
+
+                <div class="col">
                 <label for="{{ nav_item_string.lang }}" class="m-0 p-0 {% if not nav_item_string.text %}text-danger{% endif %}">
                   <small>
                     {{ nav_item_string.lang }}&nbsp;
                     {% if nav_item_string.lang == cookie_language %}<small class="text-light text-opacity-50">*</small>{% endif %}
                   </small>
                 </label>
+
                 <input type="text" class="form-control form-control-sm mb-2" id="{{ nav_item_string.lang }}" name="{{ nav_item_string.lang }}" value="{{ nav_item_string.text }}">
+                </div>
+
+                <div class="col">
+                <label for="{{ nav_item_string.lang }}-summary" class="m-0 p-0">
+                  <small>&nbsp;</small>
+                </label>
+
+                <input type="text" class="form-control form-control-sm mb-2" id="{{ nav_item_string.lang }}-summary" name="{{ nav_item_string.lang }}-summary" value="{{ nav_item_string.summary }}" placeholder="Optional summary">
+                </div>
+
+                </div>
                 {% endif %}
                 {% endfor %}
               </div>

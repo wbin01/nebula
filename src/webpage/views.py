@@ -184,7 +184,6 @@ def category(request, lang, category_name, page=1):
             module_categ.delete_nav_item(
                 context, NavItem.objects.get(code='item'))
 
-
         index_list = [x.index for x in NavItem.objects.all() if not x.parent]
         index_num = 1
         for num in range(1, len(index_list) + 1):
@@ -310,11 +309,13 @@ def category(request, lang, category_name, page=1):
         elif 'nav-item-category-modal' in request.POST:
             categories_code = [x.code for x in Category.objects.all()]
 
+            # Add checked category to nav item list
             for check_item in categories_code:
                 if check_item in request.POST:
                     if check_item not in nav_item.categories.split(','):
                         nav_item.categories += f',{check_item}'
 
+            # Clear/remove old non used categories
             nav_item_categories = nav_item.categories.split(',')
             for check_item in categories_code:
                 if check_item not in request.POST:
@@ -324,17 +325,21 @@ def category(request, lang, category_name, page=1):
 
             nav_item.categories = ','.join(nav_item_categories)
 
+            # Add new created category to nav item list
             if ('nav-item-new-category' in request.POST and
                     request.POST['nav-item-new-category']):
                 for new_category in ''.join(
                         [x for x in request.POST['nav-item-new-category'
                         ].lower().strip().strip(',').strip().replace(' ', '*')
                          if x in string.digits + string.ascii_lowercase + '-,']
-                ).split(','):
+                        ).split(','):
+
+                    # create category string on nav item list
                     if (new_category and new_category
                             not in nav_item.categories.split(',')):
                         nav_item.categories +=  f',{new_category}'
 
+                        # create the real category model
                         if new_category not in categories_code:
                             new_c = Category.objects.create(code=new_category)
                             new_c.save()

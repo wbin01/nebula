@@ -208,7 +208,7 @@
 
               {% if nav_item.display_text %}
               <span style="color:{{ style.nav_items_fg }};" onMouseOver="this.style.color='{{ style.nav_items_fg_hover }}'" onMouseOut="this.style.color='{{ style.nav_items_fg }}'">
-                {{ categories_name|dict_key:nav_item.code|split:"-|0" }}
+                {{ categories_name|dict_key:nav_item.code }}
               </span>
               {% endif %}
             </a>
