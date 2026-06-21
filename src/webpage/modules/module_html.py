@@ -130,20 +130,30 @@ def clear_mark(html: str) -> str:
 
 
 def create_citation(html: str, icon) -> str:
-    tags_text = r'<span[^>]+><i>“[^”]+”</i></span>'
-    tags = (
-        r'<span[^>]+><i>“|<span[^>]+><i>|<span[^>]+>|”</i></span>|</i></span>')
-    ini = (
-        '<div class="citacao"><span class="citacao-aspa">'
+    start = (
+        '<p><div class="quote-p"><span class="quote-mark">'
         f'{icon.cita_start.replace('"16"', '"24"')}</span>')
     end = (
-        '<span class="citacao-aspa">'
-        f'{icon.cita_end.replace('"16"', '"24"')}</span></div>')
+        '<span class="quote-mark">'
+        f'{icon.cita_end.replace('"16"', '"24"')}</span>**ref**</div></p>')
 
-    for citacao in re.findall(tags_text, html):
-        text = ini + re.sub(tags, '', citacao) + end
+    for x in html.split('</p>'):
+        for q in re.findall(r'<p><span[^>]+><i>.+</i></span></p>', x + '</p>'):
+            quote = re.sub(r'<span[^>]+>|</span>|</i>|<i>|</p>|<p>', '', q)
 
-        html = html.replace(citacao, text)
+            quote = quote.replace('“', '').replace('”', '')
+            ref = ''
+            if '(' in quote and quote.endswith(')'):
+                ref = '(' + quote.split('(')[-1]
+
+            form_ref = (
+                '<span class="text-nowrap"> - ' +
+                ref.lstrip('(').rstrip(')') + '</span>')
+            new_q = start + quote.replace(ref, '') + end.replace(
+                '**ref**', form_ref)
+
+            html = html.replace(q, new_q)
+
     return html
 
 

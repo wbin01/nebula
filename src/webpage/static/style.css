@@ -264,7 +264,7 @@ body {
     border-radius: 10px;
     mix-blend-mode: var(--body-img-blend);
 }
-.citacao {
+.quote-p {
     font-family: "Rokkitt-ThinItalic";
     font-size: 18pt;
     color: var(--body-fg);
@@ -272,7 +272,7 @@ body {
     padding-left: 15px;
     margin-left: 5px;
 }
-.citacao-aspa {
+.quote-mark {
     color: var(--body-fg-10);
 }
 .title_color {
