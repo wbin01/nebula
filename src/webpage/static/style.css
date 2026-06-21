@@ -264,6 +264,17 @@ body {
     border-radius: 10px;
     mix-blend-mode: var(--body-img-blend);
 }
+.citacao {
+    font-family: "Rokkitt-ThinItalic";
+    font-size: 18pt;
+    color: var(--body-fg);
+    border-left: 3px solid var(--body-fg-25);
+    padding-left: 15px;
+    margin-left: 5px;
+}
+.citacao-aspa {
+    color: var(--body-fg-10);
+}
 .title_color {
     color: var(--body-title);
 }

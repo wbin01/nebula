@@ -124,7 +124,7 @@ class PageStyle(models.Model):
 
     nav_bottom_bg = models.CharField(default="#222222", max_length=10)
     nav_items_fg = models.CharField(default="#CCCCCC", max_length=10)
-    nav_items_fg_hover = models.CharField(default="#FFFFFF", max_length=10)
+    nav_items_fg_hover = models.CharField(default="#A78E5C", max_length=10)
 
     body_bg = models.CharField(default="#DEDECD", max_length=10)
     body_bg_alt = models.CharField(default="#EBEBD9", max_length=10)
@@ -134,19 +134,19 @@ class PageStyle(models.Model):
     body_link_hover = models.CharField(default="#194C8B", max_length=10)
     body_selection_bg = models.CharField(default="#BBBBBB", max_length=10)
     body_selection_fg = models.CharField(default="#000000", max_length=10)
-    body_highlight_bg = models.CharField(default="#887142", max_length=10)
+    body_highlight_bg = models.CharField(default="#D9BA7C", max_length=10)
 
     is_dark = models.BooleanField(default=False)
 
     body_bg_dark = models.CharField(default="#272727", max_length=10)
     body_bg_alt_dark = models.CharField(default="#333333", max_length=10)
-    body_fg_dark = models.CharField(default="#DDDDDD", max_length=10)
+    body_fg_dark = models.CharField(default="#B1B1B1", max_length=10)
     body_title_dark = models.CharField(default="#3C5A86", max_length=10)
     body_link_dark = models.CharField(default="#3B65A3", max_length=10)
     body_link_hover_dark = models.CharField(default="#2D4E7C", max_length=10)
     body_selection_bg_dark = models.CharField(default="#3D3D3D", max_length=10)
     body_selection_fg_dark = models.CharField(default="#FFFFFF", max_length=10)
-    body_highlight_bg_dark = models.CharField(default="#766646", max_length=10)
+    body_highlight_bg_dark = models.CharField(default="#4A453A", max_length=10)
 
     def __str__(self):
         return f'Page style {self.code}'
@@ -180,6 +180,12 @@ class Icon(models.Model):
     circle_half = models.TextField(default='')
     circle_half_file = models.FileField(
         default='icons/default/circle-half.svg', upload_to='icons/')
+    cita_start = models.TextField(default='')
+    cita_start_file = models.FileField(
+        default='icons/default/cita_start.svg', upload_to='icons/')
+    cita_end = models.TextField(default='')
+    cita_end_file = models.FileField(
+        default='icons/default/cita_end.svg', upload_to='icons/')
     clock = models.TextField(default='')
     clock_file = models.FileField(
         default='icons/default/clock.svg', upload_to='icons/')

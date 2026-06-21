@@ -18,6 +18,7 @@ def clear_html(html: str, icon) -> str:
     html = clear_spaces(html)
     html = clear_image(html)
     html = clear_mark(html)
+    html = create_citation(html, icon)
     html = create_small(html)
     html = create_modal_windows(html, icon)
     html = create_modal_buttons(html, icon)
@@ -126,6 +127,24 @@ def clear_mark(html: str) -> str:
     return html.replace(
         '<p><mark>', '').replace('</mark></p>', ''
         ).replace('<mark>', '').replace('</mark>', '')
+
+
+def create_citation(html: str, icon) -> str:
+    tags_text = r'<span[^>]+><i>“[^”]+”</i></span>'
+    tags = (
+        r'<span[^>]+><i>“|<span[^>]+><i>|<span[^>]+>|”</i></span>|</i></span>')
+    ini = (
+        '<div class="citacao"><span class="citacao-aspa">'
+        f'{icon.cita_start.replace('"16"', '"24"')}</span>')
+    end = (
+        '<span class="citacao-aspa">'
+        f'{icon.cita_end.replace('"16"', '"24"')}</span></div>')
+
+    for citacao in re.findall(tags_text, html):
+        text = ini + re.sub(tags, '', citacao) + end
+
+        html = html.replace(citacao, text)
+    return html
 
 
 def create_details(html: str) -> str:
@@ -380,6 +399,8 @@ def update_icons(icon, posts):
     icon.card = svg_to_html(icon.card_file.url)
     icon.category = svg_to_html(icon.category_file.url)
     icon.circle_half = svg_to_html(icon.circle_half_file.url)
+    icon.cita_start = svg_to_html(icon.cita_start_file.url)
+    icon.cita_end = svg_to_html(icon.cita_end_file.url)
     icon.clock = svg_to_html(icon.clock_file.url)
     icon.close = svg_to_html(icon.close_file.url, 'icon.close')
     icon.content_text = svg_to_html(icon.content_text_file.url)

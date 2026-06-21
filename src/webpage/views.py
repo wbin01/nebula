@@ -141,7 +141,7 @@ def index(request, lang='', page=1):
             lang=context['cookie_language'],
             display=True).order_by('-publication_date')
         if 'home-highlight' in x.categories.split(',')]
-    
+
     posts_highlight.reverse()
     context['posts_highlight'] = posts_highlight
 
