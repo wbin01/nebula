@@ -269,6 +269,12 @@ class Icon(models.Model):
         return 'Icons'
 
 
+class HomeHighlight(models.Model):
+    code = models.CharField(default='TR0', max_length=20)
+    lang = models.CharField(default='en', max_length=50)
+    index = models.IntegerField(default=1)
+
+
 class Post(models.Model):
     categories = models.CharField(
         default='home,home-highlight', max_length=200)

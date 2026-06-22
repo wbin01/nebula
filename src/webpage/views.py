@@ -82,18 +82,6 @@ def default_context(request):
     all_sub_nav_items = NavItem.objects.filter(
         local='category').order_by('index')
 
-    # 3 highlight posts
-    highlight_posts = [
-        x for x in Post.objects.all().order_by('-publication_date')
-        if 'home-highlight' in x.categories]
-
-    if len(highlight_posts) > 3:
-        highlight_posts.reverse()
-        for post in highlight_posts[3:]:
-            post.categories = post.categories.replace(
-                'home-highlight', '').replace(',,', ',')
-            post.save()
-
     return {
         'settings': page_settings,
         'icon': icon,
@@ -135,12 +123,10 @@ def index(request, lang='', page=1):
     if pagination:
         return redirect('index', context['cookie_language'], pagination)
 
-    # Posts Highlight
-    posts_highlight = [
-        x for x in Post.objects.filter(
-            lang=context['cookie_language'],
-            display=True).order_by('-publication_date')
-        if 'home-highlight' in x.categories.split(',')]
+    highlights = HomeHighlight.objects.filter(lang=context['cookie_language'])
+    posts_highlight = []
+    for h in highlights:
+        posts_highlight.append(Post.objects.get(code=h.code))
 
     posts_highlight.reverse()
     context['posts_highlight'] = posts_highlight
@@ -511,6 +497,34 @@ def post(request, lang, url):
                 if category_item.code in request.POST:
                     all_categories += f',{category_item.code}'
             post_obj.categories = all_categories
+
+            highlights = [x.code for x in HomeHighlight.objects.all()]
+            if 'home-highlight' in post_obj.categories:
+                if not post_obj.code in highlights:
+                    # Aumenta o numero dos index's para o novo ser index 1
+                    for h in HomeHighlight.objects.filter(lang=post_obj.lang):
+                        h.index += 1
+                        h.save()
+
+                        # Garantir 3 itens
+                        if h.index > 3:
+                            h.delete()
+
+                    # Novo com index 1
+                    highlight = HomeHighlight.objects.create()
+                    highlight.code = post_obj.code
+                    highlight.index = 1
+                    highlight.lang = post_obj.lang
+                    highlight.save()
+
+            # Remove 'home-highlight' de 'Post.categories' não usados
+            highlights = [x.code for x in HomeHighlight.objects.all()]
+            for p in Post.objects.filter(lang=post_obj.lang):
+                if 'home-highlight' in p.categories.split(','):
+                    if p.code not in highlights:
+                        p.categories = p.categories.replace(
+                            'home-highlight', '').replace(',,', ',')
+                        p.save()
 
         if 'is-published' in request.POST:
             post_obj.display = False
