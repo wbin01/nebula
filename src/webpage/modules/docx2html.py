@@ -112,8 +112,8 @@ class Docx2HTML:
 
         for xml in self._parse:
             # Start
-            start, end, is_title = self._tag_start_end(xml['pro'])
-            
+            start, end, tag_type = self._tag_start_end(xml['pro'])
+
             is_cover = False
             if not self._cover:
                 image = self._tag_img(xml['img'], cover=True)
@@ -127,7 +127,8 @@ class Docx2HTML:
                 center = 'text-center' if 'center' in start else ''
                 start, end = f'{cov}<div class="image {center}">', '</div>\n'
 
-            if is_cover and self._hidde_cover or is_title and self._hidde_title:
+            if (is_cover and self._hidde_cover or
+                    tag_type == 'h1' and self._hidde_title):
                 start, end, image = '', '', ''
                 
             self._html += start
@@ -144,11 +145,18 @@ class Docx2HTML:
                 if modal:
                     self._modals.append(modal)
             
-            if is_title:
+            # Title
+            if tag_type == 'h1':
                 self._title = text
-            
-            if is_title and self._hidde_title:
-                text = ''
+                if self._hidde_title: text = ''
+
+            # Quote
+            if tag_type == 'quote':
+                for x in ('"', '“', '”'): text = text.replace(x, '')
+                if '(' in text and ')' in text and text.endswith(')'):
+                    txt_list = text.split('(')
+                    text = '('.join(txt_list[:-1]).strip()
+                    end = end.replace('<!-- ref -->', ' - (' + txt_list[-1])
             
             self._html += text
             self._html += end
@@ -302,19 +310,29 @@ class Docx2HTML:
 
     def _tag_start_end(self, xml: str) -> tuple:
         center = 'text-center' if '<w:jc w:val="center"/>' in xml else ''
-        start, end = f'<p class="{center}">', '</p>\n'
+        # P
+        start, end, type_ = f'<p class="{center}">', '</p>\n', 'p'
+        
+        # H1
         if '<w:pStyle w:val="159"' in xml:
             return (
                 f'\n<!-- Title -->\n<h1 class="post-title {center}">',
-                '</h1>\n', True)
-
+                '</h1>\n', 'h1')
+        # H+
         for num, tag in zip(
                 range(139, 145), ('h2', 'h3', 'h4', 'h5', 'h6', 'h7')):
             if f'<w:pStyle w:val="{num}"/>' in xml:
-                start, end = f'\n<{tag}>', f'</{tag}>\n'
+                start, end, type_ = f'\n<{tag}>', f'</{tag}>\n', 'h+'
                 break
+        # Quote
+        if '<w:pStyle w:val="163"' in xml:
+            return (
+                '<p><div class="quote-p"><span class="quote-mark">'
+                '[[".]]</span>',
+                '<span class="quote-mark">'
+                '[[."]]</span><!-- ref --></div></p>', 'quote')
 
-        return start, end, False
+        return start, end, type_
 
 
 if __name__ == '__main__':

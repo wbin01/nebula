@@ -180,12 +180,12 @@ class Icon(models.Model):
     circle_half = models.TextField(default='')
     circle_half_file = models.FileField(
         default='icons/default/circle-half.svg', upload_to='icons/')
-    cita_start = models.TextField(default='')
-    cita_start_file = models.FileField(
-        default='icons/default/cita_start.svg', upload_to='icons/')
-    cita_end = models.TextField(default='')
-    cita_end_file = models.FileField(
-        default='icons/default/cita_end.svg', upload_to='icons/')
+    quote_start = models.TextField(default='')
+    quote_start_file = models.FileField(
+        default='icons/default/quote_start.svg', upload_to='icons/')
+    quote_end = models.TextField(default='')
+    quote_end_file = models.FileField(
+        default='icons/default/quote_end.svg', upload_to='icons/')
     clock = models.TextField(default='')
     clock_file = models.FileField(
         default='icons/default/clock.svg', upload_to='icons/')
