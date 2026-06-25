@@ -14,6 +14,8 @@ src/media/cover_image/*.jpg
 src/media/cover_image/*.jpeg
 src/media/cover_image/*.png
 
+src/media/content_doc/*.html
+
 src/media/icons/*.jpg
 src/media/icons/*.jpeg
 src/media/icons/*.png
