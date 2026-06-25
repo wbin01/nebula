@@ -101,8 +101,8 @@ body {
     font-family: "OpenSans-Light";
     font-size: 12pt;
 }
+
 ::selection {
-  /*background: var(--body-selection-bg);*/
   background: var(--body-selection-bg);
   color: var(--body-selection-fg);
 }

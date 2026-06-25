@@ -111,14 +111,11 @@ def clear_image(html: str) -> str:
         img_width_pattern = r'width=\"[^\"]+\"'
         img_height_pattern = r'height=\"[^\"]+\"'
         for img_ in img_content:
-            img_new = re.sub(
-                img_style_pattern,
-                'style="max-width:100%;max-height:350px;" class="m-0 p-0 img-fluid"',
-                img_)
-            img_new = re.sub(
-                img_width_pattern, '', img_new)
-            img_new = re.sub(
-                img_height_pattern, '', img_new)
+            img_new = re.sub(img_style_pattern,
+                'style="max-width:100%;max-height:300px;" ' +
+                'class="m-0 p-0 img-fluid"', img_)
+            img_new = re.sub(img_width_pattern, '', img_new)
+            img_new = re.sub(img_height_pattern, '', img_new)
             html = html.replace(img_, img_new)
     return html
 

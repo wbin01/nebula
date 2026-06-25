@@ -123,9 +123,9 @@ def index(request, lang='', page=1):
     if pagination:
         return redirect('index', context['cookie_language'], pagination)
 
-    highlights = HomeHighlight.objects.filter(lang=context['cookie_language'])
     posts_highlight = []
-    for h in highlights:
+    for h in HomeHighlight.objects.filter(
+            lang=context['cookie_language']).order_by('-index'):
         posts_highlight.append(Post.objects.get(code=h.code))
 
     posts_highlight.reverse()
@@ -501,16 +501,11 @@ def post(request, lang, url):
             highlights = [x.code for x in HomeHighlight.objects.all()]
             if 'home-highlight' in post_obj.categories:
                 if not post_obj.code in highlights:
-                    # Aumenta o numero dos index's para o novo ser index 1
                     for h in HomeHighlight.objects.filter(lang=post_obj.lang):
                         h.index += 1
                         h.save()
+                        if h.index > 3: h.delete()
 
-                        # Garantir 3 itens
-                        if h.index > 3:
-                            h.delete()
-
-                    # Novo com index 1
                     highlight = HomeHighlight.objects.create()
                     highlight.code = post_obj.code
                     highlight.index = 1

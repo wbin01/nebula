@@ -118,11 +118,11 @@ class PageSetting(models.Model):
 
 class PageStyle(models.Model):
     code = models.IntegerField(default=1)
-    nav_top_bg = models.CharField(default="#222222", max_length=10)
+    nav_top_bg = models.CharField(default="#000000", max_length=10)
     nav_top_fg = models.CharField(default="#CCCCCC", max_length=10)
     nav_top_fg_hover = models.CharField(default="#FFFFFF", max_length=10)
 
-    nav_bottom_bg = models.CharField(default="#222222", max_length=10)
+    nav_bottom_bg = models.CharField(default="#000000", max_length=10)
     nav_items_fg = models.CharField(default="#CCCCCC", max_length=10)
     nav_items_fg_hover = models.CharField(default="#A78E5C", max_length=10)
 
