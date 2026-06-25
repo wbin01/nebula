@@ -138,7 +138,7 @@ class Docx2HTML:
             # Text
             text = ''
             for run in xml['runs']:
-                txt, modal = self._tag_modal_button(run['txt'])
+                txt, modal = self._tag_modal_link(run['txt'])
                 # self._html += txt
                 text += txt
                 if modal:
@@ -165,9 +165,9 @@ class Docx2HTML:
             line = re.sub(r'<w:p\b[^>]*>', '<w:p>', line, count=1)
             img = re.findall(r'<mc:AlternateContent>.+</mc:AlternateContent>',
                 line, flags=re.DOTALL)
-            line = self._tag_modal_mark(line)
+            line = self._mark_modal_link(line)
 
-            # print(line)
+            # print(line, '\n---')
             lines = {
                 'xml': line,
                 'pro': line.split('</w:pPr>')[0],
@@ -181,8 +181,8 @@ class Docx2HTML:
                 txt = re.findall(r'<w:t\b[^>]*>[^<]*</w:t>', run)
                 pro = run.replace(txt[0], '') if txt else ''
                 txt = re.findall(r'<w:t\b[^>]*>([^<]*)</w:t>', run)
-                btn = re.findall(r'<button>[^<]+<\/button>', run)
-                if btn: txt = btn
+                modal = re.findall(r'<modal-link>[^<]+<\/modal-link>', run)
+                if modal: txt = modal
 
                 lines['runs'].append({
                     'txt': txt[0] if txt else '', 'pro': pro})
@@ -214,23 +214,7 @@ class Docx2HTML:
         size = '' if cover else f'style="width:{w[0]}pt;height:{h[0]}pt;"'
         return f'\n<img {cover} {size} src="data:image/{ext};base64,{b64}">\n'
 
-    def _tag_modal_button(self, xml: str) -> tuple:
-        if not '<button>' in xml:
-            return xml, ''
-
-        content = re.findall(r'<button>([^<]+)<\/button>', xml)
-        if not content: return xml, ''
-        ref, txt = content[0][1:].split(']')
-
-        link = (
-        '<a type="button" class="ref_button d-print-none" '
-        'data-bs-toggle="modal" '
-        f'data-bs-target="#ref{ref}">[[{txt}]]</a>')
-        xml = re.sub(r'<button>[^<]+<\/button>', link, xml)
-
-        return xml, self._tag_modal_window(ref)
-
-    def _tag_modal_mark(self, xml: str) -> str:
+    def _mark_modal_link(self, xml: str) -> str:
         tag = re.findall(
             r'<w:commentRangeStart w:id=".+<w:commentRangeEnd w:id="',
             xml, flags=re.DOTALL)
@@ -246,8 +230,25 @@ class Docx2HTML:
         txt = txt[0]
 
         btn = re.sub(
-            r'<w:t[^>]+>([^<]+)<\/w:t>', f'<button>[{id_}]{txt}</button>', tag)
+            r'<w:t[^>]+>([^<]+)<\/w:t>',
+            f'<modal-link>[{id_}]{txt}</modal-link>', tag)
         return xml.replace(tag, btn)
+
+    def _tag_modal_link(self, xml: str) -> tuple:
+        if not '<modal-link>' in xml:
+            return xml, ''
+
+        content = re.findall(r'<modal-link>([^<]+)<\/modal-link>', xml)
+        if not content: return xml, ''
+        ref, txt = content[0][1:].split(']')
+
+        link = (
+        '<a type="button" class="ref_modal d-print-none" '
+        'data-bs-toggle="modal" '
+        f'data-bs-target="#ref{ref}">[[{txt}]]</a>')
+        xml = re.sub(r'<modal-link>[^<]+<\/modal-link>', link, xml)
+
+        return xml, self._tag_modal_window(ref)
 
     def _tag_modal_window(self, reference: str) -> str:
         with ZipFile(self._path) as docx:  # print(docx.namelist())
@@ -256,22 +257,25 @@ class Docx2HTML:
         comments = etree.tostring(
             comments, encoding='unicode', pretty_print=True)
         if not comments: return ''
-        
-        for comment in comments.split('</w:comments>'):
-            txt = re.findall(r'<w:t xml:space="preserve">(.+)<\/w:t>', comment)
-            if not txt: return ''
+
+        for commnt in comments.split('</w:comments>')[0].split('</w:comment>'):
+            txt = re.findall(r'<w:t xml:space="preserve">(.+)<\/w:t>', commnt)
+            if not txt: continue
+
             text = ''
             for x in txt:
                 text += f'<p>{x}</p>'
 
-            id_ = re.findall(r'<w:comment w:id="([^"]+)"', comment)
-            if not id_: return ''
-            id_ = id_[0]
+            id_ = re.findall(r'<w:comment w:id="([^"]+)"', commnt)
+            if not id_: continue
 
-            if id_ != reference: return ''
+            for x in id_:
+                if x == reference: id_ = x
+            if id_ != reference: continue
+            
             return (
                 f'\n<!-- Modal {id_} -->\n'
-                f'<div class="modal fade" id="ref{id_}" tabindex="-1"'
+                f'<div class="modal fade" id="ref{id_}" tabindex="-1" '
                 f'aria-labelledby="ref{id_}Label" aria-hidden="true" '
                 'data-bs-theme="read">\n'
                 ' <div class="modal-dialog modal-lg modal-dialog-scrollable">\n'
