@@ -153,6 +153,8 @@ class Docx2HTML(object):
             'mXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" '
             'crossorigin="anonymous"></script>')
         style = '\n<style>.bg_highlight {background-color: #CAb45E;}</style>'
+        # style = ('\n<style>.bg_highlight {background-color: #CAb45E;} '
+        #     'a { color: red;} </style>')
         head = f'<header>{meta}{style}{link}{script}\n</header>'
         
         if not self._only_content:
@@ -209,7 +211,7 @@ class Docx2HTML(object):
                     txt = f'<u>{txt}</u>'
 
                 # Selection
-                if '<w:highlight w:val="' in run['pro']:  # w:val="yellow"
+                elif '<w:highlight w:val="' in run['pro']:  # w:val="yellow"
                     if '<w:highlight w:val="none"/>' not in run['pro']:
                         txt = f'<span class="bg_highlight">{txt}</span>'
 
@@ -245,7 +247,7 @@ class Docx2HTML(object):
                 line, flags=re.DOTALL)
             line = self._mark_modal_link(line)
 
-            # print(line, '\n---')
+            print(line, '\n---')
             lines = {
                 'xml': line,
                 'pro': line.split('</w:pPr>')[0],
