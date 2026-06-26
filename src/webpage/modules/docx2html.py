@@ -1,14 +1,59 @@
 import re
 import base64
+
 from zipfile import ZipFile
 from lxml import etree
+from pathlib import Path
+from scour import scour
 
 
 NS = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+PATH = Path(__file__).resolve().parent.parent.parent
 
+class Icon(object):
+    def __init__(self, name: str) -> None:
+        self._name = name
+        self._path = PATH/'media'/'icons'/'default'/f'{name}.svg' # .as_posix()
+        self._html = None
 
-class Docx2HTML:
-    def __init__(self, path):
+    @property
+    def html(self) -> str:
+        if self._html:
+            return self._html
+
+        options = scour.sanitizeOptions()
+        options.remove_metadata = True
+        options.strip_xml_prolog = True
+        ## options.enable_viewboxing = True
+
+        with open(self._path, 'r', encoding='utf-8') as f:
+            svg_text = f.read()
+
+        optimized = scour.scourString(svg_text, options)
+        optimized = re.sub(r'\s*fill\s*=\s*\"#[^\"]*\"', '', optimized.strip())
+        if 'class="' not in optimized:
+            optimized = optimized.replace('<svg ', '<svg class="" ')
+
+        if 'fill="currentColor"' not in optimized:
+            optimized = optimized.replace(
+                'class="', 'fill="currentColor" class="')
+
+        if self._name == 'book':
+            optimized = optimized.replace(
+                'class="', 'style="margin:0px 0px 2px 2px;" class="')
+        else:
+            optimized = optimized.replace(
+                'class="', 'style="margin:0px 0px 2px 0px;" class="')
+
+        if self._name:
+            self._html = f'<!-- {self._name} -->{optimized}<!-- /{self._name} -->'
+        else:
+            self._html = optimized
+
+        return self._html
+
+class Docx2HTML(object):
+    def __init__(self, path: str) -> None:
         self._hidde_cover = False
         self._hidde_title = False
         self._only_content = False
@@ -156,7 +201,7 @@ class Docx2HTML:
                 if '(' in text and ')' in text and text.endswith(')'):
                     txt_list = text.split('(')
                     text = '('.join(txt_list[:-1]).strip()
-                    end = end.replace('<!-- ref -->', ' - (' + txt_list[-1])
+                    end = end.replace('<!-- ref -->', f' - (' + txt_list[-1])
             
             self._html += text
             self._html += end
@@ -250,10 +295,15 @@ class Docx2HTML:
         if not content: return xml, ''
         ref, txt = content[0][1:].split(']')
 
+        if txt == '+':
+            txt = Icon('plus_ref').html
+        elif txt == 'book':
+            txt = Icon('biblius').html
+
         link = (
         '<a type="button" class="ref_modal d-print-none" '
         'data-bs-toggle="modal" '
-        f'data-bs-target="#ref{ref}">[[{txt}]]</a>')
+        f'data-bs-target="#ref{ref}">{txt}</a>')
         xml = re.sub(r'<modal-link>[^<]+<\/modal-link>', link, xml)
 
         return xml, self._tag_modal_window(ref)
@@ -297,7 +347,7 @@ class Docx2HTML:
                 '      <button type="button" class="btn btn-outline-danger '
                 'btn-sm border border-0" data-bs-dismiss="modal" '
                 'aria-label="Close">\n'
-                '       [[close]]\n'
+                f'       {Icon("close").html}\n'
                 '      </button>\n'
                 '     </div>\n'
                 '    </div>\n\n'
@@ -328,9 +378,9 @@ class Docx2HTML:
         if '<w:pStyle w:val="163"' in xml:
             return (
                 '<p><div class="quote-p"><span class="quote-mark">'
-                '[[".]]</span>',
+                f'{Icon("quote_start").html}</span>',
                 '<span class="quote-mark">'
-                '[[."]]</span><!-- ref --></div></p>', 'quote')
+                f'{Icon("quote_end").html}</span><!-- ref --></div></p>', 'quote')
 
         return start, end, type_
 
