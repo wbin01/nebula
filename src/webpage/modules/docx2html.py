@@ -46,9 +46,11 @@ class Icon(object):
                 'class="', 'style="margin:0px 0px 2px 0px;" class="')
 
         if self._name:
-            self._html = f'<!-- {self._name} -->{optimized}<!-- /{self._name} -->'
+            html = optimized.replace('<svg', f'<svg name="{self._name}"')
         else:
-            self._html = optimized
+            html = optimized
+
+        self._html = html.replace('\n', '').strip()
 
         return self._html
 
@@ -150,7 +152,8 @@ class Docx2HTML(object):
             'js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNk'
             'mXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" '
             'crossorigin="anonymous"></script>')
-        head = f'<header>{meta}{link}{script}\n</header>'
+        style = '\n<style>.bg_highlight {background-color: #CAb45E;}</style>'
+        head = f'<header>{meta}{style}{link}{script}\n</header>'
         
         if not self._only_content:
             self._html = f'<!DOCTYPE html>\n<html>\n{head}\n<body>\n'
@@ -178,17 +181,39 @@ class Docx2HTML(object):
                 
             self._html += start
 
-            #image
+            # Image
             self._html += image
             
             # Text
             text = ''
             for run in xml['runs']:
+                # Modal
                 txt, modal = self._tag_modal_link(run['txt'])
-                # self._html += txt
-                text += txt
                 if modal:
                     self._modals.append(modal)
+
+                # Bold
+                if '<w:b/>' in run['pro']:
+                    txt = f'<b>{txt}</b>'
+
+                # Italic
+                elif '<w:i/>' in run['pro']:
+                    txt = f'<i>{txt}</i>'
+
+                # Strikethrough
+                elif '<w:strike/>' in run['pro']: #  
+                    txt = f'<s>{txt}</s>'
+
+                # Underline
+                elif '<w:u w:val="single"/>' in run['pro']:
+                    txt = f'<u>{txt}</u>'
+
+                # Selection
+                if '<w:highlight w:val="' in run['pro']:  # w:val="yellow"
+                    if '<w:highlight w:val="none"/>' not in run['pro']:
+                        txt = f'<span class="bg_highlight">{txt}</span>'
+
+                text += txt
             
             # Title
             if tag_type == 'h1':
@@ -242,6 +267,26 @@ class Docx2HTML(object):
 
             self._parse.append(lines)
 
+    def _mark_modal_link(self, xml: str) -> str:
+        tag = re.findall(
+            r'<w:commentRangeStart w:id=".+<w:commentRangeEnd w:id="',
+            xml, flags=re.DOTALL)
+        if not tag: return xml
+        tag = tag[0]
+
+        id_ = re.findall(r'<w:commentRangeStart w:id="([^"]+)"', tag)
+        if not id_: return xml
+        id_ = id_[0]
+
+        txt = re.findall(r'<w:t[^>]+>([^<]+)<\/w:t>', tag)
+        if not txt: return xml
+        txt = txt[0]
+
+        btn = re.sub(
+            r'<w:t[^>]+>([^<]+)<\/w:t>',
+            f'<modal-link>[{id_}]{txt}</modal-link>', tag)
+        return xml.replace(tag, btn)
+
     def _tag_img(self, xml: str, cover: bool = False) -> str:
         data = re.findall(r'<v:imagedata[^>]+>', xml)
         shape = re.findall(r'<v:shape [^>]+>', xml)
@@ -266,26 +311,6 @@ class Docx2HTML(object):
         cover = 'class="post-cover"' if cover else ''
         size = '' if cover else f'style="width:{w[0]}pt;height:{h[0]}pt;"'
         return f'\n<img {cover} {size} src="data:image/{ext};base64,{b64}">\n'
-
-    def _mark_modal_link(self, xml: str) -> str:
-        tag = re.findall(
-            r'<w:commentRangeStart w:id=".+<w:commentRangeEnd w:id="',
-            xml, flags=re.DOTALL)
-        if not tag: return xml
-        tag = tag[0]
-
-        id_ = re.findall(r'<w:commentRangeStart w:id="([^"]+)"', tag)
-        if not id_: return xml
-        id_ = id_[0]
-
-        txt = re.findall(r'<w:t[^>]+>([^<]+)<\/w:t>', tag)
-        if not txt: return xml
-        txt = txt[0]
-
-        btn = re.sub(
-            r'<w:t[^>]+>([^<]+)<\/w:t>',
-            f'<modal-link>[{id_}]{txt}</modal-link>', tag)
-        return xml.replace(tag, btn)
 
     def _tag_modal_link(self, xml: str) -> tuple:
         if not '<modal-link>' in xml:
@@ -354,7 +379,7 @@ class Docx2HTML(object):
                 '   </div>\n'
                 '  </div>\n'
                 ' </div>\n'
-                f'</div> <!-- Modal {id_} end -->\n')
+                '</div>\n')
 
         return ''
 
@@ -379,8 +404,8 @@ class Docx2HTML(object):
             return (
                 '<p><div class="quote-p"><span class="quote-mark">'
                 f'{Icon("quote_start").html}</span>',
-                '<span class="quote-mark">'
-                f'{Icon("quote_end").html}</span><!-- ref --></div></p>', 'quote')
+                f'<span class="quote-mark">{Icon("quote_end").html}'
+                '</span><!-- ref --></div></p>', 'quote')
 
         return start, end, type_
 
