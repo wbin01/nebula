@@ -191,11 +191,14 @@ class Docx2HTML(object):
             # if id_: parse['id'] = id_[0]
 
     def _set_doc_parse(self) -> None:
+        tag_conv = {'Quote': 'blockquote',}
+
         for xml in self._doc.xpath('//w:body/w:p', namespaces=self._doc_ns):
             xml = etree.tostring(xml, encoding='unicode', pretty_print=True)
             xml = re.sub(r'<w:p\b[^>]*>', '<w:p>', xml, count=1)
 
-            parse = {'xml': xml, 'id': '', 'tag': '', 'pr': {}, 'content': []}
+            pr = {'align': 'left', 'style': ''}
+            parse = {'xml': xml, 'id': '', 'tag': '', 'pr': pr, 'content': []}
 
             if '<w:pStyle w:val="' in xml:
                 # id
@@ -205,10 +208,23 @@ class Docx2HTML(object):
                 # pr: style
                 for style in self._styles_parse:
                     s = re.findall(fr'<w:style w:styleId=\"{id_[0]}\">', style)
-                    if s: parse['pr']['style'] = style
+                    if s:
+                        parse['pr']['style'] = style
+                        break
 
                 # Break
                 if not parse['id']: continue
+
+                # tag
+                tag = re.findall(
+                    r'<w:name w:val=\"([^\"]+)\"/>', parse['pr']['style'])
+                if tag:
+                    if tag[0] in tag_conv: tag = tag_conv[tag[0]]
+                    parse['tag'] = tag
+
+                # pr: align
+                align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
+                if align: parse['pr']['align'] = align[0]
 
             else:
                 # Image
@@ -249,8 +265,8 @@ class Docx2HTML(object):
             if parse['id']:self._doc_parse.append(parse)
 
     def parse_print(
-            self, hidde_xml: bool = True,
-            hidde_styl_xml: bool = True) -> None:
+            self, hidde_xml: bool = False,
+            hidde_styl_xml: bool = False) -> None:
 
         for x in self._doc_parse:
             for k, v in x.items():
@@ -278,6 +294,8 @@ class Docx2HTML(object):
                                     '\n', '').replace(' ', '') + '..."'}')
                             else:
                                 print(f'  {i}: """\n{j}"""')
+                        else:
+                            print(f'  {i}: "{j}"')
                 else:
                     print(f'{k}: "{v}"')
             print('---')
