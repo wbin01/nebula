@@ -76,21 +76,20 @@ class Docx2HTML(object):
             self._comments = etree.parse(docx.open('word/comments.xml'))
             self._rel = etree.parse(docx.open('word/_rels/document.xml.rels'))
 
-        # Parsers
-        self._doc_parse = []
-        self._styles_parse = []
-        self._comments_parse = []
-        self._rel_parse = []
-
         # Name space parsers
         self._doc_ns = {'w':
             'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
         self._rel_ns = {'r':
             'http://schemas.openxmlformats.org/package/2006/relationships'}
 
-        # ---
-        self._set_style_parse()
-        self._set_doc_parse()
+        # Parsers
+        self._styles_parse = self._set_style_parse()
+        self._doc_parse = self._set_doc_parse()
+        self._comments_parse = self._set_comments_parse()
+        self._rel_parse = []
+
+        self._parse = {
+            'body': self._doc_parse, 'comments': self._comments_parse}
 
     @property
     def cover(self) -> str:
@@ -180,14 +179,17 @@ class Docx2HTML(object):
         
         self._html += html_end
 
-    def _set_style_parse(self) -> None:
+    def _set_style_parse(self) -> list:
+        styles_parse = []
         style, find, ns = '', r'<w:style.+w:styleId=\"', self._doc_ns
         for x in self._styles.xpath('//w:style', namespaces=ns):
             x = etree.tostring(x, encoding='unicode',pretty_print=True)
             style = re.sub(find, '<w:style w:styleId="', x, count=1)
-            self._styles_parse.append(style)
+            styles_parse.append(style)
+        return styles_parse
 
-    def _set_doc_parse(self) -> None:
+    def _set_doc_parse(self) -> list:
+        doc_parse = []
         tag_converter = {f'Heading {x}': f'h{x}' for x in range(1, 10)}
         tag_converter['Quote'] = 'blockquote'
 
@@ -198,7 +200,6 @@ class Docx2HTML(object):
 
             pr = {'align': 'left',}
             parse = {'xml': xml, 'id': '', 'tag': '', 'children': [], 'pr': pr}
-
             # H, Quote...
             if '<w:pStyle w:val="' in xml:
                 # id
@@ -212,7 +213,6 @@ class Docx2HTML(object):
                         parse['pr']['style'] = style
                         break
 
-                # Break
                 if not parse['id']: continue
 
                 # tag
@@ -231,19 +231,20 @@ class Docx2HTML(object):
                     id_ = re.findall(r'r:id="(rId\d+)"', data[0])
                     if id_: parse['id'], parse['tag'] = id_[0], 'img'
 
-                # Break
                 if not parse['id']: continue
 
-                # children
+                # pr: url
                 for rel in self._rel.xpath(
                         '//r:Relationship', namespaces=self._rel_ns):
                     if rel.get('Id') == parse['id']:
                         parse['pr']['url'] = rel.get('Target')
                         break
 
+                # pr: src
                 with ZipFile(self._path) as docx:
                     data = docx.read('word/' + parse['pr']['url'])
-                parse['children'] = base64.b64encode(data).decode('ascii')
+                # parse['children'] = base64.b64encode(data).decode('ascii')
+                parse['pr']['src'] = base64.b64encode(data).decode('ascii')
 
                 # pr
                 shape = re.findall(r'<v:shape [^>]+>', xml)
@@ -286,7 +287,7 @@ class Docx2HTML(object):
                         elif k == '<w:commentRangeStart ':
                             comt = re.findall('<w:commentRangeStart w:id'
                                 r'=\"([^\"]+)\"/>', run)
-                            if comt: tags.append({'tag': v, 'ref': comt[0]})
+                            if comt: tags.append({'tag': v, 'id': comt[0]})
 
                         else:
                             tags.append({'tag': v})
@@ -298,47 +299,79 @@ class Docx2HTML(object):
             align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
             if align: parse['pr']['align'] = align[0]
 
-            # End
-            if parse['id']:self._doc_parse.append(parse)
+            if parse['id']: doc_parse.append(parse)
+        return doc_parse
 
-    def parse_print(
+    def _set_comments_parse(self) -> list:
+        comments_parse = []
+        # Comments modal
+        with ZipFile(self._path) as docx:  # docx.namelist()
+            comments = etree.parse(docx.open('word/comments.xml'))
+
+        comments = etree.tostring(
+            comments, encoding='unicode', pretty_print=True)
+        if not comments: return
+
+        for xml in comments.split('</w:comments>')[0].split('</w:comment>'):
+            xml = re.sub(r'<w:comments [^>]+>', '<w:comments>', xml)
+            # print(xml, '\n---')
+
+            parse = {
+                'xml': xml, 'id': '', 'tag': 'comment_modal',
+                'children': [], 'pr': {'align': 'left',}}
+
+            id_ = re.findall(r'<w:comment w:id="([^"]+)"', xml)
+            if not id_: continue
+            parse['id'] = id_[0]
+
+            for run in xml.split('</w:r>'):
+                txt = re.findall(r'<w:t xml:space="preserve">(.+)<\/w:t>', run)
+                if not txt: continue
+
+                tag = {'tag': 'p'}
+                parse['children'].append({'text': txt[0], 'tags': tag})
+
+            if parse['id']: comments_parse.append(parse)
+        return comments_parse
+
+    def _parse_print(
             self,
+            parse_list: list,
             hidde_xml: bool = True,
             hidde_xml_style: bool = True) -> None:
 
-        for x in self._doc_parse:
+        for x in parse_list:
             for k, v in x.items():
                 if k == 'xml':
                     if hidde_xml:
                         print(f"'xml': '{v.replace(
-                            '\n', '').replace(' ', '')[:41] + "...'"}")
+                            '\n', '').replace(' ', '')[:41] + "...'"},")
                     else:
                         print(f"'xml': '''\n{v}'''")
                 elif k == 'children':
-                    if x['tag'] == 'img':
-                        print(f"'children': '{v[:37]}...'")
+                    if not v:
+                        print(f"'children': {v},")
                     else:
-                        if not v:
-                            print(f"'children': {v}")
-                        else:
-                            print(f"'children': [")
-                            for c in v:
-                                if 'text' in c and len(c['tags']) > 1:
-                                    print(
-                                        f"  {{'text': '{c["text"]}', 'tags': ["
-                                        , end='')
-                                    for n, t in enumerate(c['tags']):
-                                        comma = ',' if n != 0 else ''
-                                        print(f'{comma}\n    {t}', end='')
-                                    print(']},')
-                                else:
-                                    print(f'  {c},')
-                            print('  ],')
+                        print(f"'children': [")
+                        for c in v:
+                            if 'text' in c and len(c['tags']) > 1:
+                                print(
+                                    f"  {{'text': '{c["text"]}', 'tags': [",
+                                    end='')
+                                for n, t in enumerate(c['tags']):
+                                    comma = ',' if n != 0 else ''
+                                    print(f'{comma}\n    {t}', end='')
+                                print(']},')
+                            else:
+                                print(f'  {c},')
+                        print('  ],')
 
                 elif k == 'pr':
                     print(f"'pr': [")
                     for i, j in v.items():
-                        if i == 'style':
+                        if i == 'src':
+                            print(f"  '{i}': '{j[:39]}...',")
+                        elif i == 'style':
                             if hidde_xml_style:
                                 print(f"  '{i}': " f"'{j.replace(
                                     '\n', '').replace(' ', '')[:37] + "...'"},")
@@ -349,12 +382,25 @@ class Docx2HTML(object):
                     print(  '],')
                 else:
                     print(f"'{k}': '{v}',")
-            print('---')
+
+            if x != parse_list[-1]: print('---')
+
+    def print(
+            self,
+            hidde_xml: bool = True,
+            hidde_xml_style: bool = True) -> None:
+        print('=== BODY ===')
+        print()
+        self._parse_print(self._doc_parse, hidde_xml, hidde_xml_style)
+        print()
+        print('=== COMMENTS ===')
+        print()
+        self._parse_print(self._comments_parse, hidde_xml, hidde_xml_style)
 
 
 if __name__ == '__main__':
     parser = Docx2HTML('/home/user/Documento1.docx')
-    parser.parse_print(hidde_xml_style=True, hidde_xml=True)
+    parser.print(hidde_xml_style=True, hidde_xml=True)
 
     # parser.only_content = False
     # parser.hidde_cover = False
