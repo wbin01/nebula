@@ -199,12 +199,13 @@ class Docx2HTML(object):
             # print(xml, '\n---')
 
             pr = {'align': 'left',}
-            parse = {'xml': xml, 'id': '', 'tag': '', 'children': [], 'pr': pr}
+            mt = {'id': None, 'xml_doc': '', 'xml_style': '', 'source': 'docx'}
+            parse = {'xml': xml, 'tag': '', 'children': [], 'pr': pr, 'meta': mt}
             # H, Quote...
             if '<w:pStyle w:val="' in xml:
                 # id
                 id_ = re.findall(r'<w:pStyle w:val=\"(\d+)\"/>', xml)
-                if id_: parse['id'] = id_[0]
+                if id_: parse['meta']['id'] = id_[0]
 
                 # pr: style
                 for style in self._styles_parse:
@@ -213,7 +214,7 @@ class Docx2HTML(object):
                         parse['pr']['style'] = style
                         break
 
-                if not parse['id']: continue
+                if not parse['meta']['id']: continue
 
                 # tag
                 tag = re.findall(
@@ -229,14 +230,14 @@ class Docx2HTML(object):
                 data = re.findall(r'<v:imagedata[^>]+>', xml)
                 if data:
                     id_ = re.findall(r'r:id="(rId\d+)"', data[0])
-                    if id_: parse['id'], parse['tag'] = id_[0], 'img'
+                    if id_: parse['meta']['id'], parse['tag'] = id_[0], 'img'
 
-                if not parse['id']: continue
+                if not parse['meta']['id']: continue
 
                 # pr: url
                 for rel in self._rel.xpath(
                         '//r:Relationship', namespaces=self._rel_ns):
-                    if rel.get('Id') == parse['id']:
+                    if rel.get('Id') == parse['meta']['id']:
                         parse['pr']['url'] = rel.get('Target')
                         break
 
@@ -261,7 +262,7 @@ class Docx2HTML(object):
             # P
             else:
                 # id, tag
-                parse['id'] = parse['tag'] = 'p'
+                parse['meta']['id'] = parse['tag'] = 'p'
 
             # Runs children tags
             tag_converter.update({
@@ -299,7 +300,8 @@ class Docx2HTML(object):
             align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
             if align: parse['pr']['align'] = align[0]
 
-            if parse['id']: doc_parse.append(parse)
+            if parse['meta']['id']: doc_parse.append(parse)
+
         return doc_parse
 
     def _set_comments_parse(self) -> list:
@@ -316,13 +318,14 @@ class Docx2HTML(object):
             xml = re.sub(r'<w:comments [^>]+>', '<w:comments>', xml)
             # print(xml, '\n---')
 
+            mt = {'id': None, 'xml_doc': '', 'xml_style': '', 'source': 'docx'}
             parse = {
-                'xml': xml, 'id': '', 'tag': 'comment_modal',
-                'children': [], 'pr': {'align': 'left',}}
+                'xml': xml, 'tag': 'comment_modal',
+                'children': [], 'pr': {'align': 'left',}, 'meta': mt}
 
             id_ = re.findall(r'<w:comment w:id="([^"]+)"', xml)
             if not id_: continue
-            parse['id'] = id_[0]
+            parse['meta']['id'] = id_[0]
 
             for run in xml.split('</w:r>'):
                 txt = re.findall(r'<w:t xml:space="preserve">(.+)<\/w:t>', run)
@@ -331,7 +334,7 @@ class Docx2HTML(object):
                 tag = {'tag': 'p'}
                 parse['children'].append({'text': txt[0], 'tags': tag})
 
-            if parse['id']: comments_parse.append(parse)
+            if parse['meta']['id']: comments_parse.append(parse)
         return comments_parse
 
     def _parse_print(
@@ -366,8 +369,8 @@ class Docx2HTML(object):
                                 print(f'  {c},')
                         print('  ],')
 
-                elif k == 'pr':
-                    print(f"'pr': [")
+                elif k == 'pr' or k == 'meta':
+                    print(f"'{k}': [")
                     for i, j in v.items():
                         if i == 'src':
                             print(f"  '{i}': '{j[:39]}...',")
