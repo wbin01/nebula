@@ -187,9 +187,6 @@ class Docx2HTML(object):
             style = re.sub(find, '<w:style w:styleId="', x, count=1)
             self._styles_parse.append(style)
 
-            # id_ = re.findall(r'<w:style w:styleId=\"(\d+)\">', style)
-            # if id_: parse['id'] = id_[0]
-
     def _set_doc_parse(self) -> None:
         tag_converter = {f'Heading {x}': f'h{x}' for x in range(1, 10)}
         tag_converter['Quote'] = 'blockquote'
@@ -226,15 +223,6 @@ class Docx2HTML(object):
                     if tag in tag_converter: tag = tag_converter[tag]
                     parse['tag'] = tag
 
-                # # pr: align
-                # align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
-                # if align: parse['pr']['align'] = align[0]
-
-                # content
-                for run in xml.split('</w:r>'):
-                    txt = re.findall(r'<w:t [^>]+>([^<]+)</w:t>', run)
-                    if txt:
-                        for t in txt: parse['content'].append(txt[0])
             # Image
             elif '<v:imagedata' in xml:
                 # id, tag
@@ -274,11 +262,31 @@ class Docx2HTML(object):
                 # id, tag
                 parse['id'] = parse['tag'] = 'p'
 
-                # content
-                for run in xml.split('</w:r>'):
-                    txt = re.findall(r'<w:t [^>]+>([^<]+)</w:t>', run)
-                    if txt:
-                        for t in txt: parse['content'].append(txt[0])
+            # Runs content tags
+            tag_converter.update({
+                '<w:b/>': 'b', '<w:i/>': 'i', '<w:strike/>': 's',
+                '<w:u w:val="single"/>': 'u', '<w:highlight w:val="': 'bg',
+                '<w:hyperlink ': 'a'})
+
+            # content
+            for run in xml.split('</w:r>'):
+                txt = re.findall(r'<w:t [^>]+>([^<]+)</w:t>', run)
+                tags = []
+                for k, v in tag_converter.items():
+                    if k in run:
+                        if k == '<w:highlight w:val="':
+                            if '<w:highlight w:val="none"/>' not in run:
+                                tags.append(v)
+                        elif k == '<w:hyperlink ':
+                            link = re.findall(
+                                r'<w:hyperlink .+w:tooltip=\"([^\"]+)\"[^>]+>',
+                                run)
+                            if link: tags.append((v, link[0]))
+                        else:
+                            tags.append(v)
+                if txt:
+                    content = {'text': txt[0], 'tags': tags}
+                    for t in txt: parse['content'].append(content)
 
             # pr: align
             align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
@@ -308,7 +316,7 @@ class Docx2HTML(object):
                             print(f'content: {v}')
                         else:
                             print(f'content:')
-                            for c in v: print(f'  "{c}"')
+                            for c in v: print(f'  {c}')
                 elif k == 'pr':
                     print(f'pr:')
                     for i, j in v.items():
