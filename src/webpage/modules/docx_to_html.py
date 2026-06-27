@@ -191,15 +191,18 @@ class Docx2HTML(object):
             # if id_: parse['id'] = id_[0]
 
     def _set_doc_parse(self) -> None:
-        tag_conv = {'Quote': 'blockquote',}
+        tag_converter = {f'Heading {x}': f'h{x}' for x in range(1, 10)}
+        tag_converter['Quote'] = 'blockquote'
 
         for xml in self._doc.xpath('//w:body/w:p', namespaces=self._doc_ns):
             xml = etree.tostring(xml, encoding='unicode', pretty_print=True)
             xml = re.sub(r'<w:p\b[^>]*>', '<w:p>', xml, count=1)
+            # print(xml, '\n---')
 
-            pr = {'align': 'left', 'style': ''}
-            parse = {'xml': xml, 'id': '', 'tag': '', 'pr': pr, 'content': []}
+            pr = {'align': 'left',}
+            parse = {'xml': xml, 'id': '', 'tag': '', 'content': [], 'pr': pr}
 
+            # H, Quote...
             if '<w:pStyle w:val="' in xml:
                 # id
                 id_ = re.findall(r'<w:pStyle w:val=\"(\d+)\"/>', xml)
@@ -219,66 +222,87 @@ class Docx2HTML(object):
                 tag = re.findall(
                     r'<w:name w:val=\"([^\"]+)\"/>', parse['pr']['style'])
                 if tag:
-                    if tag[0] in tag_conv: tag = tag_conv[tag[0]]
+                    tag = tag[0]
+                    if tag in tag_converter: tag = tag_converter[tag]
                     parse['tag'] = tag
 
-                # pr: align
-                align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
-                if align: parse['pr']['align'] = align[0]
+                # # pr: align
+                # align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
+                # if align: parse['pr']['align'] = align[0]
 
+                # content
+                for run in xml.split('</w:r>'):
+                    txt = re.findall(r'<w:t [^>]+>([^<]+)</w:t>', run)
+                    if txt:
+                        for t in txt: parse['content'].append(txt[0])
+            # Image
+            elif '<v:imagedata' in xml:
+                # id, tag
+                data = re.findall(r'<v:imagedata[^>]+>', xml)
+                if data:
+                    id_ = re.findall(r'r:id="(rId\d+)"', data[0])
+                    if id_: parse['id'], parse['tag'] = id_[0], 'img'
+
+                # Break
+                if not parse['id']: continue
+
+                # content
+                for rel in self._rel.xpath(
+                        '//r:Relationship', namespaces=self._rel_ns):
+                    if rel.get('Id') == parse['id']:
+                        parse['pr']['url'] = rel.get('Target')
+                        break
+
+                with ZipFile(self._path) as docx:
+                    data = docx.read('word/' + parse['pr']['url'])
+                parse['content'] = base64.b64encode(data).decode('ascii')
+
+                # pr
+                shape = re.findall(r'<v:shape [^>]+>', xml)
+                if shape:
+                    # width, height
+                    w = re.findall(r'width:(\d+)', shape[0])
+                    if w: parse['pr']['width'] = w[0]
+                    h = re.findall(r'height:(\d+)', shape[0])
+                    if h: parse['pr']['height'] = h[0]
+
+                    # extension
+                    parse['pr']['ext'] = parse[
+                        'pr']['url'].split('.')[-1].lower()
+            # P
             else:
-                # Image
-                if '<v:imagedata' in xml:  
-                    # id, tag
-                    data = re.findall(r'<v:imagedata[^>]+>', xml)
-                    if data:
-                        id_ = re.findall(r'r:id="(rId\d+)"', data[0])
-                        if id_: parse['id'], parse['tag'] = id_[0], 'img'
+                # id, tag
+                parse['id'] = parse['tag'] = 'p'
 
-                    # Break
-                    if not parse['id']: continue
+                # content
+                for run in xml.split('</w:r>'):
+                    txt = re.findall(r'<w:t [^>]+>([^<]+)</w:t>', run)
+                    if txt:
+                        for t in txt: parse['content'].append(txt[0])
 
-                    # content
-                    for rel in self._rel.xpath(
-                            '//r:Relationship', namespaces=self._rel_ns):
-                        if rel.get('Id') == parse['id']:
-                            parse['pr']['url'] = rel.get('Target')
-                            break
+            # pr: align
+            align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
+            if align: parse['pr']['align'] = align[0]
 
-                    with ZipFile(self._path) as docx:
-                        data = docx.read('word/' + parse['pr']['url'])
-                    parse['content'] = base64.b64encode(data).decode('ascii')
-
-                    # pr
-                    shape = re.findall(r'<v:shape [^>]+>', xml)
-                    if shape:
-                        # width, height
-                        w = re.findall(r'width:(\d+)', shape[0])
-                        if w: parse['pr']['width'] = w[0]
-                        h = re.findall(r'height:(\d+)', shape[0])
-                        if h: parse['pr']['height'] = h[0]
-
-                        # extension
-                        parse['pr']['ext'] = parse[
-                            'pr']['url'].split('.')[-1].lower()
-
+            # End
             if parse['id']:self._doc_parse.append(parse)
 
     def parse_print(
-            self, hidde_xml: bool = False,
-            hidde_styl_xml: bool = False) -> None:
+            self,
+            hidde_xml: bool = True,
+            hidde_xml_style: bool = True) -> None:
 
         for x in self._doc_parse:
             for k, v in x.items():
                 if k == 'xml':
                     if hidde_xml:
-                        print(f'xml: "{v[:50].replace(
-                            '\n', '').replace(' ', '') + '..."'}')
+                        print(f'xml: "{v.replace(
+                            '\n', '').replace(' ', '')[:41] + '..."'}')
                     else:
                         print(f'xml: """\n{v}"""')
                 elif k == 'content':
                     if x['tag'] == 'img':
-                        print(f'content: "{v[:32]}..."')
+                        print(f'content: "{v[:37]}..."')
                     else:
                         if not v:
                             print(f'content: {v}')
@@ -289,9 +313,9 @@ class Docx2HTML(object):
                     print(f'pr:')
                     for i, j in v.items():
                         if i == 'style':
-                            if hidde_styl_xml:
-                                print(f'  {i}: "{j[:37].replace(
-                                    '\n', '').replace(' ', '') + '..."'}')
+                            if hidde_xml_style:
+                                print(f'  {i}: "{j.replace(
+                                    '\n', '').replace(' ', '')[:37] + '..."'}')
                             else:
                                 print(f'  {i}: """\n{j}"""')
                         else:
@@ -303,7 +327,8 @@ class Docx2HTML(object):
 
 if __name__ == '__main__':
     parser = Docx2HTML('/home/user/Documento1.docx')
-    parser.parse_print()
+    parser.parse_print(hidde_xml_style=True, hidde_xml=True)
+
     # parser.only_content = False
     # parser.hidde_cover = False
     # parser.hidde_title = False
