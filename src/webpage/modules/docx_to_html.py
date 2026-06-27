@@ -197,7 +197,7 @@ class Docx2HTML(object):
             # print(xml, '\n---')
 
             pr = {'align': 'left',}
-            parse = {'xml': xml, 'id': '', 'tag': '', 'content': [], 'pr': pr}
+            parse = {'xml': xml, 'id': '', 'tag': '', 'children': [], 'pr': pr}
 
             # H, Quote...
             if '<w:pStyle w:val="' in xml:
@@ -234,7 +234,7 @@ class Docx2HTML(object):
                 # Break
                 if not parse['id']: continue
 
-                # content
+                # children
                 for rel in self._rel.xpath(
                         '//r:Relationship', namespaces=self._rel_ns):
                     if rel.get('Id') == parse['id']:
@@ -243,7 +243,7 @@ class Docx2HTML(object):
 
                 with ZipFile(self._path) as docx:
                     data = docx.read('word/' + parse['pr']['url'])
-                parse['content'] = base64.b64encode(data).decode('ascii')
+                parse['children'] = base64.b64encode(data).decode('ascii')
 
                 # pr
                 shape = re.findall(r'<v:shape [^>]+>', xml)
@@ -262,13 +262,13 @@ class Docx2HTML(object):
                 # id, tag
                 parse['id'] = parse['tag'] = 'p'
 
-            # Runs content tags
+            # Runs children tags
             tag_converter.update({
                 '<w:b/>': 'b', '<w:i/>': 'i', '<w:strike/>': 's',
                 '<w:u w:val="single"/>': 'u', '<w:highlight w:val="': 'bg',
-                '<w:hyperlink ': 'a'})
+                '<w:hyperlink ': 'a', '<w:commentRangeStart ': 'comment'})
 
-            # content
+            # children
             for run in xml.split('</w:r>'):
                 txt = re.findall(r'<w:t [^>]+>([^<]+)</w:t>', run)
                 tags = []
@@ -276,17 +276,23 @@ class Docx2HTML(object):
                     if k in run:
                         if k == '<w:highlight w:val="':
                             if '<w:highlight w:val="none"/>' not in run:
-                                tags.append(v)
+                                tags.append({'tag': v})
+
                         elif k == '<w:hyperlink ':
-                            link = re.findall(
-                                r'<w:hyperlink .+w:tooltip=\"([^\"]+)\"[^>]+>',
-                                run)
-                            if link: tags.append((v, link[0]))
+                            link = re.findall('<w:hyperlink '
+                                r'.+w:tooltip=\"([^\"]+)\"[^>]+>', run)
+                            if link: tags.append({'tag': v, 'href': link[0]})
+
+                        elif k == '<w:commentRangeStart ':
+                            comt = re.findall('<w:commentRangeStart w:id'
+                                r'=\"([^\"]+)\"/>', run)
+                            if comt: tags.append({'tag': v, 'ref': comt[0]})
+
                         else:
-                            tags.append(v)
+                            tags.append({'tag': v})
                 if txt:
-                    content = {'text': txt[0], 'tags': tags}
-                    for t in txt: parse['content'].append(content)
+                    children = {'text': txt[0], 'tags': tags}
+                    for t in txt: parse['children'].append(children)
 
             # pr: align
             align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
@@ -304,32 +310,45 @@ class Docx2HTML(object):
             for k, v in x.items():
                 if k == 'xml':
                     if hidde_xml:
-                        print(f'xml: "{v.replace(
-                            '\n', '').replace(' ', '')[:41] + '..."'}')
+                        print(f"'xml': '{v.replace(
+                            '\n', '').replace(' ', '')[:41] + "...'"}")
                     else:
-                        print(f'xml: """\n{v}"""')
-                elif k == 'content':
+                        print(f"'xml': '''\n{v}'''")
+                elif k == 'children':
                     if x['tag'] == 'img':
-                        print(f'content: "{v[:37]}..."')
+                        print(f"'children': '{v[:37]}...'")
                     else:
                         if not v:
-                            print(f'content: {v}')
+                            print(f"'children': {v}")
                         else:
-                            print(f'content:')
-                            for c in v: print(f'  {c}')
+                            print(f"'children': [")
+                            for c in v:
+                                if 'text' in c and len(c['tags']) > 1:
+                                    print(
+                                        f"  {{'text': '{c["text"]}', 'tags': ["
+                                        , end='')
+                                    for n, t in enumerate(c['tags']):
+                                        comma = ',' if n != 0 else ''
+                                        print(f'{comma}\n    {t}', end='')
+                                    print(']},')
+                                else:
+                                    print(f'  {c},')
+                            print('  ],')
+
                 elif k == 'pr':
-                    print(f'pr:')
+                    print(f"'pr': [")
                     for i, j in v.items():
                         if i == 'style':
                             if hidde_xml_style:
-                                print(f'  {i}: "{j.replace(
-                                    '\n', '').replace(' ', '')[:37] + '..."'}')
+                                print(f"  '{i}': " f"'{j.replace(
+                                    '\n', '').replace(' ', '')[:37] + "...'"},")
                             else:
-                                print(f'  {i}: """\n{j}"""')
+                                print(f"  '{i}': '''\n{j}''',")
                         else:
-                            print(f'  {i}: "{j}"')
+                            print(f"  '{i}': " f"'{j}',")
+                    print(  '],')
                 else:
-                    print(f'{k}: "{v}"')
+                    print(f"'{k}': '{v}',")
             print('---')
 
 
