@@ -37,6 +37,10 @@ class DocxParser(object):
     def parse(self) -> str:
         return self._parse
 
+    @property
+    def path(self) -> str:
+        return self._path
+
     def print(
             self,
             hidde_xml: bool = True,
@@ -63,7 +67,7 @@ class DocxParser(object):
                     else:
                         print(f"'children': [")
                         for c in v:
-                            if 'text' in c and len(c['tags']) > 1:
+                            if 'text' in c and c['tags']:
                                 print(
                                     f"  {{'text': '{c["text"]}', 'tags': [",
                                     end='')
@@ -75,8 +79,12 @@ class DocxParser(object):
                                 print(f'  {c},')
                         print('  ],')
 
-                elif k == 'pr' or k == 'meta':
-                    print(f"'{k}': [")
+                elif k == 'pr' or k == 'meta' or k == 'style':
+                    if not v:
+                        print(f"'{k}': {v},")
+                        continue
+
+                    print(f"'{k}': {{")
                     for i, j in v.items():
                         if i == 'src':
                             print(f"  '{i}': '{j[:44]}...',")
@@ -98,7 +106,7 @@ class DocxParser(object):
                         else:
                             print(f"  '{i}': " f"'{j}',")
 
-                    print(  '],')
+                    print(  '},')
                 else:
                     print(f"'{k}': '{v}',")
 
@@ -117,10 +125,9 @@ class DocxParser(object):
         for xml in comments.split('</w:comments>')[0].split('</w:comment>'):
             xml = re.sub(r'<w:comments [^>]+>', '<w:comments>', xml)
 
-            parse = {
-                'tag': 'comment_modal', 'children': [],'pr': {'align': 'left'},
-                'meta': {
-                    'id': '', 'xml_doc': xml,'xml_style': '','source': 'docx'}}
+            parse = {'tag': '', 'children': [], 'pr': {'x': '7'}, 'style':{}, 'meta': {
+                'id': '', 'xml_doc': xml, 'xml_style': '', 'source': 'docx'}}
+            parse['tag'] = 'comment_modal'
 
             id_ = re.findall(r'<w:comment w:id="([^"]+)"', xml)
             if not id_: continue
@@ -130,8 +137,8 @@ class DocxParser(object):
                 txt = re.findall(r'<w:t xml:space="preserve">(.+)<\/w:t>', run)
                 if not txt: continue
 
-                tag = {'tag': 'p'}
-                parse['children'].append({'text': txt[0], 'tags': tag})
+                tag = {'tag': 'p', 'pr': {}}
+                parse['children'].append({'text': txt[0], 'tags': [tag]})
 
             if parse['meta']['id']: comments_parse.append(parse)
         return comments_parse
@@ -145,9 +152,8 @@ class DocxParser(object):
             xml = etree.tostring(xml, encoding='unicode', pretty_print=True)
             xml = re.sub(r'<w:p\b[^>]*>', '<w:p>', xml, count=1)
             
-            parse = {
-                'tag': '', 'children': [], 'pr': {'align': 'left'}, 'meta':
-                {'id': '', 'xml_doc': xml, 'xml_style': '','source': 'docx'}}
+            parse = {'tag': '', 'children': [], 'pr': {}, 'style':{}, 'meta': {
+                'id': '', 'xml_doc': xml, 'xml_style': '', 'source': 'docx'}}
 
             # H, Quote...
             if '<w:pStyle w:val="' in xml:
@@ -186,13 +192,15 @@ class DocxParser(object):
                 for rel in self._rel.xpath(
                         '//r:Relationship', namespaces=self._rel_ns):
                     if rel.get('Id') == parse['meta']['id']:
-                        parse['pr']['url'] = rel.get('Target')
+                        parse['meta']['url'] = rel.get('Target')
                         break
 
                 # pr: src
                 with ZipFile(self._path) as docx:
-                    data = docx.read('word/' + parse['pr']['url'])
-                parse['pr']['src'] = base64.b64encode(data).decode('ascii')
+                    data = docx.read('word/' + parse['meta']['url'])
+                parse['pr']['src'] = (
+                    'data:image/ext;base64,' + base64.b64encode(
+                        data).decode('ascii'))
 
                 # pr
                 shape = re.findall(r'<v:shape [^>]+>', xml)
@@ -204,8 +212,12 @@ class DocxParser(object):
                     if h: parse['pr']['height'] = h[0]
 
                     # extension
-                    parse['pr']['ext'] = parse[
-                        'pr']['url'].split('.')[-1].lower()
+                    parse['meta']['ext'] = parse[
+                        'meta']['url'].split('.')[-1].lower()
+
+                    parse['pr']['src'] = parse['pr']['src'].replace(
+                        'data:image/ext;base64,',
+                        f'data:image/{parse['meta']['ext']};base64,')
             # P
             else:
                 # id, tag
@@ -222,30 +234,38 @@ class DocxParser(object):
                 txt = re.findall(r'<w:t [^>]+>([^<]+)</w:t>', run)
                 tags = []
                 for k, v in tag_converter.items():
+                    tag = {'tag': '', 'pr': {}}
                     if k in run:
                         if k == '<w:highlight w:val="':
                             if '<w:highlight w:val="none"/>' not in run:
-                                tags.append({'tag': v})
+                                tag['tag'] = v
+                                tags.append(tag)
 
                         elif k == '<w:hyperlink ':
                             link = re.findall('<w:hyperlink '
                                 r'.+w:tooltip=\"([^\"]+)\"[^>]+>', run)
-                            if link: tags.append({'tag': v, 'href': link[0]})
+                            if link:
+                                tag['tag'] = v
+                                tag['pr']['href'] = link[0]
+                                tags.append(tag)
 
                         elif k == '<w:commentRangeStart ':
                             comt = re.findall('<w:commentRangeStart w:id'
                                 r'=\"([^\"]+)\"/>', run)
-                            if comt: tags.append({'tag': v, 'id': comt[0]})
-
+                            if comt:
+                                tag['tag'] = v
+                                tag['pr']['id'] = comt[0]
+                                tags.append(tag)
                         else:
-                            tags.append({'tag': v})
+                            tag['tag'] = v
+                            tags.append(tag)
                 if txt:
                     children = {'text': txt[0], 'tags': tags}
                     for t in txt: parse['children'].append(children)
 
             # pr: align
             align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
-            if align: parse['pr']['align'] = align[0]
+            if align: parse['style']['align'] = align[0]
 
             if parse['meta']['id']: doc_parse.append(parse)
 
@@ -263,5 +283,5 @@ class DocxParser(object):
 
 if __name__ == '__main__':
     parser = DocxParser('/home/user/Documento1.docx')
-    # print(parser)
+    print(parser)
     parser.print(True, True)
