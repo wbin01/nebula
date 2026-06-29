@@ -79,12 +79,12 @@ class HTMLRender(object):
         self._html += self._end
 
     def _set_html_body(self, parse: dict) -> str:
-            tag = pr = text = id_ = parse_tag = ''
+            parse_tag = tag = pr = text = id_ = ''
             for key, value in parse.items():
                 if key == 'tag':
+                    parse_tag = value
                     tag_value = self._set_tag(value)
                     tag = tag_value['tag']
-                    parse_tag = tag_value['parse_tag']
                     pr += tag_value['pr']
 
                 elif key == 'pr' and value:
@@ -102,61 +102,59 @@ class HTMLRender(object):
                     pass
 
             # End format
-            if tag == 'h1' and parse_tag == 'post-title':
-                tag = f'\n  <!-- Title -->\n  <{tag}{pr}>{text}</{tag}>\n\n'
+            if tag == 'h1' and parse_tag == 'Title':
+                tag = f'\n  <!-- Title -->\n  <{tag}{pr}>{text}</{tag}>\n'
                 self._title = text
 
-            elif tag == 'div' and parse_tag == 'modal':
+            elif tag == 'div' and parse_tag == 'comment_modal':
                 tag = (
                     f'  <!-- Modal {id_} -->\n'
                     f'  <div class="modal fade" id="modal{id_}" tabindex="-1" '
                     'aria-labelledby="#idLabel" aria-hidden="true" '
                     'data-bs-theme="read">\n'
-                    '    <div class="modal-dialog modal-lg '
+                    '   <div class="modal-dialog modal-lg '
                     'modal-dialog-scrollable">\n'
-                    '      <div class="modal-content">\n'
-                    '        <div class="modal-body p-0 m-0">\n'
-                    '          <div class="px-2 mt-2">\n'
-                    f'           {text}\n'
-                    '          </div>\n'
-                    '          <div class="modal-footer p-0 m-1">\n'
-                    '            <div class="d-grid gap-2 d-flex '
+                    '    <div class="modal-content">\n'
+                    '     <div class="modal-body p-0 m-0">\n\n'
+                    '      <div class="px-2 mt-2">\n'
+                    f'       {text}\n'
+                    '      </div>\n\n'
+                    '      <div class="modal-footer p-0 m-1">\n'
+                    '       <div class="d-grid gap-2 d-flex '
                     'justify-content-end">\n'
-                    '              <button type="button" class="btn '
-                    'btn-outline-danger btn-sm '
-                    'border border-0" data-bs-dismiss="modal" '
-                    'aria-label="Close">\n'
-                    '                #icon_close\n'
-                    '              </button>\n'
-                    '            </div>\n'
-                    '          </div>\n'
-                    '        </div>\n'
-                    '      </div>\n'
-                    '    </div>\n'
-                    '  </div>\n')
+                    '        <button type="button" class="btn '
+                    'btn-outline-danger btn-sm border border-0" '
+                    'data-bs-dismiss="modal" aria-label="Close">\n'
+                    '         #icon_close\n'
+                    '        </button>\n'
+                    '       </div>\n      </div>\n\n     </div>\n    </div>\n'
+                    '   </div>\n  </div>\n')
 
             elif tag == 'img':
                 tag = (
                     '  <figure class="image">\n   '
                     f'<{tag}{pr} />\n'
-                    '  <figcaption></figcaption>\n'
+                    '   <figcaption></figcaption>\n'
                     '  </figure>\n')
+                
+                if not self._cover:
+                    self._cover = tag
+                    tag = f'  <!-- Cover -->\n{tag}'
+
             else:
                 tag = f'  <{tag}{pr}>{text}</{tag}>\n'
 
             return tag
 
     def _set_tag(self, value: str) -> dict:
-        tag = pr = parse_tag = ''
-
-        tag = value
+        tag, pr = value, ''
         if value == 'Title':
-            tag, pr, parse_tag = 'h1', ' class="post-title"', 'post-title'
+            tag, pr, parse_tag = 'h1', ' class="post-title"', value
         
         elif value == 'comment_modal':
-            tag, parse_tag = 'div', 'modal'
+            tag, parse_tag = 'div', value
 
-        return {'tag': tag, 'pr': pr, 'parse_tag': parse_tag}
+        return {'tag': tag, 'pr': pr}
 
     def _set_text_run(self, run: dict) -> str:
         text = ''
