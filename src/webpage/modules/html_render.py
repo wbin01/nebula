@@ -74,17 +74,17 @@ class HTMLRender(object):
         self._end = f'\n </body>\n</html>'
 
         self._html += self._start
-        self._html += self._body
+        self._html += self._body + '\n'
         self._html += self._modals
         self._html += self._end
 
     def _set_html_body(self, parse: dict) -> str:
-            tag = pr = text = note = ''
+            tag = pr = text = id_ = parse_tag = ''
             for key, value in parse.items():
                 if key == 'tag':
                     tag_value = self._set_tag(value)
                     tag = tag_value['tag']
-                    note = tag_value['note']
+                    parse_tag = tag_value['parse_tag']
                     pr += tag_value['pr']
 
                 elif key == 'pr' and value:
@@ -95,11 +95,47 @@ class HTMLRender(object):
                     for run in value:
                         text += self._set_text_run(run)
 
+                elif key == 'meta':
+                    id_ = value['id']
+
+                elif key == 'style':
+                    pass
+
             # End format
-            if tag == 'h1' and note == 'post-title':
+            if tag == 'h1' and parse_tag == 'post-title':
+                tag = f'\n  <!-- Title -->\n  <{tag}{pr}>{text}</{tag}>\n\n'
                 self._title = text
 
-            if tag == 'img':
+            elif tag == 'div' and parse_tag == 'modal':
+                tag = (
+                    f'  <!-- Modal {id_} -->\n'
+                    f'  <div class="modal fade" id="modal{id_}" tabindex="-1" '
+                    'aria-labelledby="#idLabel" aria-hidden="true" '
+                    'data-bs-theme="read">\n'
+                    '    <div class="modal-dialog modal-lg '
+                    'modal-dialog-scrollable">\n'
+                    '      <div class="modal-content">\n'
+                    '        <div class="modal-body p-0 m-0">\n'
+                    '          <div class="px-2 mt-2">\n'
+                    f'           {text}\n'
+                    '          </div>\n'
+                    '          <div class="modal-footer p-0 m-1">\n'
+                    '            <div class="d-grid gap-2 d-flex '
+                    'justify-content-end">\n'
+                    '              <button type="button" class="btn '
+                    'btn-outline-danger btn-sm '
+                    'border border-0" data-bs-dismiss="modal" '
+                    'aria-label="Close">\n'
+                    '                #icon_close\n'
+                    '              </button>\n'
+                    '            </div>\n'
+                    '          </div>\n'
+                    '        </div>\n'
+                    '      </div>\n'
+                    '    </div>\n'
+                    '  </div>\n')
+
+            elif tag == 'img':
                 tag = (
                     '  <figure class="image">\n   '
                     f'<{tag}{pr} />\n'
@@ -111,38 +147,16 @@ class HTMLRender(object):
             return tag
 
     def _set_tag(self, value: str) -> dict:
-        tag = pr = note = ''
+        tag = pr = parse_tag = ''
 
         tag = value
         if value == 'Title':
-            tag, pr, note = 'h1', ' class="post-title"', 'post-title'
+            tag, pr, parse_tag = 'h1', ' class="post-title"', 'post-title'
         
         elif value == 'comment_modal':
-            tag = 'div'
-            comment_modal_start = (
-                '<div class="modal fade" id="#modal{}" tabindex="-1"'
-                'aria-labelledby="#idLabel" aria-hidden="true" '
-                'data-bs-theme="read">'
-                
-                '<div class="modal-dialog modal-lg modal-dialog-scrollable">'
-                '<div class="modal-content">'
-                '<div class="modal-body p-0 m-0">'
-                
-                '<div class="px-2 mt-2">')
+            tag, parse_tag = 'div', 'modal'
 
-            comment_modal_end = (
-                '</div>'
-
-                '<div class="modal-footer p-0 m-1">'
-
-                '<div class="d-grid gap-2 d-flex justify-content-end">'
-                '<button type="button" class="btn btn-outline-danger btn-sm '
-                'border border-0" data-bs-dismiss="modal" aria-label="Close">'
-                '#icon_close'
-                '</button></div>''</div>'
-                '</div></div></div></div>')
-
-        return {'tag': tag, 'pr': pr, 'note': note}
+        return {'tag': tag, 'pr': pr, 'parse_tag': parse_tag}
 
     def _set_text_run(self, run: dict) -> str:
         text = ''
