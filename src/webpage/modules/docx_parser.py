@@ -125,7 +125,7 @@ class DocxParser(object):
         for xml in comments.split('</w:comments>')[0].split('</w:comment>'):
             xml = re.sub(r'<w:comments [^>]+>', '<w:comments>', xml)
 
-            parse = {'tag': '', 'children': [], 'pr': {'x': '7'}, 'style':{}, 'meta': {
+            parse = {'tag': '', 'children': [], 'pr': {}, 'style':{}, 'meta': {
                 'id': '', 'xml_doc': xml, 'xml_style': '', 'source': 'docx'}}
             parse['tag'] = 'comment_modal'
 

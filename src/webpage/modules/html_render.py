@@ -17,7 +17,7 @@ class HTMLRender(object):
         self._cover = ''
         self._title = ''
         self._body = ''
-        self._modals = []
+        self._modals = ''
         self._footer = ''
         self._end = ''
         self._html = ''
@@ -39,55 +39,15 @@ class HTMLRender(object):
         path = path if path else self._parser.path.replace('.docx', '.html')
         with open(path, 'w') as html:
             html.write(self._html)
-
-    def _xxx(self, text: str) -> None:
-        comment_start = (
-            '<a type="button" class="ref_button d-print-none" '
-            'data-bs-toggle="modal" '
-            'data-bs-target="#id">#text</a>')
-
-        comment_end = '</a>'
-        
-        modal_start = (
-            '<div class="modal fade" '
-            'id="#id" tabindex="-1"'
-            'aria-labelledby="#idLabel" aria-hidden="true" '
-            'data-bs-theme="read">'
-            
-            '<div class="modal-dialog modal-lg modal-dialog-scrollable">'
-            '<div class="modal-content">'
-            '<div class="modal-body p-0 m-0">'
-            
-            '<div class="px-2 mt-2">')
-
-        modal_end = (
-            '</div>'
-
-            '<div class="modal-footer p-0 m-1">'
-
-            '<div class="d-grid gap-2 d-flex justify-content-end">'
-            '<button type="button" class="btn btn-outline-danger btn-sm '
-            'border border-0" data-bs-dismiss="modal" aria-label="Close">'
-            '#icon_close'
-            '</button></div>''</div>'
-            '</div></div></div></div>')
-
-        map_ = {
-            '<Title>': '<h1 class="post-title">',
-            '</Title>': '</h1>',
-            '<comment>': comment_start,
-            '</comment>': comment_end,
-            '<comment_modal>': modal_start,
-            '</comment_modal>': modal_end,
-            }
-
-        for key, value in map_.items():
-            text = text.replace(key, value)
     
     def _set_html(self) -> None:
         # Body
         for parse in self._parser.parse['body']:
             self._body += self._set_html_body(parse)
+
+        # self._parser.print()
+        for parse in self._parser.parse['comments']:
+            self._modals += self._set_html_body(parse)
 
         # Start
         self._start = (
@@ -111,20 +71,21 @@ class HTMLRender(object):
             ' <body>\n\n')
 
         # End
-        self._end = f' </body>\n</html>'
+        self._end = f'\n </body>\n</html>'
 
         self._html += self._start
         self._html += self._body
+        self._html += self._modals
         self._html += self._end
 
     def _set_html_body(self, parse: dict) -> str:
             tag = pr = text = note = ''
             for key, value in parse.items():
                 if key == 'tag':
-                    set_tag = self._set_tag(key, value)
-                    tag = set_tag['tag']
-                    note = set_tag['note']
-                    pr += set_tag['pr']
+                    tag_value = self._set_tag(value)
+                    tag = tag_value['tag']
+                    note = tag_value['note']
+                    pr += tag_value['pr']
 
                 elif key == 'pr' and value:
                     for pr_key, pr_value in value.items():
@@ -132,9 +93,12 @@ class HTMLRender(object):
 
                 elif key == 'children':
                     for run in value:
-                        text += self._set_text_run(run, note)
+                        text += self._set_text_run(run)
 
             # End format
+            if tag == 'h1' and note == 'post-title':
+                self._title = text
+
             if tag == 'img':
                 tag = (
                     '  <figure class="image">\n   '
@@ -146,15 +110,41 @@ class HTMLRender(object):
 
             return tag
 
-    def _set_tag(self, key: str, value: str) -> dict:
+    def _set_tag(self, value: str) -> dict:
         tag = pr = note = ''
-        if key == 'tag':
-            tag = value
-            if value == 'Title':
-                tag, pr, note = 'h1', ' class="post-title"', 'post-title'
+
+        tag = value
+        if value == 'Title':
+            tag, pr, note = 'h1', ' class="post-title"', 'post-title'
+        
+        elif value == 'comment_modal':
+            tag = 'div'
+            comment_modal_start = (
+                '<div class="modal fade" id="#modal{}" tabindex="-1"'
+                'aria-labelledby="#idLabel" aria-hidden="true" '
+                'data-bs-theme="read">'
+                
+                '<div class="modal-dialog modal-lg modal-dialog-scrollable">'
+                '<div class="modal-content">'
+                '<div class="modal-body p-0 m-0">'
+                
+                '<div class="px-2 mt-2">')
+
+            comment_modal_end = (
+                '</div>'
+
+                '<div class="modal-footer p-0 m-1">'
+
+                '<div class="d-grid gap-2 d-flex justify-content-end">'
+                '<button type="button" class="btn btn-outline-danger btn-sm '
+                'border border-0" data-bs-dismiss="modal" aria-label="Close">'
+                '#icon_close'
+                '</button></div>''</div>'
+                '</div></div></div></div>')
+
         return {'tag': tag, 'pr': pr, 'note': note}
 
-    def _set_text_run(self, run: dict, note: str) -> str:
+    def _set_text_run(self, run: dict) -> str:
         text = ''
 
         # Tag start
@@ -179,7 +169,6 @@ class HTMLRender(object):
 
         # Text
         text += run['text']
-        if note == 'post-title': self._title += run['text']
         
         # Tag close - Reversed
         end_tags = []
