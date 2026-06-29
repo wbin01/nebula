@@ -65,7 +65,9 @@ class HTMLRender(object):
             'mXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anony'
             'mous"></script>\n'
             '  <style>\n'
-            '   .bg {background-color: #CAb45E;}\n'
+            '   h1, h2, h3, h4, h5, h6, h7, h8, h9 { color: #3770BC }'
+            '   .post-title { color: #000000; font-size: 28pt; }\n'
+            '   .bg { background-color: #F4C559; border-radius: 3px; }\n'
             '  </style>\n'
             ' </head>\n'
             ' <body>\n\n')
