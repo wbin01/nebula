@@ -79,13 +79,11 @@ class HTMLRender(object):
         self._html += self._end
 
     def _set_html_body(self, parse: dict) -> str:
-            parse_tag = tag = pr = text = id_ = ''
+            parse_tag = tag = pr = text = id_ = style = ''
             for key, value in parse.items():
                 if key == 'tag':
                     parse_tag = value
-                    tag_value = self._set_tag(value)
-                    tag = tag_value['tag']
-                    pr += tag_value['pr']
+                    tag = self._set_tag(value)
 
                 elif key == 'pr' and value:
                     for pr_key, pr_value in value.items():
@@ -99,17 +97,22 @@ class HTMLRender(object):
                     id_ = value['id']
 
                 elif key == 'style':
-                    pass
+                    style = value
 
             # End format
             if tag == 'h1' and parse_tag == 'Title':
-                tag = f'\n  <!-- Title -->\n  <{tag}{pr}>{text}</{tag}>\n'
                 self._title = text
+
+                class_ = 'post-title'
+                if 'align' in style: class_ += f' text-' + style['align']
+                class_ = f' class="{class_}"'
+
+                tag = f'\n  <!-- Title -->\n  <{tag}{class_}>{text}</{tag}>\n'
 
             elif tag == 'div' and parse_tag == 'comment_modal':
                 tag = (
                     f'  <!-- Modal {id_} -->\n'
-                    f'  <div class="modal fade" id="modal{id_}" tabindex="-1" '
+                    f'  <div class="modal fade " id="modal{id_}" tabindex="-1" '
                     'aria-labelledby="#idLabel" aria-hidden="true" '
                     'data-bs-theme="read">\n'
                     '   <div class="modal-dialog modal-lg '
@@ -131,30 +134,39 @@ class HTMLRender(object):
                     '   </div>\n  </div>\n')
 
             elif tag == 'img':
+                class_ = styl = ''
+                if 'align' in style: class_ = f'text-' + style['align']
+
+                if 'max-width' in style:
+                    styl = f' style="max-width:{style['max-width']};"'
+
                 tag = (
-                    '  <figure class="image">\n   '
-                    f'<{tag}{pr} />\n'
+                    f'  <figure class="image {class_}">\n   '
+                    f'<{tag}{styl}{pr} />\n'
                     '   <figcaption></figcaption>\n'
                     '  </figure>\n')
                 
                 if not self._cover:
                     self._cover = tag
                     tag = f'  <!-- Cover -->\n{tag}'
-
             else:
-                tag = f'  <{tag}{pr}>{text}</{tag}>\n'
+                class_ = ''
+                if 'align' in style: class_ = f'text-' + style['align']
+                if class_: class_ = f' class="{class_}"'
+
+                tag = f'  <{tag}{class_}{pr}>{text}</{tag}>\n'
 
             return tag
 
-    def _set_tag(self, value: str) -> dict:
-        tag, pr = value, ''
+    def _set_tag(self, value: str) -> str:
+        tag = value
         if value == 'Title':
-            tag, pr, parse_tag = 'h1', ' class="post-title"', value
+            tag, parse_tag = 'h1', value
         
         elif value == 'comment_modal':
             tag, parse_tag = 'div', value
 
-        return {'tag': tag, 'pr': pr}
+        return tag
 
     def _set_text_run(self, run: dict) -> str:
         text = ''

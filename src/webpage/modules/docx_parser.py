@@ -198,7 +198,7 @@ class DocxParser(object):
                 # pr: src
                 with ZipFile(self._path) as docx:
                     data = docx.read('word/' + parse['meta']['url'])
-                parse['pr']['src'] = (
+                pr_source = (
                     'data:image/ext;base64,' + base64.b64encode(
                         data).decode('ascii'))
 
@@ -207,17 +207,19 @@ class DocxParser(object):
                 if shape:
                     # width, height
                     w = re.findall(r'width:(\d+)', shape[0])
-                    if w: parse['pr']['width'] = w[0]
+                    if w: parse['pr']['width'] = int(int(w[0]) * (96 / 72))
                     h = re.findall(r'height:(\d+)', shape[0])
-                    if h: parse['pr']['height'] = h[0]
+                    if h: parse['pr']['height'] = int(int(h[0]) * (96 / 72))
 
                     # extension
                     parse['meta']['ext'] = parse[
                         'meta']['url'].split('.')[-1].lower()
 
-                    parse['pr']['src'] = parse['pr']['src'].replace(
+                    parse['pr']['src'] = pr_source.replace(
                         'data:image/ext;base64,',
                         f'data:image/{parse['meta']['ext']};base64,')
+
+                parse['style']['max-width'] = '100%'
             # P
             else:
                 # id, tag
