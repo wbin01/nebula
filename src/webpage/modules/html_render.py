@@ -4,6 +4,7 @@ import base64
 from zipfile import ZipFile
 from lxml import etree
 from docx_parser import DocxParser
+from svg_icon_to_html import SvgIconToHTML
 
 
 class HTMLRender(object):
@@ -21,6 +22,10 @@ class HTMLRender(object):
         self._footer = ''
         self._end = ''
         self._html = ''
+
+        self._icon_close = icon = SvgIconToHTML('close').html
+        self._icon_book = icon = SvgIconToHTML('biblius').html
+
         self._set_html()
 
     @property
@@ -130,7 +135,7 @@ class HTMLRender(object):
                     '        <button type="button" class="btn '
                     'btn-outline-danger btn-sm border border-0" '
                     'data-bs-dismiss="modal" aria-label="Close">\n'
-                    '         #icon_close\n'
+                    f'         {self._icon_close}\n'
                     '        </button>\n'
                     '       </div>\n      </div>\n\n     </div>\n    </div>\n'
                     '   </div>\n  </div>\n')
@@ -194,7 +199,10 @@ class HTMLRender(object):
             text += '>'
 
         # Text
-        text += run['text']
+        if run['text'] == 'book':
+            text += self._icon_book
+        else:
+            text += run['text']
         
         # Tag close - Reversed
         end_tags = []
