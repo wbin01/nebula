@@ -118,72 +118,86 @@ class HTMLRender(object):
         self._html += self._end
 
     def _set_html_body(self, parse: dict) -> str:
-            t = txt = pr = ''
-            is_title = False
+            tag = pr = text = note = ''
             for key, value in parse.items():
                 if key == 'tag':
-                    t = value
-                    if value == 'Title':
-                        t = 'h1'
-                        pr += ' class="post-title"'
-                        is_title = True
+                    set_tag = self._set_tag(key, value)
+                    tag = set_tag['tag']
+                    note = set_tag['note']
+                    pr += set_tag['pr']
 
                 elif key == 'pr' and value:
                     for pr_key, pr_value in value.items():
                         pr += f' {pr_key}="{pr_value}"'
 
                 elif key == 'children':
-                    for val in value:
-                        # Tag start
-                        for tag_ in val['tags']:
-                            if tag_['tag'] == 'comment':
-                                txt += ('<a type="button" class="ref_button '
-                                    'd-print-none" data-bs-toggle="modal" ')
+                    for run in value:
+                        text += self._set_text_run(run, note)
 
-                            elif tag_['tag'] == 'bg':
-                                txt += '<span class="bg"'
-                            
-                            else:
-                                txt += f'<{tag_['tag']}'
-
-                            # Tag properties
-                            for pr_k, pr_v in tag_['pr'].items():
-                                if tag_['tag'] == 'comment':
-                                    txt += f'data-bs-target="#modal{pr_v}"'
-                                else:
-                                    txt += f' {pr_k}="{pr_v}"'
-                            txt += '>'
-
-                        # Text
-                        txt += val['text']
-                        if is_title: self._title += val['text']
-                        
-                        # Tag close - Reversed
-                        end_tags = []
-                        for tag_ in val['tags']:
-                            if tag_['tag'] == 'comment':
-                                end_tags.append(f'</a>')
-
-                            elif tag_['tag'] == 'bg':
-                                end_tags.append(f'</span>')
-                            
-                            else:
-                                end_tags.append(f'</{tag_['tag']}>')
-
-                        end_tags.reverse()
-                        for end_tag in end_tags:
-                            txt += end_tag
-
-            if t == 'img':
+            # End format
+            if tag == 'img':
                 tag = (
                     '  <figure class="image">\n   '
-                    f'<{t}{pr} />\n'
+                    f'<{tag}{pr} />\n'
                     '  <figcaption></figcaption>\n'
                     '  </figure>\n')
             else:
-                tag = f'  <{t}{pr}>{txt}</{t}>\n'
+                tag = f'  <{tag}{pr}>{text}</{tag}>\n'
 
             return tag
+
+    def _set_tag(self, key: str, value: str) -> dict:
+        tag = pr = note = ''
+        if key == 'tag':
+            tag = value
+            if value == 'Title':
+                tag, pr, note = 'h1', ' class="post-title"', 'post-title'
+        return {'tag': tag, 'pr': pr, 'note': note}
+
+    def _set_text_run(self, run: dict, note: str) -> str:
+        text = ''
+
+        # Tag start
+        for tag in run['tags']:
+            if tag['tag'] == 'comment':
+                text += ('<a type="button" class="ref_button '
+                    'd-print-none" data-bs-toggle="modal" ')
+
+            elif tag['tag'] == 'bg':
+                text += '<span class="bg"'
+            
+            else:
+                text += f'<{tag['tag']}'
+
+            # Tag properties
+            for pr_k, pr_v in tag['pr'].items():
+                if tag['tag'] == 'comment':
+                    text += f'data-bs-target="#modal{pr_v}"'
+                else:
+                    text += f' {pr_k}="{pr_v}"'
+            text += '>'
+
+        # Text
+        text += run['text']
+        if note == 'post-title': self._title += run['text']
+        
+        # Tag close - Reversed
+        end_tags = []
+        for tag in run['tags']:
+            if tag['tag'] == 'comment':
+                end_tags.append(f'</a>')
+
+            elif tag['tag'] == 'bg':
+                end_tags.append(f'</span>')
+            
+            else:
+                end_tags.append(f'</{tag['tag']}>')
+
+        end_tags.reverse()
+        for end_tag in end_tags:
+            text += end_tag
+
+        return text
 
 
 if __name__ == '__main__':
