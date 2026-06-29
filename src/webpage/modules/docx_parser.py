@@ -232,6 +232,7 @@ class DocxParser(object):
             # children
             for run in xml.split('</w:r>'):
                 txt = re.findall(r'<w:t [^>]+>([^<]+)</w:t>', run)
+                
                 tags = []
                 for k, v in tag_converter.items():
                     tag = {'tag': '', 'pr': {}}
@@ -261,7 +262,18 @@ class DocxParser(object):
                             tags.append(tag)
                 if txt:
                     children = {'text': txt[0], 'tags': tags}
-                    for t in txt: parse['children'].append(children)
+                    # Before: <u><i> te</i></u> <u><i>xt </i></u>
+                    # Now:    <u><i> text </i></u>
+                    if parse['children']:
+                        last = parse['children'][-1]
+                        lt = [x['tag'] for x in last['tags']]
+                        ct = [x['tag'] for x in children['tags']]
+                        if lt == ct:
+                            parse['children'][-1]['text'] += children['text']
+                        else:
+                            for t in txt: parse['children'].append(children)
+                    else:
+                        for t in txt: parse['children'].append(children)
 
             # pr: align
             align = re.findall(r'<w:jc w:val=\"([^\"]+)\"/>', xml)
@@ -283,5 +295,5 @@ class DocxParser(object):
 
 if __name__ == '__main__':
     parser = DocxParser('/home/user/Documento1.docx')
-    print(parser)
-    parser.print(True, True)
+    # print(parser)
+    # parser.print(True, True)
