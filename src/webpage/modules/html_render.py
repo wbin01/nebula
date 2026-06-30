@@ -47,12 +47,14 @@ class HTMLRender(object):
     
     def _set_html(self) -> None:
         # Body
+        self._body = ' <main>\n <article>\n\n'
         for parse in self._parser.parse['body']:
             self._body += self._set_html_body(parse)
+        self._body +='\n </article>\n </main>\n\n <footer></footer>\n'
 
         # self._parser.print()
         for parse in self._parser.parse['comments']:
-            self._modals += self._set_html_body(parse)
+            self._modals += self._set_html_body(parse, True)
 
         # Start
         self._start = (
@@ -85,7 +87,7 @@ class HTMLRender(object):
         self._html += self._modals
         self._html += self._end
 
-    def _set_html_body(self, parse: dict) -> str:
+    def _set_html_body(self, parse: dict, modal: bool = False) -> str:
             parse_tag = tag = pr = text = id_ = style = ''
             for key, value in parse.items():
                 if key == 'tag':
@@ -114,7 +116,8 @@ class HTMLRender(object):
                 if 'align' in style: class_ += f' text-' + style['align']
                 class_ = f' class="{class_}"'
 
-                tag = f'\n  <!-- Title -->\n  <{tag}{class_}>{text}</{tag}>\n'
+                tag = f'\n   <{tag}{class_}>{text}</{tag}>\n'
+                tag = f'\n  <!-- Title -->\n  <header>{tag}  </header>\n\n'
 
             elif tag == 'div' and parse_tag == 'comment_modal':
                 tag = (
